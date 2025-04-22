@@ -24,7 +24,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFE0F7FA),
+      backgroundColor: Color(0xFFF1F9FD),
       body: Center(
         child: Column(
           children: [
@@ -44,7 +44,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 24,
+                  fontSize: 20,
                   color: Color(0xff2E3094)
                 ),
               ),

@@ -24,6 +24,8 @@ flutter:
     - assets/images/logo_paud.png
     - assets/images/logo_ortu.png
     - assets/images/logo_guru.png
+    - assets/images/photo1.png
+    - assets/images/photo2.png
 
 # ⬇️ Konfigurasi splash screen diletakkan DI SINI, setelah flutter:
 flutter_native_splash:
