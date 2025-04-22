@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../menu_pages/profile_page.dart';
+import '../ortu_pages/profile_page.dart';
 
 class BottomNavbar extends StatefulWidget {
   const BottomNavbar({super.key});
