@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'screens/splash_screen.dart';
 import 'screens/role_option_page.dart';
+import 'pages/home_page.dart';
+import 'widgets/bottom_navbar.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,7 +17,11 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'LifeSync',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.deepPurple,
+          ),
+        fontFamily: 'Poppins',
+
       ),
       home: SplashScreen(),
       routes: {
