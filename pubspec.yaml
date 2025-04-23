@@ -11,11 +11,13 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.8
+  carousel_slider: ^5.0.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
+  
 
 flutter:
   uses-material-design: true
@@ -26,6 +28,16 @@ flutter:
     - assets/images/logo_guru.png
     - assets/images/photo1.png
     - assets/images/photo2.png
+    - assets/images/placeholder_slider.jpg
+    - assets/images/placeholder_updates.jpg
+  fonts:
+    - family: Poppins
+      fonts:
+        - asset: assets/fonts/Poppins-Regular.ttf
+        - asset: assets/fonts/Poppins-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Poppins-SemiBold.ttf
+          weight: 600
 
 # ⬇️ Konfigurasi splash screen diletakkan DI SINI, setelah flutter:
 flutter_native_splash:
