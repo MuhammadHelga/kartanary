@@ -173,12 +173,88 @@ class ProfilePage extends StatelessWidget {
                 Container(
                   margin: EdgeInsets.symmetric(horizontal: 50),
                   decoration: BoxDecoration(
-                    color: Color(0xffF2F9FD),
+                    color: Color.fromARGB(255, 238, 242, 245),
                     borderRadius: BorderRadius.all(Radius.circular(20)),
                   ),
                   padding: const EdgeInsets.symmetric(
                     horizontal: 16,
                     vertical: 16,
+                  ),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          IconButton(
+                            onPressed: () {},
+                            icon: Icon(
+                              Icons.settings_outlined,
+                              color: Color(0xff333333),
+                              size: 30,
+                            ),
+                          ),
+                          Text('Umum', style: TextStyle(fontSize: 20)),
+                          Spacer(),
+                          IconButton(
+                            onPressed: () {},
+                            icon: Icon(
+                              Icons.chevron_right,
+                              color: Color(0xffA8A8A8),
+                              size: 30,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          IconButton(
+                            onPressed: () {},
+                            icon: Icon(
+                              Icons.info_outlined,
+                              color: Color(0xff333333),
+                              size: 30,
+                            ),
+                          ),
+                          Text('Tentang', style: TextStyle(fontSize: 20)),
+                          Spacer(),
+                          IconButton(
+                            onPressed: () {},
+                            icon: Icon(
+                              Icons.chevron_right,
+                              color: Color(0xffA8A8A8),
+                              size: 30,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          IconButton(
+                            onPressed: () {},
+                            icon: Icon(
+                              Icons.logout_outlined,
+                              color: Color(0xffDC040F),
+                              size: 30,
+                            ),
+                          ),
+                          Text(
+                            'LogOut',
+                            style: TextStyle(
+                              color: Color(0xffDC040F),
+                              fontSize: 20,
+                            ),
+                          ),
+                          Spacer(),
+                          IconButton(
+                            onPressed: () {},
+                            icon: Icon(
+                              Icons.chevron_right,
+                              color: Color(0xffA8A8A8),
+                              size: 30,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
               ],
