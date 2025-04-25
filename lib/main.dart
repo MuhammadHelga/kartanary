@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'screens/splash_screen.dart';
-import 'screens/role_option_page.dart';
-import 'ortu_pages/home_page.dart';
-import 'widgets/bottom_navbar.dart';
+import 'package:lifesync_capstone_project/guru_pages/choose_class_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -23,7 +20,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Poppins',
 
       ),
-      home: SplashScreen(),
+      home: ChooseClassPage(),
       routes: {
         '/home': (context) => const MyHomePage(title: 'Flutter Demo Home Page'),
       },
