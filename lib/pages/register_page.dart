@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../screens/role_option_page.dart';
+import '../pages/class_options.dart';
 import '../pages/login_page.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -28,13 +28,13 @@ class _RegisterPageState extends State<RegisterPage> {
                   alignment: Alignment.topLeft,
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Colors.lightBlue,
+                      color: Color(0xff98D5F1),
                       borderRadius: BorderRadius.circular(50),
                     ),
                     child: IconButton(
                       icon: Icon(
                         Icons.arrow_back,
-                        color: Color(0xffe0f7fa),
+                        color: Color(0xff1D99D3),
                         size: 36,
                       ),
                       onPressed: () {
@@ -83,7 +83,11 @@ class _RegisterPageState extends State<RegisterPage> {
                 decoration: InputDecoration(
                   prefixIcon: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: Icon(Icons.email, color: Colors.blue, size: 34),
+                    child: Icon(
+                      Icons.email,
+                      color: Color(0xff1D99D3),
+                      size: 34,
+                    ),
                   ),
                   hintText: 'Masukkan Email',
                   hintStyle: TextStyle(fontSize: 20, color: Colors.grey),
@@ -92,11 +96,11 @@ class _RegisterPageState extends State<RegisterPage> {
                   contentPadding: EdgeInsets.symmetric(vertical: 20),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(24),
-                    borderSide: BorderSide(color: Colors.blue, width: 3),
+                    borderSide: BorderSide(color: Color(0xff1D99D3), width: 3),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(24),
-                    borderSide: BorderSide(color: Colors.blue, width: 3),
+                    borderSide: BorderSide(color: Color(0xff1D99D3), width: 3),
                   ),
                 ),
               ),
@@ -110,7 +114,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 decoration: InputDecoration(
                   prefixIcon: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: Icon(Icons.lock, color: Colors.blue, size: 34),
+                    child: Icon(Icons.lock, color: Color(0xff1D99D3), size: 34),
                   ),
                   hintText: 'Masukkan Password',
                   hintStyle: TextStyle(fontSize: 20, color: Colors.grey),
@@ -127,44 +131,34 @@ class _RegisterPageState extends State<RegisterPage> {
                       padding: const EdgeInsets.symmetric(horizontal: 15),
                       child: Icon(
                         _hidepass ? Icons.visibility_off : Icons.visibility,
-                        color: Colors.blue,
+                        color: Color(0xff1D99D3),
                         size: 34,
                       ),
                     ),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(24),
-                    borderSide: BorderSide(color: Colors.blue, width: 3),
+                    borderSide: BorderSide(color: Color(0xff1D99D3), width: 3),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(24),
-                    borderSide: BorderSide(color: Colors.blue, width: 3),
+                    borderSide: BorderSide(color: Color(0xff1D99D3), width: 3),
                   ),
                 ),
               ),
-              SizedBox(height: 10),
-              Align(
-                alignment: Alignment.centerRight,
-                child: TextButton(
-                  onPressed: () {
-                    // Handle forgot password
-                  },
-                  child: Text(
-                    'Lupa password?',
-                    style: TextStyle(color: Colors.grey[600], fontSize: 16),
-                  ),
-                ),
-              ),
-              SizedBox(height: 20),
+              SizedBox(height: 80),
               SizedBox(
                 height: 60,
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    // Handle login
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ClassOptions()),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
+                    backgroundColor: Color(0xff1D99D3),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),

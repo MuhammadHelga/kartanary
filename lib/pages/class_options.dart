@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../pages/login_page.dart';
+import '../pages/register_page.dart';
+import '../widgets/bottom_navbar.dart';
 
 class ClassOptions extends StatelessWidget {
   const ClassOptions({super.key});
@@ -32,7 +33,9 @@ class ClassOptions extends StatelessWidget {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => LoginPage()),
+                          MaterialPageRoute(
+                            builder: (context) => RegisterPage(),
+                          ),
                         );
                       },
                     ),
@@ -120,7 +123,7 @@ class ClassOptions extends StatelessWidget {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => ClassOptions()),
+                        MaterialPageRoute(builder: (context) => BottomNavbar()),
                       );
                     },
                     style: ElevatedButton.styleFrom(

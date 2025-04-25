@@ -31,6 +31,9 @@ flutter:
     - assets/images/photo2.png
     - assets/images/placeholder_slider.jpg
     - assets/images/placeholder_updates.jpg
+    - assets/images/lh_cover.png
+    - assets/images/lm_cover.png
+    - assets/images/ls_cover.png
   fonts:
     - family: Poppins
       fonts:
