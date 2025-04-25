@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lifesync_capstone_project/ortu_pages/home_page.dart';
+import '/ortu_pages/home_page.dart';
 import '/theme/AppColors.dart';
 
 class JoinClassPage extends StatefulWidget {
@@ -111,7 +111,6 @@ class _JoinClassPageState extends State<JoinClassPage> {
                     color: Colors.white
                   ),
                 ),
-              
               ),
             ),
           ],
