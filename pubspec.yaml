@@ -24,7 +24,6 @@ flutter:
   assets:
     - assets/images/splash_screen.png
     - assets/images/logo_paud.png
-    - assets/images/logo_paud.jpg
     - assets/images/logo_ortu.png
     - assets/images/logo_guru.png
     - assets/images/photo1.png
