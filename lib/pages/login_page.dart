@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../screens/role_option_page.dart';
 import '../pages/register_page.dart';
-import '../pages/class_options.dart';
 import '../pages/forgot_password.dart';
 import '../widgets/bottom_navbar.dart';
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../widgets/bottom_navbar.dart';
 import '../pages/login_page.dart';
+import '../ortu_pages/edit_profile.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -8,7 +9,7 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xffF2F9FD),
+      backgroundColor: Color(0xffFFFFFF),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Container(
@@ -111,7 +112,14 @@ class ProfilePage extends StatelessWidget {
                                 color: Color(0xffF2F9FD),
                                 size: 30,
                               ),
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => EditProfile(),
+                                  ),
+                                );
+                              },
                             ),
                           ],
                         ),
