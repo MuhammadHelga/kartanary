@@ -25,7 +25,7 @@ class ForgotPassword extends StatelessWidget {
                     ),
                     child: IconButton(
                       icon: Icon(
-                        Icons.arrow_back,
+                        Icons.chevron_left,
                         color: Color(0xff1D99D3),
                         size: 36,
                       ),
@@ -43,8 +43,8 @@ class ForgotPassword extends StatelessWidget {
                 child: Image.asset(
                   'assets/images/logo_paud.png',
                   height: 200,
-                  width: 200,
-                  fit: BoxFit.fill,
+                  width: 300,
+                  fit: BoxFit.cover,
                 ),
               ),
               SizedBox(height: 20),

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import '../widgets/bottom_navbar.dart';
+import 'reporting_page.dart';
 
-class PresencePage extends StatelessWidget {
-  const PresencePage({super.key});
+class WeeksReportingPage extends StatelessWidget {
+  const WeeksReportingPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xffF2F9FD),
+      backgroundColor: Color(0xffffffff),
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -30,12 +30,7 @@ class PresencePage extends StatelessWidget {
                         size: 34,
                       ),
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => BottomNavbar(),
-                          ),
-                        );
+                        Navigator.pop(context);
                       },
                       tooltip: 'Back',
                     ),
@@ -43,7 +38,7 @@ class PresencePage extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(left: 10),
                     child: const Text(
-                      'Presensi',
+                      'Laporan Mingguan',
                       style: TextStyle(
                         color: Color(0xffF2F9FD),
                         fontWeight: FontWeight.w600,

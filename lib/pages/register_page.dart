@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../pages/class_options.dart';
+import '../ortu_pages/class_options.dart';
 import '../pages/login_page.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -33,7 +33,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                     child: IconButton(
                       icon: Icon(
-                        Icons.arrow_back,
+                        Icons.chevron_left,
                         color: Color(0xff1D99D3),
                         size: 36,
                       ),
@@ -51,8 +51,8 @@ class _RegisterPageState extends State<RegisterPage> {
                 child: Image.asset(
                   'assets/images/logo_paud.png',
                   height: 200,
-                  width: 200,
-                  fit: BoxFit.fill,
+                  width: 300,
+                  fit: BoxFit.cover,
                 ),
               ),
               SizedBox(height: 20),
