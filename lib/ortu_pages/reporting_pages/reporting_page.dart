@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import '../widgets/bottom_navbar.dart';
+import '../../widgets/bottom_navbar.dart';
+import 'daily_reporting_page.dart';
+import 'weekly_reporting_page.dart';
+import 'semester_report_page.dart';
 
 class ReportingPage extends StatelessWidget {
   const ReportingPage({super.key});
@@ -71,7 +74,12 @@ class ReportingPage extends StatelessWidget {
                       SizedBox(height: 10),
                       GestureDetector(
                         onTap: () {
-                          //
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DaysReportingPage(),
+                            ),
+                          );
                         },
                         child: Container(
                           decoration: BoxDecoration(
@@ -106,7 +114,12 @@ class ReportingPage extends StatelessWidget {
                       SizedBox(height: 10),
                       GestureDetector(
                         onTap: () {
-                          //
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => WeeksReportingPage(),
+                            ),
+                          );
                         },
                         child: Container(
                           decoration: BoxDecoration(
@@ -141,7 +154,12 @@ class ReportingPage extends StatelessWidget {
                       SizedBox(height: 10),
                       GestureDetector(
                         onTap: () {
-                          //
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SemesterReportPage(),
+                            ),
+                          );
                         },
                         child: Container(
                           decoration: BoxDecoration(

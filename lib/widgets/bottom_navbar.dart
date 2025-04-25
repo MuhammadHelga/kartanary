@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../ortu_pages/profile_page.dart';
-import '../ortu_pages/home_page.dart';
-import '../ortu_pages/reporting_page.dart';
-import '../ortu_pages/presence_page.dart';
+import '../ortu_pages/profile_pages/profile_page.dart';
+import '../ortu_pages/home_pages/home_page.dart';
+import '../ortu_pages/reporting_pages/reporting_page.dart';
+import '../ortu_pages/presence_pages/presence_page.dart';
 
 class BottomNavbar extends StatefulWidget {
   const BottomNavbar({super.key});

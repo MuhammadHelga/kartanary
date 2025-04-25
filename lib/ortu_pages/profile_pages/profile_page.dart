@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../widgets/bottom_navbar.dart';
-import '../pages/login_page.dart';
-import '../ortu_pages/edit_profile.dart';
+import '../../widgets/bottom_navbar.dart';
+import '../../pages/login_page.dart';
+import 'edit_profile.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});

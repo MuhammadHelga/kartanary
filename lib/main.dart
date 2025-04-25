@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'screens/splash_screen.dart';
 import 'screens/role_option_page.dart';
-import 'ortu_pages/home_page.dart';
+import 'ortu_pages/home_pages/home_page.dart';
 import 'widgets/bottom_navbar.dart';
 
 void main() {

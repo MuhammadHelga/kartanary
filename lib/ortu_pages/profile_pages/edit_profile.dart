@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../ortu_pages/profile_page.dart';
+import 'profile_page.dart';
 
 class EditProfile extends StatelessWidget {
   const EditProfile({super.key});
@@ -7,7 +7,7 @@ class EditProfile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xffF2F9FD),
+      backgroundColor: Color(0xffFFFFFF),
       body: SafeArea(
         child: Stack(
           clipBehavior: Clip.none,
@@ -35,12 +35,7 @@ class EditProfile extends StatelessWidget {
                             size: 34,
                           ),
                           onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ProfilePage(),
-                              ),
-                            );
+                            Navigator.pop(context);
                           },
                           tooltip: 'Back',
                         ),
@@ -223,7 +218,7 @@ class EditProfile extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => EditProfile(),
+                                  builder: (context) => ProfilePage(),
                                 ),
                               );
                             },
@@ -247,23 +242,6 @@ class EditProfile extends StatelessWidget {
                   ),
                 ),
               ],
-            ),
-            Positioned(
-              top: 150,
-              right: 130,
-              child: Container(
-                padding: const EdgeInsets.all(6),
-                child: IconButton(
-                  icon: Icon(
-                    Icons.edit_square,
-                    size: 24,
-                    color: Color(0xff1D99D3),
-                  ),
-                  onPressed: () {
-                    // Ini buat edit foto
-                  },
-                ),
-              ),
             ),
             Positioned(
               top: 100,
@@ -291,6 +269,26 @@ class EditProfile extends StatelessWidget {
                       fit: BoxFit.cover,
                     ),
                   ),
+                ),
+              ),
+            ),
+            Positioned(
+              top: 160,
+              right: 160,
+              child: Container(
+                height: 40,
+                width: 40,
+                decoration: BoxDecoration(
+                  color: Color(0xff1D99D3),
+                  shape: BoxShape.circle,
+                ),
+                child: IconButton(
+                  icon: Icon(
+                    Icons.edit_outlined,
+                    size: 24,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {},
                 ),
               ),
             ),

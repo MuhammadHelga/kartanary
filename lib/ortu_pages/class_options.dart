@@ -46,8 +46,8 @@ class ClassOptions extends StatelessWidget {
                 child: Image.asset(
                   'assets/images/logo_paud.png',
                   height: 200,
-                  width: 200,
-                  fit: BoxFit.fill,
+                  width: 300,
+                  fit: BoxFit.cover,
                 ),
               ),
               SizedBox(height: 20),
