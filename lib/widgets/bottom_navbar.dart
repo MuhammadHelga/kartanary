@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../ortu_pages/profile_page.dart';
-import '../pages/home_page.dart';
+import '../ortu_pages/home_page.dart';
+import '../ortu_pages/reporting_page.dart';
+import '../ortu_pages/presence_page.dart';
 
 class BottomNavbar extends StatefulWidget {
   const BottomNavbar({super.key});
@@ -20,8 +22,8 @@ class _BottomNavbarState extends State<BottomNavbar> {
 
   List<Widget> pages = [
     HomePage(),
-    const Center(child: Text('Presensi', style: TextStyle(fontSize: 40))),
-    const Center(child: Text('Laporan', style: TextStyle(fontSize: 40))),
+    PresencePage(),
+    ReportingPage(),
     ProfilePage(),
   ];
 
