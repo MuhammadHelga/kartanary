@@ -7,7 +7,7 @@ class ReportingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xffF2F9FD),
+      backgroundColor: Color(0xffFFFFFF),
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -73,13 +73,25 @@ class ReportingPage extends StatelessWidget {
                         onTap: () {
                           //
                         },
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(16),
-                          child: Image.asset(
-                            'assets/images/lh_cover.png',
-                            width: double.infinity,
-                            height: 170,
-                            fit: BoxFit.cover,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.shade400,
+                                blurRadius: 6,
+                                offset: Offset(0, 5),
+                              ),
+                            ],
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(16),
+                            child: Image.asset(
+                              'assets/images/lh_cover.png',
+                              width: double.infinity,
+                              height: 170,
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
                       ),
@@ -96,13 +108,25 @@ class ReportingPage extends StatelessWidget {
                         onTap: () {
                           //
                         },
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(16),
-                          child: Image.asset(
-                            'assets/images/lm_cover.png',
-                            width: double.infinity,
-                            height: 170,
-                            fit: BoxFit.cover,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.shade400,
+                                blurRadius: 6,
+                                offset: Offset(0, 5),
+                              ),
+                            ],
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(16),
+                            child: Image.asset(
+                              'assets/images/lm_cover.png',
+                              width: double.infinity,
+                              height: 170,
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
                       ),
@@ -119,13 +143,25 @@ class ReportingPage extends StatelessWidget {
                         onTap: () {
                           //
                         },
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(16),
-                          child: Image.asset(
-                            'assets/images/ls_cover.png',
-                            width: double.infinity,
-                            height: 170,
-                            fit: BoxFit.cover,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.shade400,
+                                blurRadius: 6,
+                                offset: Offset(0, 5),
+                              ),
+                            ],
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(16),
+                            child: Image.asset(
+                              'assets/images/ls_cover.png',
+                              width: double.infinity,
+                              height: 170,
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
                       ),
