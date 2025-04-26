@@ -1,13 +1,65 @@
 import 'package:flutter/material.dart';
 import '../../widgets/bottom_navbar.dart';
 
-class PresencePage extends StatelessWidget {
+class PresencePage extends StatefulWidget {
   const PresencePage({super.key});
+
+  @override
+  State<PresencePage> createState() => _PresencePageState();
+}
+
+class _PresencePageState extends State<PresencePage> {
+  DateTime selectedDate = DateTime.now();
+
+  void _selectDate() async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.light(
+              primary: Color(0xff1D99D3),
+              onPrimary: Colors.white,
+              onSurface: Colors.black,
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+      });
+    }
+  }
+
+  String _monthName(int month) {
+    const months = [
+      'Januari',
+      'Februari',
+      'Maret',
+      'April',
+      'Mei',
+      'Juni',
+      'Juli',
+      'Agustus',
+      'September',
+      'Oktober',
+      'November',
+      'Desember',
+    ];
+    return months[month - 1];
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xffFfffff),
+      backgroundColor: Color(0xffFFFFFF),
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -40,9 +92,9 @@ class PresencePage extends StatelessWidget {
                       tooltip: 'Back',
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 10),
-                    child: const Text(
+                  const Padding(
+                    padding: EdgeInsets.only(left: 10),
+                    child: Text(
                       'Presensi',
                       style: TextStyle(
                         color: Color(0xffF2F9FD),
@@ -54,46 +106,52 @@ class PresencePage extends StatelessWidget {
                 ],
               ),
             ),
+
             SizedBox(height: 20),
+
+            // PILIH TANGGAL
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 40),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     'Pilih Tanggal',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 10),
                   Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      GestureDetector(
-                        onTap: () {},
-                        child: Container(
-                          width: 120,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            color: Color(0xffC5E7F7),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.shade400,
-                                spreadRadius: 1,
-                                blurRadius: 5,
-                                offset: Offset(3, 3),
-                              ),
-                            ],
-                          ),
-                          alignment: Alignment.center,
-                          child: Padding(
+                      for (var item in [
+                        selectedDate.day.toString(),
+                        _monthName(selectedDate.month),
+                        selectedDate.year.toString(),
+                      ])
+                        GestureDetector(
+                          onTap: _selectDate,
+                          child: Container(
+                            width: 120,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              color: Color(0xffC5E7F7),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.shade400,
+                                  spreadRadius: 1,
+                                  blurRadius: 5,
+                                  offset: Offset(3, 3),
+                                ),
+                              ],
+                            ),
+                            alignment: Alignment.center,
                             padding: const EdgeInsets.symmetric(
                               horizontal: 16,
                               vertical: 10,
                             ),
                             child: Text(
-                              '24',
-                              style: TextStyle(
+                              item,
+                              style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black,
@@ -101,73 +159,6 @@ class PresencePage extends StatelessWidget {
                             ),
                           ),
                         ),
-                      ),
-                      GestureDetector(
-                        onTap: () {},
-                        child: Container(
-                          width: 120,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            color: Color(0xffC5E7F7),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.shade400,
-                                spreadRadius: 1,
-                                blurRadius: 5,
-                                offset: Offset(3, 3),
-                              ),
-                            ],
-                          ),
-                          alignment: Alignment.center,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 10,
-                            ),
-                            child: Text(
-                              'Maret',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () {},
-                        child: Container(
-                          width: 120,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            color: Color(0xffC5E7F7),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.shade400,
-                                spreadRadius: 1,
-                                blurRadius: 5,
-                                offset: Offset(3, 3),
-                              ),
-                            ],
-                          ),
-                          alignment: Alignment.center,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 10,
-                            ),
-                            child: Text(
-                              '2025',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
                     ],
                   ),
                   SizedBox(height: 20),
@@ -305,7 +296,7 @@ class PresencePage extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: 20),
-                  Text(
+                  const Text(
                     'Nama Anak',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
