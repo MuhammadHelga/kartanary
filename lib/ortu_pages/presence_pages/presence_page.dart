@@ -64,7 +64,7 @@ class PresencePage extends StatelessWidget {
                     'Pilih Tanggal',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: 20),
+                  SizedBox(height: 10),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -173,6 +173,140 @@ class PresencePage extends StatelessWidget {
                   SizedBox(height: 20),
                   Text(
                     'Total Kehadiran',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 10),
+                  Column(
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: 184,
+                            padding: EdgeInsets.symmetric(vertical: 5),
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: Color(0xffA8EE87),
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(15),
+                              ),
+                            ),
+                            child: Text(
+                              'Hadir',
+                              style: TextStyle(fontSize: 20),
+                            ),
+                          ),
+                          Container(
+                            width: 184,
+                            padding: EdgeInsets.symmetric(vertical: 5),
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: Color(0xffF8D96D),
+                              borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(15),
+                              ),
+                            ),
+                            child: Text('Izin', style: TextStyle(fontSize: 20)),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Container(
+                            width: 184,
+                            padding: EdgeInsets.symmetric(vertical: 5),
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                width: 2,
+                                color: Color(0xffA8EE87),
+                              ),
+                            ),
+                            child: Text('data'),
+                          ),
+                          Container(
+                            width: 184,
+                            padding: EdgeInsets.symmetric(vertical: 5),
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                width: 2,
+                                color: Color(0xffF8D96D),
+                              ),
+                            ),
+                            child: Text('data'),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Container(
+                            width: 184,
+                            padding: EdgeInsets.symmetric(vertical: 5),
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(color: Color(0xffFFA470)),
+                            child: Text(
+                              'Sakit',
+                              style: TextStyle(fontSize: 20),
+                            ),
+                          ),
+                          Container(
+                            width: 184,
+                            padding: EdgeInsets.symmetric(vertical: 5),
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(color: Color(0xffFF6666)),
+                            child: Text(
+                              'Alpha',
+                              style: TextStyle(fontSize: 20),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: 184,
+                            padding: EdgeInsets.symmetric(vertical: 5),
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                width: 2,
+                                color: Color(0xffFFA470),
+                              ),
+                              borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(15),
+                              ),
+                            ),
+                            child: Text(
+                              'Hadir',
+                              style: TextStyle(fontSize: 20),
+                            ),
+                          ),
+                          Container(
+                            width: 184,
+                            padding: EdgeInsets.symmetric(vertical: 5),
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                width: 2,
+                                color: Color(0xffFF6666),
+                              ),
+                              borderRadius: BorderRadius.only(
+                                bottomRight: Radius.circular(15),
+                              ),
+                            ),
+                            child: Text('Izin', style: TextStyle(fontSize: 20)),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 20),
+                  Text(
+                    'Nama Anak',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                 ],
