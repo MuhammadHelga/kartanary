@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import '../ortu_pages/profile_pages/profile_page.dart';
 import '../ortu_pages/home_pages/home_page.dart';
-import '../ortu_pages/reporting_pages/reporting_page.dart';
+import '../guru_pages/guru_home_pages/guru_home_page.dart';
 import '../ortu_pages/presence_pages/presence_page.dart';
+import '../ortu_pages/reporting_pages/reporting_page.dart';
+import '../ortu_pages/profile_pages/profile_page.dart';
+import '../guru_pages/guru_profile_pages/guru_profile_page.dart';
 
 class BottomNavbar extends StatefulWidget {
   const BottomNavbar({super.key});
@@ -20,17 +22,17 @@ class _BottomNavbarState extends State<BottomNavbar> {
     });
   }
 
-  List<Widget> pages = [
-    HomePage(),
+  List<Widget> ortu_pages = [
+    GuruHomePage(),
     PresencePage(),
     ReportingPage(),
-    ProfilePage(),
+    GuruProfilePage(),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: pages[_selectedIndex],
+      body: ortu_pages[_selectedIndex],
       bottomNavigationBar: ClipRRect(
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(30),
@@ -39,8 +41,6 @@ class _BottomNavbarState extends State<BottomNavbar> {
         child: BottomNavigationBar(
           backgroundColor: Color(0xff1D99D3),
           type: BottomNavigationBarType.fixed,
-          // showSelectedLabels: false,
-          // showUnselectedLabels: false,
           iconSize: 35,
           selectedItemColor: Color(0xffF8FAFC),
           currentIndex: _selectedIndex,
