@@ -11,10 +11,7 @@ class RoleOptionPage extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
-          colors: [
-            Color.fromARGB(255, 176, 230, 255),
-            Color(0xFFFFFFFF),
-          ],
+          colors: [Color.fromARGB(255, 176, 230, 255), Color(0xFFFFFFFF)],
         ),
       ),
       child: Scaffold(
@@ -36,7 +33,7 @@ class RoleOptionPage extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 50),
               Padding(
                 padding: const EdgeInsets.only(top: 34),
                 child: const Text(

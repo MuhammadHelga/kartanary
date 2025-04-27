@@ -106,10 +106,7 @@ class _PresencePageState extends State<PresencePage> {
                 ],
               ),
             ),
-
             SizedBox(height: 20),
-
-            // PILIH TANGGAL
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 40),
               child: Column(
@@ -214,7 +211,7 @@ class _PresencePageState extends State<PresencePage> {
                                 color: Color(0xffA8EE87),
                               ),
                             ),
-                            child: Text('data'),
+                            child: Text('1', style: TextStyle(fontSize: 20)),
                           ),
                           Container(
                             width: 184,
@@ -226,7 +223,7 @@ class _PresencePageState extends State<PresencePage> {
                                 color: Color(0xffF8D96D),
                               ),
                             ),
-                            child: Text('data'),
+                            child: Text('1', style: TextStyle(fontSize: 20)),
                           ),
                         ],
                       ),
@@ -271,10 +268,7 @@ class _PresencePageState extends State<PresencePage> {
                                 bottomLeft: Radius.circular(15),
                               ),
                             ),
-                            child: Text(
-                              'Hadir',
-                              style: TextStyle(fontSize: 20),
-                            ),
+                            child: Text('1', style: TextStyle(fontSize: 20)),
                           ),
                           Container(
                             width: 184,
@@ -289,7 +283,7 @@ class _PresencePageState extends State<PresencePage> {
                                 bottomRight: Radius.circular(15),
                               ),
                             ),
-                            child: Text('Izin', style: TextStyle(fontSize: 20)),
+                            child: Text('1', style: TextStyle(fontSize: 20)),
                           ),
                         ],
                       ),
@@ -300,7 +294,60 @@ class _PresencePageState extends State<PresencePage> {
                     'Nama Anak',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
+                  SizedBox(height: 10),
                 ],
+              ),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 40),
+                child: ListView.builder(
+                  itemCount: 20,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      margin: EdgeInsets.only(bottom: 15),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 15,
+                        vertical: 10,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Color(0xffC5E7F7),
+                        borderRadius: BorderRadius.circular(15),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.shade400,
+                            spreadRadius: 1,
+                            blurRadius: 5,
+                            offset: Offset(3, 3),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        children: [
+                          Text(
+                            'Anak ke-${index + 1}',
+                            style: TextStyle(fontSize: 18),
+                          ),
+                          Spacer(),
+                          Container(
+                            padding: EdgeInsets.all(15),
+                            decoration: BoxDecoration(
+                              color: Color(0xffA8EE87),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Text(
+                              'H',
+                              style: TextStyle(
+                                fontSize: 30,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
           ],
