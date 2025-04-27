@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '/ortu_pages/home_page.dart';
+import 'package:lifesync_capstone_project/guru_pages/input_student_page.dart';
 import '/theme/AppColors.dart';
 
 class CreateClassPage extends StatefulWidget {
@@ -14,11 +14,28 @@ class _CreateClassPageState extends State<CreateClassPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor:AppColors.primary5,
-      // appBar: AppBar(
-        
-      // ),
+      appBar: AppBar(
+        backgroundColor: AppColors.primary5,
+        leading: IconButton(
+          padding: const EdgeInsets.only(left: 20),
+          icon: Container(
+            padding: EdgeInsets.all(6.5), // Padding di sekitar ikon
+            decoration: BoxDecoration(
+              shape: BoxShape.circle, // Membuat bentuk bulat
+              color: AppColors.primary20, // Warna latar belakang bulatan
+            ),
+            child: Icon(
+              Icons.chevron_left,
+              color: AppColors.primary50, // Warna ikon
+            ),
+          ),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+      ),
       body: Padding(
-        padding: const EdgeInsets.all(30.0),
+        padding: const EdgeInsets.only(left: 30.0, right: 30.0, bottom: 30.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start, // Keep elements at the top
           crossAxisAlignment: CrossAxisAlignment.start, // Align all children to the left
@@ -27,7 +44,7 @@ class _CreateClassPageState extends State<CreateClassPage> {
             Center(
               child: Column(
                 children: [
-                  SizedBox(height: 90),
+                  SizedBox(height: 50),
                   Image.asset('assets/images/logo_paud.png', height: 150),
                   SizedBox(height: 20),
                   Text(
@@ -120,7 +137,7 @@ class _CreateClassPageState extends State<CreateClassPage> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => HomePage()),
+                    MaterialPageRoute(builder: (context) => InputStudentPage()),
                   );
                 },
                 style: ElevatedButton.styleFrom(
