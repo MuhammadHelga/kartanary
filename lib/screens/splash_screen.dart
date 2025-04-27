@@ -30,12 +30,7 @@ class _SplashScreenState extends State<SplashScreen> {
           children: [
             Padding(
               padding: const EdgeInsets.only(top: 300),
-              child: Image.asset(
-                'assets/images/logo_paud.png',
-                width: 250,
-                height: 250,
-                fit: BoxFit.cover,
-              ),
+              child: Image.asset('assets/images/logo_paud.png'),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 50),
@@ -45,10 +40,10 @@ class _SplashScreenState extends State<SplashScreen> {
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20,
-                  color: Color(0xff2E3094)
+                  color: Color(0xff2E3094),
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),
