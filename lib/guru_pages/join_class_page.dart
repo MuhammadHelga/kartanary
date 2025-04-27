@@ -20,9 +20,26 @@ class _JoinClassPageState extends State<JoinClassPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor:AppColors.primary5,
-      // appBar: AppBar(
-        
-      // ),
+      appBar: AppBar(
+        backgroundColor: AppColors.primary5,
+        leading: IconButton(
+          padding: const EdgeInsets.only(left: 20),
+          icon: Container(
+            padding: EdgeInsets.all(6.5), // Padding di sekitar ikon
+            decoration: BoxDecoration(
+              shape: BoxShape.circle, // Membuat bentuk bulat
+              color: AppColors.primary20, // Warna latar belakang bulatan
+            ),
+            child: Icon(
+              Icons.chevron_left,
+              color: AppColors.primary50, // Warna ikon
+            ),
+          ),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(30.0),
         child: Column(
