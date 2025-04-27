@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import '../widgets/bottom_navbar.dart';
-import '../pages/login_page.dart';
-import '../ortu_pages/edit_profile.dart';
+import '../../widgets/bottom_navbar.dart';
+import '../../pages/login_page.dart';
 
-class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
+class GuruProfilePage extends StatelessWidget {
+  const GuruProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +96,7 @@ class ProfilePage extends StatelessWidget {
                                   ),
                                 ),
                                 Text(
-                                  'Orang Tua',
+                                  'Guru',
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: Color(0xffF2F9FD),
@@ -113,12 +112,12 @@ class ProfilePage extends StatelessWidget {
                                 size: 30,
                               ),
                               onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => EditProfile(),
-                                  ),
-                                );
+                                // Navigator.push(
+                                //   context,
+                                //   MaterialPageRoute(
+                                //     builder: (context) => EditProfile(),
+                                //   ),
+                                // );
                               },
                             ),
                           ],
@@ -127,54 +126,7 @@ class ProfilePage extends StatelessWidget {
                     ],
                   ),
                 ),
-                SizedBox(height: 30),
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: 50),
-                  decoration: BoxDecoration(
-                    color: Color(0xffFDF2CE),
-                    borderRadius: BorderRadius.all(Radius.circular(20)),
-                  ),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 16,
-                  ),
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          ClipOval(
-                            child: Image.asset(
-                              'assets/images/photo2.png',
-                              height: 80,
-                              width: 80,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 15),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Anak',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Text(
-                                  'Liana Almira',
-                                  style: TextStyle(fontSize: 18),
-                                ),
-                                Text('KB - A1', style: TextStyle(fontSize: 18)),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
+
                 Padding(
                   padding: const EdgeInsets.only(top: 20, left: 50),
                   child: Align(
