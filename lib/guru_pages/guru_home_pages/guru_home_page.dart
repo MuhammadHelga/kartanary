@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:lifesync_capstone_project/theme/AppColors.dart';
 
 class GuruHomePage extends StatelessWidget {
   const GuruHomePage({super.key});
@@ -8,26 +9,39 @@ class GuruHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xffFFFFFF),
+      appBar: AppBar(
+        backgroundColor: AppColors.primary50, // Ganti warna sesuai kebutuhan
+        elevation: 0,
+        // title: Text(
+        //   'My App Bar',
+        //   style: TextStyle(
+        //     fontSize: 20,
+        //     fontWeight: FontWeight.w600,
+        //     color: Colors.white,
+        //   ),
+        // ),
+         automaticallyImplyLeading: false, 
+        actions: [
+          IconButton(
+            icon: Icon(Icons.notifications, color: Colors.white, size: 30),
+            onPressed: () {
+              // Tindakan ketika notifikasi diklik
+              print("Notifikasi diklik");
+            },
+          ),
+        ],
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(20),
+            bottomRight: Radius.circular(20),
+          ),
+        ), // Menambahkan radius di bagian bawah
+        clipBehavior: Clip.hardEdge, 
+        toolbarHeight: 70,
+      ),
       body: SafeArea(
         child: Column(
           children: [
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: Color(0xff1D99D3),
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(18),
-                  bottomRight: Radius.circular(18),
-                ),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Icon(Icons.notifications, color: Colors.white, size: 40),
-                ],
-              ),
-            ),
             Expanded(
               child: SingleChildScrollView(
                 padding: EdgeInsets.all(20),
