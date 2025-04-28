@@ -12,25 +12,10 @@ class GuruPresencePage extends StatefulWidget {
 class _GuruPresencePageState extends State<GuruPresencePage> {
   DateTime selectedDate = DateTime.now();
 
-    // Tambahkan daftar nama anak
-  final List<String> childrenNames = [
-    'Ahmad',
-    'Budi',
-    'Citra',
-    'Dina',
-    'Eko',
-  ];
+  final List<String> childrenNames = ['Dokja', 'Rafayel', 'Caleb', 'Moran', 'WKWK'];
+  final List<String> presenceStatus = ['Hadir', 'Sakit', 'Izin', 'Alpha'];
 
-  final List<String> presenceStatus = [
-    'Hadir',
-    'Sakit',
-    'Izin',
-    'Alpha',
-  ];
-
-  String getInitial(String presence) {
-    return presence.isNotEmpty ? presence[0].toUpperCase() : '';
-  }
+  String getInitial(String presence) => presence.isNotEmpty ? presence[0].toUpperCase() : '';
 
   void _selectDate() async {
     final DateTime? picked = await showDatePicker(
@@ -61,18 +46,8 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
 
   String _monthName(int month) {
     const months = [
-      'Januari',
-      'Februari',
-      'Maret',
-      'April',
-      'Mei',
-      'Juni',
-      'Juli',
-      'Agustus',
-      'September',
-      'Oktober',
-      'November',
-      'Desember',
+      'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus',
+      'September', 'Oktober', 'November', 'Desember',
     ];
     return months[month - 1];
   }
@@ -106,9 +81,7 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
               size: 22,
             ),
           ),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
+          onPressed: () => Navigator.of(context).pop(),
         ),
         toolbarHeight: 70,
       ),
@@ -119,7 +92,7 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
           children: [
             SizedBox(height: 20),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal:0),
+              padding: const EdgeInsets.symmetric(horizontal: 0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -153,10 +126,7 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
                               ],
                             ),
                             alignment: Alignment.center,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 10,
-                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                             child: Text(
                               item,
                               style: const TextStyle(
@@ -177,124 +147,117 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
                   SizedBox(height: 10),
                   Column(
                     children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
+                      Table(
+                        border: TableBorder.all(width: 0, color: Colors.transparent),
                         children: [
-                          Container(
-                            width: 170,
-                            padding: EdgeInsets.symmetric(vertical: 5),
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: Color(0xffA8EE87),
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(15),
+                          TableRow(
+                            children: [
+                              Container(
+                                width: 170,
+                                padding: EdgeInsets.symmetric(vertical: 5),
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  color: Color(0xffA8EE87),
+                                  borderRadius: BorderRadius.only(topLeft: Radius.circular(15)),
+                                ),
+                                child: Text(
+                                  'Hadir',
+                                  style: TextStyle(fontSize: 20),
+                                ),
                               ),
-                            ),
-                            child: Text(
-                              'Hadir',
-                              style: TextStyle(fontSize: 20),
-                            ),
+                              Container(
+                                width: 170,
+                                padding: EdgeInsets.symmetric(vertical: 5),
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  color: Color(0xffF8D96D),
+                                  borderRadius: BorderRadius.only(topRight: Radius.circular(15)),
+                                ),
+                                child: Text('Izin', style: TextStyle(fontSize: 20)),
+                              ),
+                            ],
                           ),
-                          Container(
-                            width: 170,
-                            padding: EdgeInsets.symmetric(vertical: 5),
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: Color(0xffF8D96D),
-                              borderRadius: BorderRadius.only(
-                                topRight: Radius.circular(15),
+                          TableRow(
+                            children: [
+                              Container(
+                                width: 170,
+                                padding: EdgeInsets.symmetric(vertical: 5),
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    width: 2,
+                                    color: Color(0xffA8EE87),
+                                  ),
+                                ),
+                                child: Text('1', style: TextStyle(fontSize: 20)),
                               ),
-                            ),
-                            child: Text('Izin', style: TextStyle(fontSize: 20)),
+                              Container(
+                                width: 170,
+                                padding: EdgeInsets.symmetric(vertical: 5),
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    width: 2,
+                                    color: Color(0xffF8D96D),
+                                  ),
+                                ),
+                                child: Text('1', style: TextStyle(fontSize: 20)),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Container(
-                            width: 170,
-                            padding: EdgeInsets.symmetric(vertical: 5),
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                width: 2,
-                                color: Color(0xffA8EE87),
+                          TableRow(
+                            children: [
+                              Container(
+                                width: 170,
+                                padding: EdgeInsets.symmetric(vertical: 5),
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(color: Color(0xffFFA470)),
+                                child: Text(
+                                  'Sakit',
+                                  style: TextStyle(fontSize: 20),
+                                ),
                               ),
-                            ),
-                            child: Text('1', style: TextStyle(fontSize: 20)),
+                              Container(
+                                width: 170,
+                                padding: EdgeInsets.symmetric(vertical: 5),
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(color: Color(0xffFF6666)),
+                                child: Text(
+                                  'Alpha',
+                                  style: TextStyle(fontSize: 20),
+                                ),
+                              ),
+                            ],
                           ),
-                          Container(
-                            width: 170,
-                            padding: EdgeInsets.symmetric(vertical: 5),
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                width: 2,
-                                color: Color(0xffF8D96D),
+                          TableRow(
+                            children: [
+                              Container(
+                                width: 170,
+                                padding: EdgeInsets.symmetric(vertical: 5),
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    width: 2,
+                                    color: Color(0xffFFA470),
+                                  ),
+                                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(15)),
+                                ),
+                                child: Text('1', style: TextStyle(fontSize: 20)),
                               ),
-                            ),
-                            child: Text('1', style: TextStyle(fontSize: 20)),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Container(
-                            width: 170,
-                            padding: EdgeInsets.symmetric(vertical: 5),
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(color: Color(0xffFFA470)),
-                            child: Text(
-                              'Sakit',
-                              style: TextStyle(fontSize: 20),
-                            ),
-                          ),
-                          Container(
-                            width: 170,
-                            padding: EdgeInsets.symmetric(vertical: 5),
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(color: Color(0xffFF6666)),
-                            child: Text(
-                              'Alpha',
-                              style: TextStyle(fontSize: 20),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            width: 170,
-                            padding: EdgeInsets.symmetric(vertical: 5),
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                width: 2,
-                                color: Color(0xffFFA470),
+                              Container(
+                                width: 170,
+                                padding: EdgeInsets.symmetric(vertical: 5),
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    width: 2,
+                                    color: Color(0xffFF6666),
+                                  ),
+                                  borderRadius: BorderRadius.only(bottomRight: Radius.circular(15)),
+                                ),
+                                child: Text('1', style: TextStyle(fontSize: 20)),
                               ),
-                              borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(15),
-                              ),
-                            ),
-                            child: Text('1', style: TextStyle(fontSize: 20)),
-                          ),
-                          Container(
-                            width: 170,
-                            padding: EdgeInsets.symmetric(vertical: 5),
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                width: 2,
-                                color: Color(0xffFF6666),
-                              ),
-                              borderRadius: BorderRadius.only(
-                                bottomRight: Radius.circular(15),
-                              ),
-                            ),
-                            child: Text('1', style: TextStyle(fontSize: 20)),
+                            ],
                           ),
                         ],
                       ),
@@ -316,59 +279,106 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
                 itemBuilder: (context, index) {
                   final name = childrenNames[index];
                   final presence = presenceStatus[index % presenceStatus.length];
-                  final initial_presence = getInitial(presence);
+                  final initialPresence = getInitial(presence);
 
-                  Color presenceColor;
-                  switch (presence) {
-                    case 'Hadir':
-                      presenceColor = Color(0xffA8EE87); // Hijau
-                      break;
-                    case 'Izin':
-                      presenceColor = Color(0xffF8D96D); // Kuning
-                      break;
-                    case 'Sakit':
-                      presenceColor = Color(0xffFFA470); // Orange
-                      break;
-                    case 'Alpha':
-                      presenceColor = Color(0xffFF6666); // Merah
-                      break;
-                    default:
-                      presenceColor = AppColors.secondary50;
-                  }
-                  return Container(
-                    decoration: BoxDecoration(
-                      color: AppColors.primary10,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            name,
-                            style: const TextStyle(
-                              fontSize: 20,
+                  Color presenceColor = _getPresenceColor(presence);
+
+                  return GestureDetector(
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          backgroundColor: Color(0xffF7FAFC),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  CircleAvatar(
+                                    backgroundColor: presenceColor,
+                                    radius: 30,
+                                    child: Text(
+                                      initialPresence,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 30,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Text(
+                                    presence,
+                                    style: const TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 20),
+                              const Text(
+                                'Ubah keterangan kehadiran:',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black54,
+                                ),
+                              ),
+                              const SizedBox(height: 20),
+                              Wrap(
+                                spacing: 10,
+                                runSpacing: 10,
+                                children: [
+                                  _buildPresenceButton('Hadir', Color(0xffA8EE87), index),
+                                  _buildPresenceButton('Sakit', Color(0xffFFA470), index),
+                                  _buildPresenceButton('Izin', Color(0xffF8D96D), index),
+                                  _buildPresenceButton('Alpha', Color(0xffFF6666), index),
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: AppColors.primary10,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              name,
+                              style: const TextStyle(
+                                fontSize: 20,
                                 color: Colors.black,
                                 fontWeight: FontWeight.w500,
+                              ),
                             ),
                           ),
-                        ),
-                        CircleAvatar(
-                          backgroundColor: presenceColor,
-                          radius: 28,
-                          child: Text(
-                            initial_presence,
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 30,
+                          CircleAvatar(
+                            backgroundColor: presenceColor,
+                            radius: 28,
+                            child: Text(
+                              initialPresence,
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 30,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   );
-                }
+                },
               ),
             ),
           ],
@@ -376,6 +386,74 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
       ),
     );
   }
+
+  Widget _buildPresenceRow(String label1, Color color1, String label2, Color color2) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        _buildPresenceContainer(label1, color1),
+        _buildPresenceContainer(label2, color2),
+      ],
+    );
+  }
+
+  Widget _buildPresenceContainer(String label, Color color) {
+    return Container(
+      width: 170,
+      padding: EdgeInsets.symmetric(vertical: 5),
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.only(topLeft: Radius.circular(15)),
+      ),
+      child: Text(
+        label,
+        style: TextStyle(fontSize: 20),
+      ),
+    );
+  }
+
+  Color _getPresenceColor(String presence) {
+    switch (presence) {
+      case 'Hadir':
+        return Color(0xffA8EE87);
+      case 'Izin':
+        return Color(0xffF8D96D);
+      case 'Sakit':
+        return Color(0xffFFA470);
+      case 'Alpha':
+        return Color(0xffFF6666);
+      default:
+        return AppColors.secondary50;
+    }
+  }
+
+  Widget _buildPresenceButton(String label, Color color, int index) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          presenceStatus[index] = label;
+        });
+        Navigator.of(context).pop();
+      },
+      child: Container(
+        width: 100,
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        alignment: Alignment.center,
+        child: Text(
+          label,
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+        ),
+      ),
+    );
+  }
 }
-
-
