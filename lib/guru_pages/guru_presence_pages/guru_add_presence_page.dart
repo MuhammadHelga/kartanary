@@ -13,7 +13,38 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
   DateTime selectedDate = DateTime.now();
 
   final List<String> childrenNames = ['Dokja', 'Rafayel', 'Caleb', 'Moran', 'WKWK'];
-  final List<String> presenceStatus = ['Hadir', 'Sakit', 'Izin', 'Alpha'];
+  final List<String> presenceStatus = ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir']; // Default all to "Hadir"
+  
+  // Map to store counts of each presence status
+  Map<String, int> statusCounts = {
+    'Hadir': 0,
+    'Sakit': 0,
+    'Izin': 0,
+    'Alpha': 0,
+  };
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize counts based on default values
+    _updateStatusCounts();
+  }
+
+  // Method to update status counts
+  void _updateStatusCounts() {
+    // Reset all counts
+    statusCounts = {
+      'Hadir': 0,
+      'Sakit': 0,
+      'Izin': 0,
+      'Alpha': 0,
+    };
+    
+    // Count occurrences
+    for (var status in presenceStatus) {
+      statusCounts[status] = (statusCounts[status] ?? 0) + 1;
+    }
+  }
 
   String getInitial(String presence) => presence.isNotEmpty ? presence[0].toUpperCase() : '';
 
@@ -189,7 +220,7 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
                                     color: Color(0xffA8EE87),
                                   ),
                                 ),
-                                child: Text('1', style: TextStyle(fontSize: 20)),
+                                child: Text('${statusCounts['Hadir']}', style: TextStyle(fontSize: 20)),
                               ),
                               Container(
                                 width: 170,
@@ -201,7 +232,7 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
                                     color: Color(0xffF8D96D),
                                   ),
                                 ),
-                                child: Text('1', style: TextStyle(fontSize: 20)),
+                                child: Text('${statusCounts['Izin']}', style: TextStyle(fontSize: 20)),
                               ),
                             ],
                           ),
@@ -242,7 +273,7 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
                                   ),
                                   borderRadius: BorderRadius.only(bottomLeft: Radius.circular(15)),
                                 ),
-                                child: Text('1', style: TextStyle(fontSize: 20)),
+                                child: Text('${statusCounts['Sakit']}', style: TextStyle(fontSize: 20)),
                               ),
                               Container(
                                 width: 170,
@@ -255,7 +286,7 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
                                   ),
                                   borderRadius: BorderRadius.only(bottomRight: Radius.circular(15)),
                                 ),
-                                child: Text('1', style: TextStyle(fontSize: 20)),
+                                child: Text('${statusCounts['Alpha']}', style: TextStyle(fontSize: 20)),
                               ),
                             ],
                           ),
@@ -278,7 +309,7 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
                 separatorBuilder: (_, __) => const SizedBox(height: 12),
                 itemBuilder: (context, index) {
                   final name = childrenNames[index];
-                  final presence = presenceStatus[index % presenceStatus.length];
+                  final presence = presenceStatus[index];
                   final initialPresence = getInitial(presence);
 
                   Color presenceColor = _getPresenceColor(presence);
@@ -368,7 +399,7 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
                             child: Text(
                               initialPresence,
                               style: const TextStyle(
-                                color: Colors.black,
+                                color: Colors.white,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 30,
                               ),
@@ -383,33 +414,6 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildPresenceRow(String label1, Color color1, String label2, Color color2) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        _buildPresenceContainer(label1, color1),
-        _buildPresenceContainer(label2, color2),
-      ],
-    );
-  }
-
-  Widget _buildPresenceContainer(String label, Color color) {
-    return Container(
-      width: 170,
-      padding: EdgeInsets.symmetric(vertical: 5),
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.only(topLeft: Radius.circular(15)),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(fontSize: 20),
       ),
     );
   }
@@ -434,6 +438,7 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
       onTap: () {
         setState(() {
           presenceStatus[index] = label;
+          _updateStatusCounts(); // Update counts when status changes
         });
         Navigator.of(context).pop();
       },
