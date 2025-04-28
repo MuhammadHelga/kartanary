@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../theme/AppColors.dart';
 import '../../widgets/bottom_navbar.dart';
 import '../../pages/login_page.dart';
 
@@ -9,6 +10,35 @@ class GuruProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xffFFFFFF),
+      appBar: AppBar(
+        backgroundColor: AppColors.primary50,
+        elevation: 0,
+        title: Text(
+          'Profile',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            color: AppColors.primary5,
+          ),
+        ),
+        leading: IconButton(
+          padding: const EdgeInsets.only(left: 12.0),
+          icon: Container(
+            padding: EdgeInsets.all(3.0),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: AppColors.white,
+            ),
+            child: Icon(
+              Icons.chevron_left,
+              color: AppColors.primary50,
+              size: 22,
+            ),
+          ),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        toolbarHeight: 70,
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Container(
@@ -26,52 +56,14 @@ class GuruProfilePage extends StatelessWidget {
                   ),
                   padding: const EdgeInsets.symmetric(
                     horizontal: 16,
-                    vertical: 16,
+                    vertical: 8,
                   ),
                   child: Column(
                     children: [
-                      Row(
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Color(0xffF2F9FD),
-                              borderRadius: BorderRadius.circular(50),
-                            ),
-                            child: IconButton(
-                              icon: Icon(
-                                Icons.chevron_left,
-                                color: Color(0xff1D99D3),
-                                size: 34,
-                              ),
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => BottomNavbar(),
-                                  ),
-                                );
-                              },
-                              tooltip: 'Back',
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 10),
-                            child: const Text(
-                              'Profil',
-                              style: TextStyle(
-                                color: Color(0xffF2F9FD),
-                                fontWeight: FontWeight.w600,
-                                fontSize: 28,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
                       Padding(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 30,
-                          vertical: 20,
+                          vertical: 10,
                         ),
                         child: Row(
                           children: [

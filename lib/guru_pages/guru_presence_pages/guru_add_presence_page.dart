@@ -143,7 +143,7 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
                         GestureDetector(
                           onTap: _selectDate,
                           child: Container(
-                            width: 115,
+                            width: MediaQuery.of(context).size.width * 0.28,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12),
                               color: Color(0xffC5E7F7),

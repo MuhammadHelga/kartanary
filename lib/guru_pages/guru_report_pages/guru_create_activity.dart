@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import '../../theme/AppColors.dart';
 import '../../widgets/bottom_navbar.dart';
 
-class GuruDailyReportPage extends StatefulWidget {
-  const GuruDailyReportPage({super.key});
+class GuruCreateActivityPage extends StatefulWidget {
+  const GuruCreateActivityPage({super.key});
 
   @override
-  State<GuruDailyReportPage> createState() => _GuruDailyReportPageState();
+  State<GuruCreateActivityPage> createState() => _GuruCreateActivityPageState();
 }
 
-class _GuruDailyReportPageState extends State<GuruDailyReportPage> {
+class _GuruCreateActivityPageState extends State<GuruCreateActivityPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,7 +18,7 @@ class _GuruDailyReportPageState extends State<GuruDailyReportPage> {
         backgroundColor: AppColors.primary50,
         elevation: 0,
         title: Text(
-          'Laporan Harian',
+          'Buat Laporan',
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w600,

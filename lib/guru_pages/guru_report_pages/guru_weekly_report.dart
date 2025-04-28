@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import '../../theme/AppColors.dart';
 import '../../widgets/bottom_navbar.dart';
 
-class GuruDailyReportPage extends StatefulWidget {
-  const GuruDailyReportPage({super.key});
+class GuruWeeklyReportPage extends StatefulWidget {
+  const GuruWeeklyReportPage({super.key});
 
   @override
-  State<GuruDailyReportPage> createState() => _GuruDailyReportPageState();
+  State<GuruWeeklyReportPage> createState() => _GuruWeeklyReportPageState();
 }
 
-class _GuruDailyReportPageState extends State<GuruDailyReportPage> {
+class _GuruWeeklyReportPageState extends State<GuruWeeklyReportPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
