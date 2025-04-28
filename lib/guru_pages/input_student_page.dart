@@ -3,12 +3,19 @@ import '../theme/AppColors.dart';
 import '/guru_pages/list_student_page.dart';
 
 class InputStudentPage extends StatefulWidget {
+
+  final Function(String) onAddChild; // Callback untuk mengirim data ke halaman sebelumnya
+
+  InputStudentPage({required this.onAddChild});
+
   @override
   _InputStudentPageState createState() => _InputStudentPageState();
 }
 
 class _InputStudentPageState extends State<InputStudentPage> {
   String? _selectedGender;
+  String _childName = '';
+  List<String> _childrenNames = [];
 
   @override
   Widget build(BuildContext context) {
@@ -61,6 +68,11 @@ class _InputStudentPageState extends State<InputStudentPage> {
                     ),
                     SizedBox(height: 10),
                     TextField(
+                      onChanged: (value) {
+                        setState(() {
+                          _childName = value;
+                        });
+                      },
                       decoration: InputDecoration(
                         prefixIcon: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -92,6 +104,7 @@ class _InputStudentPageState extends State<InputStudentPage> {
                     ),
                     SizedBox(height: 10),
                     TextField(
+    
                       decoration: InputDecoration(
                         prefixIcon: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -173,7 +186,18 @@ class _InputStudentPageState extends State<InputStudentPage> {
                   height: 50,
                   child: ElevatedButton(
                     onPressed: () {
-                      // TODO: Aksi ketika klik tombol
+                      if (_childName.isNotEmpty) {
+                        setState(() {
+                          _childrenNames.add(_childName);
+                        });
+                        widget.onAddChild(_childName);
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Anak berhasil ditambahkan!')),
+                        );
+
+                        _childName = '';
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primary50,
@@ -199,11 +223,19 @@ class _InputStudentPageState extends State<InputStudentPage> {
                   height: 50,
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                        builder: (context) => ListStudentPage(),
-                        ),
-                      );
+                      if (_childrenNames.isNotEmpty) {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => ListStudentPage(
+                              childrenNames: _childrenNames,
+                            ),
+                          ),
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Tambah anak dulu ya!')),
+                        );
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primary5,

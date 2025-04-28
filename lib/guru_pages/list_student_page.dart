@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:lifesync_capstone_project/guru_pages/input_student_page.dart';
+import 'package:lifesync_capstone_project/ortu_pages/home_pages/home_page.dart';
+import 'package:lifesync_capstone_project/widgets/guru_bottom_navbar.dart';
 import '../theme/AppColors.dart';
 
 class ListStudentPage extends StatefulWidget {
+
+  final List<String> childrenNames;
+
+  ListStudentPage({Key? key, required this.childrenNames}) : super(key: key);
+  
   @override
   _ListStudentPageState createState() => _ListStudentPageState();
 }
@@ -10,18 +17,20 @@ class ListStudentPage extends StatefulWidget {
 class _ListStudentPageState extends State<ListStudentPage> {
 
   // const ListStudentPage({Key? key}) : super(key: key);
+  late List<String> childrenNames;
 
-  final List childrenNames = const [
-    'Andy Suly',
-    'Brenda Lily',
-    'Lorem Ipsum',
-    'Lorem Ipsum',
-    'Lorem Ipsum',
-    'Lorem Ipsum',
-    'Lorem Ipsum',
-    'Lorem Ipsum',
-    'Lorem Ipsum',
-  ];
+  @override
+  void initState() {
+    super.initState();
+    childrenNames = widget.childrenNames;
+  }
+
+  // // Fungsi untuk menambahkan anak baru ke dalam daftar
+  // void _addChild(String name) {
+  //   setState(() {
+  //     childrenNames.add(name); // Menambahkan nama anak baru ke list
+  //   });
+  // }
 
   String getInitial(String name) {
     if (name.isEmpty) return '';
@@ -126,7 +135,7 @@ class _ListStudentPageState extends State<ListStudentPage> {
                 onPressed: () {                    
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                    builder: (context) => ListStudentPage(),
+                    builder: (context) => GuruBottomNavbar(),
                     ),
                   );
                 },
@@ -158,7 +167,13 @@ class _ListStudentPageState extends State<ListStudentPage> {
           onPressed: () {                    
             Navigator.of(context).push(
               MaterialPageRoute(
-              builder: (context) => InputStudentPage(),
+              builder: (context) => InputStudentPage(
+                onAddChild: (String newChild) {
+                  setState(() {
+                    childrenNames.add(newChild);
+                  });
+                },
+              ),
               ),
             );
           },

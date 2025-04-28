@@ -137,7 +137,9 @@ class _CreateClassPageState extends State<CreateClassPage> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => InputStudentPage()),
+                    MaterialPageRoute(builder: (context) => InputStudentPage(onAddChild: (child) {
+                      // Add your implementation for onAddChild here
+                    })),
                   );
                 },
                 style: ElevatedButton.styleFrom(
