@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Poppins',
 
       ),
-      home: SplashScreen(),
+      home: ChooseClassPage(),
       routes: {
         '/home': (context) => const MyHomePage(title: 'Flutter Demo Home Page'),
       },
