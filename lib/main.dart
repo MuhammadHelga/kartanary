@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lifesync_capstone_project/guru_pages/choose_class_page.dart';
 import 'screens/splash_screen.dart';
 import 'screens/role_option_page.dart';
 import 'ortu_pages//home_pages/home_page.dart';

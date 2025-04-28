@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '/ortu_pages/home_page.dart';
+import '/guru_pages/guru_home_pages/guru_home_page.dart';
 import '/theme/AppColors.dart';
 
 class JoinClassPage extends StatefulWidget {
@@ -109,7 +109,7 @@ class _JoinClassPageState extends State<JoinClassPage> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => HomePage()),
+                    MaterialPageRoute(builder: (context) => GuruHomePage()),
                   );
                 },
                 style: ElevatedButton.styleFrom(
