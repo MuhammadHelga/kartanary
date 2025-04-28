@@ -97,26 +97,28 @@ class _GuruCreateActivityPageState extends State<GuruCreateActivityPage> {
               'Laporan',
               style: TextStyle(
                 fontWeight: FontWeight.w600,
-                fontSize: 14,
-                fontFamily: 'Inter',
+                fontSize: 22,
                 color: Colors.black,
               ),
             ),
             const SizedBox(height: 8),
             Container(
+              width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
-                border: Border.all(color: const Color(0xFF2196D9)),
+                border: Border.all(color: AppColors.primary30, width: 3),
                 borderRadius: BorderRadius.circular(9999),
                 color: Colors.white,
               ),
               child: DropdownButtonHideUnderline(
                 child: DropdownButton<String>(
+                  isExpanded: true,
                   value: _selectedLaporan,
                   icon: const Icon(Icons.arrow_drop_down),
                   iconSize: 24,
                   style: const TextStyle(
-                    color: Color(0xFF333333),
+                    fontFamily: 'Poppins',
+                    color: AppColors.black,
                     fontSize: 14,
                   ),
                   onChanged: (String? newValue) {
@@ -129,7 +131,13 @@ class _GuruCreateActivityPageState extends State<GuruCreateActivityPage> {
                   items: _laporanOptions.map((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
-                      child: Text(value),
+                      child: Text(
+                        value,
+                          style: const TextStyle( // Styling dropdown itemnya juga
+                          fontFamily: 'Poppins',
+                          fontSize: 14,
+                          color: Colors.black,
+                    ),),
                     );
                   }).toList(),
                 ),
