@@ -4,7 +4,8 @@ import '../../pages/login_page.dart';
 import 'edit_profile.dart';
 
 class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
+  final String role;
+  const ProfilePage({super.key, required this.role});
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +49,8 @@ class ProfilePage extends StatelessWidget {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => BottomNavbar(),
+                                    builder:
+                                        (context) => BottomNavbar(role: role),
                                   ),
                                 );
                               },
@@ -116,7 +118,8 @@ class ProfilePage extends StatelessWidget {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => EditProfile(),
+                                    builder:
+                                        (context) => EditProfile(role: role),
                                   ),
                                 );
                               },
@@ -269,7 +272,7 @@ class ProfilePage extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => LoginPage(),
+                                builder: (context) => LoginPage(role: role),
                               ),
                             );
                           },

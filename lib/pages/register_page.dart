@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import '../ortu_pages/class_options.dart';
 import '../pages/login_page.dart';
+import '../widgets/bottom_navbar.dart';
 
 class RegisterPage extends StatefulWidget {
-  const RegisterPage({super.key});
+  final String role;
+  const RegisterPage({super.key, required this.role});
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();
@@ -49,7 +51,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => LoginPage(),
+                              builder: (context) => LoginPage(role: widget.role,),
                             ),
                           );
                         },
@@ -218,7 +220,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => ClassOptions()),
+                        MaterialPageRoute(builder: (context) => BottomNavbar(role: widget.role,)),
                       );
                     },
                     style: ElevatedButton.styleFrom(

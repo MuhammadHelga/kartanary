@@ -31,12 +31,12 @@ class ClassOptions extends StatelessWidget {
                         size: 36,
                       ),
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => RegisterPage(),
-                          ),
-                        );
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) => RegisterPage(),
+                        //   ),
+                        // );
                       },
                     ),
                   ),
@@ -121,10 +121,10 @@ class ClassOptions extends StatelessWidget {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => BottomNavbar()),
-                      );
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(builder: (context) => BottomNavbar()),
+                      // );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color(0xff1D99D3),

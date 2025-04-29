@@ -3,7 +3,8 @@ import '../../widgets/bottom_navbar.dart';
 import '../../pages/login_page.dart';
 
 class GuruProfilePage extends StatelessWidget {
-  const GuruProfilePage({super.key});
+  final String role;
+  const GuruProfilePage({super.key, required this.role});
 
   @override
   Widget build(BuildContext context) {
@@ -43,14 +44,7 @@ class GuruProfilePage extends StatelessWidget {
                                 color: Color(0xff1D99D3),
                                 size: 34,
                               ),
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => BottomNavbar(),
-                                  ),
-                                );
-                              },
+                              onPressed: () {},
                               tooltip: 'Back',
                             ),
                           ),
@@ -221,7 +215,7 @@ class GuruProfilePage extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => LoginPage(),
+                                builder: (context) => LoginPage(role: role,),
                               ),
                             );
                           },
