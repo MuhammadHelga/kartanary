@@ -109,6 +109,15 @@ class _GuruCreateActivityPageState extends State<GuruCreateActivityPage> {
                 border: Border.all(color: AppColors.primary30, width: 3),
                 borderRadius: BorderRadius.circular(9999),
                 color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    // color: Colors.black,
+                    color: Color.fromRGBO(0, 0, 0, 0.3), // Warna bayangan
+                    spreadRadius: 0, // Radius penyebaran
+                    blurRadius: 2, // Radius blur
+                    offset: Offset(0, 5), // Posisi bayangan (x, y)
+                  ),
+                ],
               ),
               child: DropdownButtonHideUnderline(
                 child: DropdownButton<String>(

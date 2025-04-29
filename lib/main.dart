@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lifesync_capstone_project/guru_pages/choose_class_page.dart';
+import 'package:lifesync_capstone_project/guru_pages/guru_report_pages/guru_report_main_page.dart';
 import 'screens/splash_screen.dart';
 import 'screens/role_option_page.dart';
 import 'ortu_pages//home_pages/home_page.dart';
@@ -24,7 +25,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Poppins',
 
       ),
-      home: ChooseClassPage(),
+      home: GuruReportMainPage(),
       routes: {
         '/home': (context) => const MyHomePage(title: 'Flutter Demo Home Page'),
       },
