@@ -76,19 +76,19 @@ class HomePage extends StatelessWidget {
                           'Lorem ipsum dolor sit amet consectetur. Dolor interdum odio quam sed aliquam.',
                       imageUrl: 'assets/images/placeholder_updates.jpg',
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder:
-                                (_) => UpdateDetailPage(
-                                  title: 'Kado Cinta Ramadhan',
-                                  description:
-                                      'Lorem ipsum dolor sit amet consectetur. Dolor interdum odio quam sed aliquam.',
-                                  imageUrl:
-                                      'assets/images/placeholder_updates.jpg', // Aksi saat card di klik
-                                ),
-                          ),
-                        );
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder:
+                        //         (_) => UpdateDetailPage(
+                        //           title: 'Kado Cinta Ramadhan',
+                        //           description:
+                        //               'Lorem ipsum dolor sit amet consectetur. Dolor interdum odio quam sed aliquam.',
+                        //           imageUrl:
+                        //               'assets/images/placeholder_updates.jpg', // Aksi saat card di klik
+                        //         ),
+                        //   ),
+                        // );
                       },
                     ),
                     UpdateCard(
@@ -97,19 +97,19 @@ class HomePage extends StatelessWidget {
                           'Lorem ipsum dolor sit amet consectetur. Dolor interdum odio quam sed aliquam.',
                       imageUrl: 'assets/images/placeholder_updates.jpg',
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder:
-                                (_) => UpdateDetailPage(
-                                  title: 'Kado Cinta Ramadhan',
-                                  description:
-                                      'Lorem ipsum dolor sit amet consectetur. Dolor interdum odio quam sed aliquam.',
-                                  imageUrl:
-                                      'assets/images/placeholder_updates.jpg', // Aksi saat card di klik
-                                ),
-                          ),
-                        );
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder:
+                        //         (_) => UpdateDetailPage(
+                        //           title: 'Kado Cinta Ramadhan',
+                        //           description:
+                        //               'Lorem ipsum dolor sit amet consectetur. Dolor interdum odio quam sed aliquam.',
+                        //           imageUrl:
+                        //               'assets/images/placeholder_updates.jpg', // Aksi saat card di klik
+                        //         ),
+                        //   ),
+                        // );
                       },
                     ),
                   ],

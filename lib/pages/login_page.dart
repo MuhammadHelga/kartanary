@@ -5,7 +5,8 @@ import '../pages/forgot_password.dart';
 import '../widgets/bottom_navbar.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  final String role;
+  const LoginPage({super.key, required this.role});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -182,7 +183,8 @@ class _LoginPageState extends State<LoginPage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ForgotPassword(),
+                          builder:
+                              (context) => ForgotPassword(role: widget.role),
                         ),
                       );
                     },
@@ -200,7 +202,9 @@ class _LoginPageState extends State<LoginPage> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => BottomNavbar()),
+                        MaterialPageRoute(
+                          builder: (context) => BottomNavbar(role: widget.role),
+                        ),
                       );
                     },
                     style: ElevatedButton.styleFrom(
@@ -221,7 +225,9 @@ class _LoginPageState extends State<LoginPage> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => RegisterPage()),
+                        MaterialPageRoute(
+                          builder: (context) => RegisterPage(role: widget.role),
+                        ),
                       );
                     },
                     child: Text(
