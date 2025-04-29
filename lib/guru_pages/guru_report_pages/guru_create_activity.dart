@@ -88,7 +88,7 @@ class _GuruCreateActivityPageState extends State<GuruCreateActivityPage> {
         toolbarHeight: 70,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(20, 24, 20, 40),
+        padding: const EdgeInsets.fromLTRB(30, 34, 30, 40),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
