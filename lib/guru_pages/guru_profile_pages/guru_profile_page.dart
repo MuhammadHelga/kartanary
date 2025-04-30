@@ -3,8 +3,43 @@ import '../../theme/AppColors.dart';
 import '../../widgets/bottom_navbar.dart';
 import '../../pages/login_page.dart';
 
-class GuruProfilePage extends StatelessWidget {
-  const GuruProfilePage({super.key});
+import '../../services/auth_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+class GuruProfilePage extends StatefulWidget {
+  final String role;
+  const GuruProfilePage({super.key, required this.role});
+
+  @override
+  _GuruProfilePageState createState() => _GuruProfilePageState();
+}
+
+class _GuruProfilePageState extends State<GuruProfilePage> {
+  String? _name;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserName();
+  }
+
+  // Ambil nama pengguna dari Firestore
+  Future<void> _loadUserName() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final doc =
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(user.uid)
+              .get();
+      if (doc.exists) {
+        setState(() {
+          _name = doc['name'];
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +115,7 @@ class GuruProfilePage extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Riani',
+                                  _name ?? 'Loading...',
                                   style: TextStyle(
                                     fontSize: 28,
                                     fontWeight: FontWeight.bold,
@@ -209,12 +244,19 @@ class GuruProfilePage extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.only(top: 2),
                         child: InkWell(
-                          onTap: () {
-                            Navigator.push(
+                          onTap: () async {
+                            await AuthService().logout();
+
+                            if (!context.mounted)
+                              return; // Pastikan context masih aman digunakan
+
+                            Navigator.pushAndRemoveUntil(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => LoginPage(),
+                                builder:
+                                    (context) => LoginPage(role: widget.role),
                               ),
+                              (route) => false, // Hapus semua rute sebelumnya
                             );
                           },
                           child: Row(

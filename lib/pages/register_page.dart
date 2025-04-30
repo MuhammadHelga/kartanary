@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import '../ortu_pages/class_options.dart';
 import '../pages/login_page.dart';
+import '../widgets/bottom_navbar.dart';
+
+import '../services/auth_service.dart';
 
 class RegisterPage extends StatefulWidget {
-  const RegisterPage({super.key});
+  final String role;
+  const RegisterPage({super.key, required this.role});
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();
@@ -11,6 +15,10 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   bool _hidepass = true;
+
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +57,8 @@ class _RegisterPageState extends State<RegisterPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => LoginPage(),
+                              builder:
+                                  (context) => LoginPage(role: widget.role),
                             ),
                           );
                         },
@@ -90,6 +99,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
                 SizedBox(height: 5),
                 TextField(
+                  controller: _nameController,
                   decoration: InputDecoration(
                     prefixIcon: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -127,6 +137,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
                 SizedBox(height: 5),
                 TextField(
+                  controller: _emailController,
                   decoration: InputDecoration(
                     prefixIcon: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -164,6 +175,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
                 SizedBox(height: 5),
                 TextField(
+                  controller: _passwordController,
                   obscureText: _hidepass,
                   decoration: InputDecoration(
                     prefixIcon: Padding(
@@ -215,11 +227,59 @@ class _RegisterPageState extends State<RegisterPage> {
                   height: 60,
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => ClassOptions()),
-                      );
+                    onPressed: () async {
+                      final name = _nameController.text.trim();
+                      final email = _emailController.text.trim();
+                      final password = _passwordController.text.trim();
+
+                      if (name.isEmpty || email.isEmpty || password.isEmpty) {
+                        if (!mounted) return;
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Semua field harus diisi')),
+                        );
+                        return;
+                      }
+
+                      try {
+                        final user = await AuthService().registerWithEmail(
+                          email,
+                          password,
+                        );
+
+                        if (user != null) {
+                          await AuthService().saveUserData(
+                            user.uid,
+                            name,
+                            widget.role,
+                          );
+
+                          if (!mounted) return;
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                'Berhasil registrasi. Silahkan Verifikasi Email Anda',
+                              ),
+                            ),
+                          );
+
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (context) => LoginPage(role: widget.role),
+                            ),
+                          );
+                        }
+                      } catch (e) {
+                        if (!mounted) return;
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              e.toString().replaceAll('Exception: ', ''),
+                            ),
+                          ),
+                        );
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color(0xff1D99D3),

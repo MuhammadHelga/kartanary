@@ -4,8 +4,11 @@ import '../pages/register_page.dart';
 import '../pages/forgot_password.dart';
 import '../widgets/bottom_navbar.dart';
 
+import '../services/auth_service.dart'; // pastikan path ini benar
+
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  final String role;
+  const LoginPage({super.key, required this.role});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -13,6 +16,9 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   bool _hidepass = true;
+
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -92,6 +98,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 SizedBox(height: 10),
                 TextField(
+                  controller: _emailController,
                   decoration: InputDecoration(
                     prefixIcon: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -128,6 +135,7 @@ class _LoginPageState extends State<LoginPage> {
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 TextField(
+                  controller: _passwordController,
                   obscureText: _hidepass,
                   decoration: InputDecoration(
                     prefixIcon: Padding(
@@ -182,7 +190,8 @@ class _LoginPageState extends State<LoginPage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ForgotPassword(),
+                          builder:
+                              (context) => ForgotPassword(role: widget.role),
                         ),
                       );
                     },
@@ -197,11 +206,21 @@ class _LoginPageState extends State<LoginPage> {
                   height: 60,
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
+                    onPressed: () async {
+                      final email = _emailController.text.trim();
+                      final password = _passwordController.text.trim();
+
+                      final user = await AuthService().loginWithEmail(
+                        email,
+                        password,
                         context,
-                        MaterialPageRoute(builder: (context) => BottomNavbar()),
                       );
+
+                      if (user == null) {
+                        ScaffoldMessenger.of(
+                          context,
+                        ).showSnackBar(SnackBar(content: Text('Login gagal')));
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color(0xff1D99D3),
@@ -221,7 +240,9 @@ class _LoginPageState extends State<LoginPage> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => RegisterPage()),
+                        MaterialPageRoute(
+                          builder: (context) => RegisterPage(role: widget.role),
+                        ),
                       );
                     },
                     child: Text(

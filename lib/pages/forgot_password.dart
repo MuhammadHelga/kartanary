@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import '../pages/login_page.dart';
 
 class ForgotPassword extends StatelessWidget {
-  const ForgotPassword({super.key});
+  final String role;
+  const ForgotPassword({super.key, required this.role});
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +42,7 @@ class ForgotPassword extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => LoginPage(),
+                              builder: (context) => LoginPage(role: role),
                             ),
                           );
                         },
@@ -133,7 +134,7 @@ class ForgotPassword extends StatelessWidget {
                         ),
                       ),
                       child: Text(
-                        'Bergabung',
+                        'Kirim',
                         style: TextStyle(fontSize: 20, color: Colors.white),
                       ),
                     ),

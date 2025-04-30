@@ -3,8 +3,11 @@ import '../../widgets/bottom_navbar.dart';
 import '../../pages/login_page.dart';
 import 'edit_profile.dart';
 
+import '../../services/auth_service.dart';
+
 class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
+  final String role;
+  const ProfilePage({super.key, required this.role});
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +51,8 @@ class ProfilePage extends StatelessWidget {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => BottomNavbar(),
+                                    builder:
+                                        (context) => BottomNavbar(role: role),
                                   ),
                                 );
                               },
@@ -116,7 +120,8 @@ class ProfilePage extends StatelessWidget {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => EditProfile(),
+                                    builder:
+                                        (context) => EditProfile(role: role),
                                   ),
                                 );
                               },
@@ -265,12 +270,18 @@ class ProfilePage extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.only(top: 2),
                         child: InkWell(
-                          onTap: () {
-                            Navigator.push(
+                          onTap: () async {
+                            await AuthService().logout();
+
+                            if (!context.mounted)
+                              return; // Pastikan context masih aman digunakan
+
+                            Navigator.pushAndRemoveUntil(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => LoginPage(),
+                                builder: (context) => LoginPage(role: role),
                               ),
+                              (route) => false, // Hapus semua rute sebelumnya
                             );
                           },
                           child: Row(

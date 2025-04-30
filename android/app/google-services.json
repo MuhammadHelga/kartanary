@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "572728267771",
+    "firebase_url": "https://lifesync-capstone-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "lifesync-capstone",
+    "storage_bucket": "lifesync-capstone.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:572728267771:android:486bc1712e76cb6f47715e",
+        "android_client_info": {
+          "package_name": "com.example.lifesync_capstone_project"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCMclDLV2IMs6x_vyXa4LysE88JvUCC6W0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
