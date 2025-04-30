@@ -55,7 +55,7 @@ class _GuruCreateActivityPageState extends State<GuruCreateActivityPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.primary5,
+      backgroundColor: AppColors.white,
       appBar: AppBar(
         backgroundColor: AppColors.primary50,
         elevation: 0,
