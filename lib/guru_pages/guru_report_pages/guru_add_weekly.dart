@@ -33,12 +33,13 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
 
   List<TextEditingController> deskripsiControllers = [];
 
-void _addWeeklyBlock() {
-  setState(() {
-    deskripsiControllers.add(TextEditingController());
-    judulMingguControllers.add(TextEditingController());
-  });
-}
+  void _addWeeklyBlock() {
+    setState(() {
+      deskripsiControllers.add(TextEditingController());
+      judulMingguControllers.add(TextEditingController());
+    });
+  }
+  
   void _selectDate() async {
     final DateTime? picked = await showDatePicker(
       context: context,
