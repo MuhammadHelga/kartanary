@@ -7,7 +7,8 @@ import 'guru_daily_report.dart';
 import 'guru_semester_report.dart';
 
 class GuruReportMainPage extends StatefulWidget {
-  const GuruReportMainPage({super.key});
+  final String role;
+  const GuruReportMainPage({super.key, required this.role});
 
   @override
   State<GuruReportMainPage> createState() => _GuruReportMainPageState();

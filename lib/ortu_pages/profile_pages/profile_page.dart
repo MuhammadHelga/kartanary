@@ -4,10 +4,42 @@ import '../../pages/login_page.dart';
 import 'edit_profile.dart';
 
 import '../../services/auth_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
   final String role;
   const ProfilePage({super.key, required this.role});
+
+  @override
+  _ProfilePageState createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  String? _name;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserName();
+  }
+
+  // Ambil nama pengguna dari Firestore
+  Future<void> _loadUserName() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final doc =
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(user.uid)
+              .get();
+      if (doc.exists) {
+        setState(() {
+          _name = doc['name'];
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +84,7 @@ class ProfilePage extends StatelessWidget {
                                   context,
                                   MaterialPageRoute(
                                     builder:
-                                        (context) => BottomNavbar(role: role),
+                                        (context) => BottomNavbar(role: widget.role),
                                   ),
                                 );
                               },
@@ -93,7 +125,7 @@ class ProfilePage extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Riani',
+                                  _name ?? 'Loading...',
                                   style: TextStyle(
                                     fontSize: 28,
                                     fontWeight: FontWeight.bold,
@@ -121,7 +153,7 @@ class ProfilePage extends StatelessWidget {
                                   context,
                                   MaterialPageRoute(
                                     builder:
-                                        (context) => EditProfile(role: role),
+                                        (context) => EditProfile(role: widget.role),
                                   ),
                                 );
                               },
@@ -279,7 +311,7 @@ class ProfilePage extends StatelessWidget {
                             Navigator.pushAndRemoveUntil(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => LoginPage(role: role),
+                                builder: (context) => LoginPage(role: widget.role),
                               ),
                               (route) => false, // Hapus semua rute sebelumnya
                             );
