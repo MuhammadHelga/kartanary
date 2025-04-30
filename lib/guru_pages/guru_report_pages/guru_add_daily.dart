@@ -141,31 +141,31 @@ class _AddDailyPageState extends State<AddDailyPage> {
             child: GestureDetector(
               onTap: () => _showImageSourceOptions(context),
               child: _selectedImage != null
-                  ? ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: Image.file(
-                        _selectedImage!,
-                        width: 300,
-                        height: 150,
-                        fit: BoxFit.fitWidth,
-                      ),
-                    )
-                  : OutlinedButton(
-                      onPressed: () => _showImageSourceOptions(context),
-                      style: OutlinedButton.styleFrom(
-                        backgroundColor: Colors.grey.shade100,
-                        fixedSize: const Size(270, 120),
-                        side: BorderSide(color: Colors.grey.shade400, width: 2),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                      ),
-                      child: Icon(
-                        Icons.upload_outlined,
-                        color: AppColors.primary30,
-                        size: 32,
-                      ),
-                    ),
+              ? ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image.file(
+                  _selectedImage!,
+                  width: 300,
+                  height: 150,
+                  fit: BoxFit.fitWidth,
+                ),
+              )
+              : OutlinedButton(
+                onPressed: () => _showImageSourceOptions(context),
+              style: OutlinedButton.styleFrom(
+                  backgroundColor: Colors.grey.shade100,
+                  fixedSize: const Size(270, 120),
+                  side: BorderSide(color: Colors.grey.shade400, width: 2),
+                  shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(6),
+                  ),
+                ),
+                child: Icon(
+                  Icons.upload_outlined,
+                  color: AppColors.primary30,
+                  size: 32,
+                ),
+              ),
             ),
           ),
 
