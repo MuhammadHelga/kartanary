@@ -28,7 +28,7 @@ class _GuruBottomNavbarState extends State<GuruBottomNavbar> {
     GuruHomePage(),
     GuruPresencePage(),
     GuruReportMainPage(),
-    GuruProfilePage(),
+    GuruProfilePage(role: '',),
   ];
 
   @override
