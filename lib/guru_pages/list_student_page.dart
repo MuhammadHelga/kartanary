@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lifesync_capstone_project/guru_pages/input_student_page.dart';
 import 'package:lifesync_capstone_project/ortu_pages/home_pages/home_page.dart';
-import 'package:lifesync_capstone_project/widgets/guru_bottom_navbar.dart';
 import '../theme/AppColors.dart';
+import '../widgets/bottom_navbar.dart';
 
 class ListStudentPage extends StatefulWidget {
 
@@ -135,7 +135,7 @@ class _ListStudentPageState extends State<ListStudentPage> {
                 onPressed: () {                    
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                    builder: (context) => GuruBottomNavbar(),
+                    builder: (context) => BottomNavbar(role: 'guru',),
                     ),
                   );
                 },
