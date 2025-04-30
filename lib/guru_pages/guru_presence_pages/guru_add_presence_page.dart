@@ -3,7 +3,8 @@ import '../../theme/AppColors.dart';
 import '../../widgets/bottom_navbar.dart';
 
 class GuruPresencePage extends StatefulWidget {
-  const GuruPresencePage({super.key});
+  final String role;
+  const GuruPresencePage({super.key, required this.role});
 
   @override
   State<GuruPresencePage> createState() => _GuruPresencePageState();
