@@ -7,7 +7,8 @@ import '../ortu_pages/profile_pages/profile_page.dart';
 import '../guru_pages/guru_profile_pages/guru_profile_page.dart';
 
 class BottomNavbar extends StatefulWidget {
-  const BottomNavbar({super.key});
+  final String role;
+  const BottomNavbar({super.key, required this.role});
 
   @override
   State<BottomNavbar> createState() => _BottomNavbarState();
@@ -22,17 +23,24 @@ class _BottomNavbarState extends State<BottomNavbar> {
     });
   }
 
-  List<Widget> ortu_pages = [
-    GuruHomePage(),
-    PresencePage(),
-    ReportingPage(),
-    GuruProfilePage(),
-  ];
-
   @override
   Widget build(BuildContext context) {
+    List<Widget> ortu_pages = [
+      HomePage(),
+      PresencePage(role: widget.role),
+      ReportingPage(role: widget.role,),
+      ProfilePage(role: widget.role),
+    ];
+    List<Widget> guru_pages = [
+      GuruHomePage(),
+      GuruHomePage(),
+      GuruHomePage(),
+      GuruProfilePage(role: widget.role),
+    ];
+
+    final pages = widget.role == 'Guru' ? guru_pages : ortu_pages;
     return Scaffold(
-      body: ortu_pages[_selectedIndex],
+      body: pages[_selectedIndex],
       bottomNavigationBar: ClipRRect(
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(30),

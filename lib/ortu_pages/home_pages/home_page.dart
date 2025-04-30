@@ -1,8 +1,56 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'detail_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  String? _name;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserName();
+  }
+
+  Future<void> _loadUserName() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final doc =
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(user.uid)
+              .get();
+      if (doc.exists) {
+        setState(() {
+          _name = doc['name'];
+        });
+      }
+    }
+  }
+
+  int _currentIndex = 0;
+  final CarouselController _controller = CarouselController();
+
+  final List<Map<String, String>> outingClasses = [
+    {
+      'image': 'assets/images/placeholder_slider.jpg',
+      'title': 'Outing Class "Balai Pengkajian Teknologi Pertanian (BPTP)"',
+    },
+    {
+      'image': 'assets/images/placeholder_slider.jpg',
+      'title': 'Outing Class "Balai Pengkajian Teknologi Pertanian (BPTP)"',
+    },
+    {
+      'image': 'assets/images/placeholder_slider.jpg',
+      'title': 'Outing Class "Balai Pengkajian Teknologi Pertanian (BPTP)"',
+    },
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,33 +81,29 @@ class HomePage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Hai,',
-                          style: TextStyle(
-                            fontFamily: 'Poppins',
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          'Mom Lily!',
-                          style: TextStyle(
-                            fontFamily: 'Poppins',
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
+                    Text(
+                      'Hai,',
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
+                    Text(
+                      _name != null ? 'Mom $_name' : 'Loading...',
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+
                     SizedBox(height: 16),
 
-                    //Slider
-                    OutingClassSlider(),
+                    // Slider
+                    _buildOutingClassSlider(),
 
-                    //School Updates
+                    // School Updates
                     Text(
                       'School Updates',
                       style: TextStyle(
@@ -75,42 +119,14 @@ class HomePage extends StatelessWidget {
                       description:
                           'Lorem ipsum dolor sit amet consectetur. Dolor interdum odio quam sed aliquam.',
                       imageUrl: 'assets/images/placeholder_updates.jpg',
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder:
-                                (_) => UpdateDetailPage(
-                                  title: 'Kado Cinta Ramadhan',
-                                  description:
-                                      'Lorem ipsum dolor sit amet consectetur. Dolor interdum odio quam sed aliquam.',
-                                  imageUrl:
-                                      'assets/images/placeholder_updates.jpg', // Aksi saat card di klik
-                                ),
-                          ),
-                        );
-                      },
+                      onTap: () {},
                     ),
                     UpdateCard(
                       title: 'Cooking Class',
                       description:
                           'Lorem ipsum dolor sit amet consectetur. Dolor interdum odio quam sed aliquam.',
                       imageUrl: 'assets/images/placeholder_updates.jpg',
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder:
-                                (_) => UpdateDetailPage(
-                                  title: 'Kado Cinta Ramadhan',
-                                  description:
-                                      'Lorem ipsum dolor sit amet consectetur. Dolor interdum odio quam sed aliquam.',
-                                  imageUrl:
-                                      'assets/images/placeholder_updates.jpg', // Aksi saat card di klik
-                                ),
-                          ),
-                        );
-                      },
+                      onTap: () {},
                     ),
                   ],
                 ),
@@ -119,6 +135,89 @@ class HomePage extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildOutingClassSlider() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        CarouselSlider(
+          items:
+              outingClasses.map((outingClass) {
+                return Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  elevation: 4,
+                  child: Stack(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(16),
+                        child: Image.asset(
+                          outingClass['image']!,
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                          height: 212,
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 8,
+                        left: 16,
+                        right: 16,
+                        child: Text(
+                          outingClass['title']!,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }).toList(),
+          options: CarouselOptions(
+            height: 220,
+            viewportFraction: 0.8,
+            enableInfiniteScroll: true,
+            autoPlay: true,
+            onPageChanged: (index, reason) {
+              setState(() {
+                _currentIndex = index;
+              });
+            },
+          ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children:
+              outingClasses.asMap().entries.map((entry) {
+                return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _currentIndex = entry.key;
+                    });
+                  },
+                  child: Container(
+                    width: 10.0,
+                    height: 30.0,
+                    margin: const EdgeInsets.symmetric(horizontal: 4.0),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color:
+                          _currentIndex == entry.key
+                              ? Colors.blueAccent
+                              : Colors.grey.shade300,
+                    ),
+                  ),
+                );
+              }).toList(),
+        ),
+        SizedBox(height: 16),
+      ],
     );
   }
 }
@@ -154,144 +253,6 @@ class UpdateCard extends StatelessWidget {
           subtitle: Text(description),
         ),
       ),
-    );
-  }
-}
-
-class OutingClassSlider extends StatefulWidget {
-  @override
-  State<OutingClassSlider> createState() => _OutingClassSliderState();
-}
-
-class _OutingClassSliderState extends State<OutingClassSlider> {
-  int _currentIndex = 0;
-  final CarouselController _controller = CarouselController();
-
-  final List<Map<String, String>> outingClasses = [
-    {
-      'image': 'assets/images/placeholder_slider.jpg',
-      'title': 'Outing Class "Balai Pengkajian Teknologi Pertanian (BPTP)"',
-    },
-    {
-      'image': 'assets/images/placeholder_slider.jpg',
-      'title': 'Outing Class "Balai Pengkajian Teknologi Pertanian (BPTP)"',
-    },
-    {
-      'image': 'assets/images/placeholder_slider.jpg',
-      'title': 'Outing Class "Balai Pengkajian Teknologi Pertanian (BPTP)"',
-    },
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        CarouselSlider(
-          items:
-              outingClasses.map((outingClass) {
-                return Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16), // Radius pada card
-                  ),
-                  elevation: 4, // Menambahkan bayangan pada card
-                  child: Column(
-                    children: [
-                      // Stack untuk menempatkan gambar di bawah dan teks di atas
-                      Stack(
-                        children: [
-                          // Gambar
-                          ClipRRect(
-                            borderRadius: BorderRadius.vertical(
-                              top: Radius.circular(16),
-                              bottom: Radius.circular(16),
-                            ), // Radius pada gambar
-                            child: Container(
-                              height:
-                                  212, // Menyesuaikan tinggi card dengan gambar
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(16),
-                                  bottom: Radius.circular(16),
-                                ),
-                                boxShadow: [
-                                  BoxShadow(color: Colors.black),
-                                  BoxShadow(
-                                    color: Colors.white70,
-                                    blurRadius: 20.0,
-                                    spreadRadius: -7.0,
-                                  ),
-                                ],
-                              ),
-                              child: Image.asset(
-                                outingClass['image']!,
-                                fit: BoxFit.cover,
-                                height: 212,
-                                width: double.infinity,
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            bottom: 8, // Jarak teks dari bawah
-                            left: 16,
-                            right: 16,
-                            child: Text(
-                              outingClass['title']!,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                );
-              }).toList(),
-          options: CarouselOptions(
-            height: 220,
-            viewportFraction: 0.8,
-            enableInfiniteScroll: true,
-            autoPlay: true,
-            onPageChanged: (index, reason) {
-              setState(() {
-                _currentIndex = index; // Update index saat halaman berubah
-              });
-            },
-          ),
-        ),
-        // Indikator titik untuk carousel
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children:
-              outingClasses.asMap().entries.map((entry) {
-                return GestureDetector(
-                  onTap: () {
-                    // Menggunakan setState untuk perubahan halaman
-                    setState(() {
-                      _currentIndex = entry.key;
-                    });
-                  },
-                  child: Container(
-                    width: 10.0,
-                    height: 30.0,
-                    margin: const EdgeInsets.symmetric(horizontal: 4.0),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color:
-                          _currentIndex == entry.key
-                              ? Colors.blueAccent
-                              : Colors.grey.shade300,
-                    ),
-                  ),
-                );
-              }).toList(),
-        ),
-        SizedBox(height: 16),
-      ],
     );
   }
 }

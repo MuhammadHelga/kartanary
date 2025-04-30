@@ -5,7 +5,8 @@ import 'weekly_reporting_page.dart';
 import 'semester_report_page.dart';
 
 class ReportingPage extends StatelessWidget {
-  const ReportingPage({super.key});
+  final String role;
+  const ReportingPage({super.key, required this.role});
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +37,7 @@ class ReportingPage extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => BottomNavbar(),
+                            builder: (context) => BottomNavbar(role: role),
                           ),
                         );
                       },

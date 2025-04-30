@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'profile_page.dart';
 
 class EditProfile extends StatelessWidget {
-  const EditProfile({super.key});
+  final String role;
+  const EditProfile({super.key, required this.role});
 
   @override
   Widget build(BuildContext context) {
@@ -215,12 +216,7 @@ class EditProfile extends StatelessWidget {
                           width: 200,
                           child: ElevatedButton(
                             onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ProfilePage(),
-                                ),
-                              );
+                              Navigator.pop(context);
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Color(0xff1D99D3),
