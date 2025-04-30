@@ -3,6 +3,7 @@
 // import 'package:firebase_auth/firebase_auth.dart';
 // import '../guru_pages/guru_home_pages/guru_home_page.dart';
 // import '../ortu_pages/home_pages/home_page.dart';
+// import '../widgets/bottom_navbar.dart';
 // import '../pages/login_page.dart';
 // import '../services/auth_service.dart';
 // import 'package:firebase_database/firebase_database.dart';
@@ -13,7 +14,7 @@
 
 //   @override
 //   Widget build(BuildContext context) {
-//     final databaseRef = FirebaseDatabase.instanceFor(app: Firebase.app(), databaseURL: 'https://littlesteps-52095-default-rtdb.asia-southeast1.firebasedatabase.app/').ref();
+//     final databaseRef = FirebaseDatabase.instanceFor(app: Firebase.app(), databaseURL: 'https://lifesync-capstone-default-rtdb.asia-southeast1.firebasedatabase.app/').ref();
 
 //     return StreamBuilder<User?>(
 //       stream: AuthService().authStateChange,
@@ -48,9 +49,10 @@
 
 //               switch (userRole) {
 //                 case "Guru":
-//                   return const GuruHomePage();
+//                   return BottomNavbar(role: userRole,);
 //                 case "Orang Tua":
-//                   return const HomePageOrangTua();
+//                   // return const BottomNavbar(role: userRole,);
+//                   return BottomNavbar(role: userRole,);
 //                 default:
 //                   return const Scaffold(
 //                       body: Center(child: Text("Role tidak dikenali")));
