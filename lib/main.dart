@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         fontFamily: 'Poppins',
       ),
-      home: SplashScreen(),
+      home: GuruReportMainPage(role: '',),
       routes: {
         '/home': (context) => const MyHomePage(title: 'Flutter Demo Home Page'),
       },
