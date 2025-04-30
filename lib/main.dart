@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:lifesync_capstone_project/guru_pages/choose_class_page.dart';
+import 'package:lifesync_capstone_project/guru_pages/guru_report_pages/guru_report_main_page.dart';
 import 'screens/splash_screen.dart';
+import 'screens/role_option_page.dart';
+import 'ortu_pages//home_pages/home_page.dart';
+import 'widgets/bottom_navbar.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
