@@ -55,26 +55,29 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xffFFFFFF),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(70),
+        child: ClipRRect(
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(30),
+            bottomRight: Radius.circular(30),
+          ),
+          child: AppBar(
+            backgroundColor: Color(0xff1D99D3),
+            elevation: 0,
+            automaticallyImplyLeading: false,
+            actions: [
+              Padding(
+                padding: const EdgeInsets.only(right: 16.0),
+                child: Icon(Icons.notifications, color: Colors.white, size: 38),
+              ),
+            ],
+          ),
+        ),
+      ),
       body: SafeArea(
         child: Column(
           children: [
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: Color(0xff1D99D3),
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(18),
-                  bottomRight: Radius.circular(18),
-                ),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Icon(Icons.notifications, color: Colors.white, size: 40),
-                ],
-              ),
-            ),
             Expanded(
               child: SingleChildScrollView(
                 padding: EdgeInsets.all(20),
@@ -89,14 +92,29 @@ class _HomePageState extends State<HomePage> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    Text(
-                      _name != null ? 'Mom $_name' : 'Loading...',
-                      style: TextStyle(
-                        fontFamily: 'Poppins',
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    _name != null
+                        ? Row(
+                          children: [
+                            Text(
+                              'Mom $_name !',
+                              style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(width: 8),
+                            Icon(Icons.favorite, color: Colors.red, size: 24),
+                          ],
+                        )
+                        : Text(
+                          'Loading...',
+                          style: TextStyle(
+                            fontFamily: 'Poppins',
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
 
                     SizedBox(height: 16),
 

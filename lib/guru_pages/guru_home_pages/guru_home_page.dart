@@ -59,18 +59,10 @@ class _GuruHomePageState extends State<GuruHomePage> {
       appBar: AppBar(
         backgroundColor: AppColors.primary50, // Ganti warna sesuai kebutuhan
         elevation: 0,
-        // title: Text(
-        //   'My App Bar',
-        //   style: TextStyle(
-        //     fontSize: 20,
-        //     fontWeight: FontWeight.w600,
-        //     color: Colors.white,
-        //   ),
-        // ),
-         automaticallyImplyLeading: false, 
+        automaticallyImplyLeading: false,
         actions: [
           IconButton(
-            icon: Icon(Icons.notifications, color: Colors.white, size: 30),
+            icon: Icon(Icons.notifications, color: Colors.white, size: 38),
             onPressed: () {
               // Tindakan ketika notifikasi diklik
               print("Notifikasi diklik");
@@ -79,11 +71,11 @@ class _GuruHomePageState extends State<GuruHomePage> {
         ],
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(20),
-            bottomRight: Radius.circular(20),
+            bottomLeft: Radius.circular(30),
+            bottomRight: Radius.circular(30),
           ),
         ), // Menambahkan radius di bagian bawah
-        clipBehavior: Clip.hardEdge, 
+        clipBehavior: Clip.hardEdge,
         toolbarHeight: 70,
       ),
       body: SafeArea(

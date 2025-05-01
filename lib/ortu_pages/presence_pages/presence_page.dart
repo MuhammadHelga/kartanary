@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../theme/AppColors.dart';
 import '../../widgets/bottom_navbar.dart';
 
 class PresencePage extends StatefulWidget {
@@ -61,56 +62,50 @@ class _PresencePageState extends State<PresencePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xffFFFFFF),
-      body: SafeArea(
+      appBar: AppBar(
+        backgroundColor: AppColors.primary50,
+        elevation: 0,
+        title: Text(
+          'Presensi',
+          style: TextStyle(
+            fontSize: 30,
+            fontWeight: FontWeight.w600,
+            color: AppColors.primary5,
+          ),
+        ),
+        leading: IconButton(
+          padding: const EdgeInsets.only(left: 12.0),
+          icon: Container(
+            padding: EdgeInsets.all(3.0),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: AppColors.white,
+            ),
+            child: Icon(
+              Icons.chevron_left,
+              color: AppColors.primary50,
+              size: 38,
+            ),
+          ),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BottomNavbar(role: widget.role),
+              ),
+            );
+          },
+        ),
+        toolbarHeight: 70,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-              decoration: BoxDecoration(color: Color(0xff1D99D3)),
-              child: Row(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Color(0xffF2F9FD),
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    child: IconButton(
-                      icon: Icon(
-                        Icons.chevron_left,
-                        color: Color(0xff1D99D3),
-                        size: 34,
-                      ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder:
-                                (context) => BottomNavbar(role: widget.role),
-                          ),
-                        );
-                      },
-                      tooltip: 'Back',
-                    ),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(left: 10),
-                    child: Text(
-                      'Presensi',
-                      style: TextStyle(
-                        color: Color(0xffF2F9FD),
-                        fontWeight: FontWeight.w600,
-                        fontSize: 28,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
             SizedBox(height: 20),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40),
+              padding: const EdgeInsets.symmetric(horizontal: 0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -130,7 +125,7 @@ class _PresencePageState extends State<PresencePage> {
                         GestureDetector(
                           onTap: _selectDate,
                           child: Container(
-                            width: 120,
+                            width: MediaQuery.of(context).size.width * 0.28,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12),
                               color: Color(0xffC5E7F7),
@@ -173,7 +168,7 @@ class _PresencePageState extends State<PresencePage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Container(
-                            width: 184,
+                            width: (MediaQuery.of(context).size.width - 60) / 2,
                             padding: EdgeInsets.symmetric(vertical: 5),
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
@@ -188,7 +183,7 @@ class _PresencePageState extends State<PresencePage> {
                             ),
                           ),
                           Container(
-                            width: 184,
+                            width: (MediaQuery.of(context).size.width - 60) / 2,
                             padding: EdgeInsets.symmetric(vertical: 5),
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
@@ -202,9 +197,11 @@ class _PresencePageState extends State<PresencePage> {
                         ],
                       ),
                       Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Container(
-                            width: 184,
+                            width: (MediaQuery.of(context).size.width - 60) / 2,
                             padding: EdgeInsets.symmetric(vertical: 5),
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
@@ -216,7 +213,7 @@ class _PresencePageState extends State<PresencePage> {
                             child: Text('1', style: TextStyle(fontSize: 20)),
                           ),
                           Container(
-                            width: 184,
+                            width: (MediaQuery.of(context).size.width - 60) / 2,
                             padding: EdgeInsets.symmetric(vertical: 5),
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
@@ -230,9 +227,11 @@ class _PresencePageState extends State<PresencePage> {
                         ],
                       ),
                       Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Container(
-                            width: 184,
+                            width: (MediaQuery.of(context).size.width - 60) / 2,
                             padding: EdgeInsets.symmetric(vertical: 5),
                             alignment: Alignment.center,
                             decoration: BoxDecoration(color: Color(0xffFFA470)),
@@ -242,7 +241,7 @@ class _PresencePageState extends State<PresencePage> {
                             ),
                           ),
                           Container(
-                            width: 184,
+                            width: (MediaQuery.of(context).size.width - 60) / 2,
                             padding: EdgeInsets.symmetric(vertical: 5),
                             alignment: Alignment.center,
                             decoration: BoxDecoration(color: Color(0xffFF6666)),
@@ -258,7 +257,7 @@ class _PresencePageState extends State<PresencePage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Container(
-                            width: 184,
+                            width: (MediaQuery.of(context).size.width - 60) / 2,
                             padding: EdgeInsets.symmetric(vertical: 5),
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
@@ -273,7 +272,7 @@ class _PresencePageState extends State<PresencePage> {
                             child: Text('1', style: TextStyle(fontSize: 20)),
                           ),
                           Container(
-                            width: 184,
+                            width: (MediaQuery.of(context).size.width - 60) / 2,
                             padding: EdgeInsets.symmetric(vertical: 5),
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
@@ -302,7 +301,7 @@ class _PresencePageState extends State<PresencePage> {
             ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 40),
+                padding: const EdgeInsets.symmetric(horizontal: 0),
                 child: ListView.builder(
                   itemCount: 20,
                   itemBuilder: (context, index) {
@@ -318,9 +317,9 @@ class _PresencePageState extends State<PresencePage> {
                         boxShadow: [
                           BoxShadow(
                             color: Colors.grey.shade400,
-                            spreadRadius: 1,
-                            blurRadius: 5,
-                            offset: Offset(3, 3),
+                            spreadRadius: 0,
+                            blurRadius: 6,
+                            offset: Offset(0, 3),
                           ),
                         ],
                       ),

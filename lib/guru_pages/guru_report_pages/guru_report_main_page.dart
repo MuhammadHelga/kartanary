@@ -18,14 +18,14 @@ class _GuruReportMainPageState extends State<GuruReportMainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:AppColors.primary5,
-        appBar: AppBar(
+      backgroundColor: AppColors.primary5,
+      appBar: AppBar(
         backgroundColor: AppColors.primary50,
         elevation: 0,
         title: Text(
           'Laporan',
           style: TextStyle(
-            fontSize: 20,
+            fontSize: 30,
             fontWeight: FontWeight.w600,
             color: AppColors.primary5,
           ),
@@ -41,11 +41,16 @@ class _GuruReportMainPageState extends State<GuruReportMainPage> {
             child: Icon(
               Icons.chevron_left,
               color: AppColors.primary50,
-              size: 22,
+              size: 38,
             ),
           ),
           onPressed: () {
-            Navigator.of(context).pop();
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BottomNavbar(role: widget.role),
+              ),
+            );
           },
         ),
         toolbarHeight: 70,
@@ -189,7 +194,9 @@ class _GuruReportMainPageState extends State<GuruReportMainPage> {
                           onPressed: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => GuruCreateActivityPage()),
+                              MaterialPageRoute(
+                                builder: (context) => GuruCreateActivityPage(),
+                              ),
                             );
                           },
                           style: ElevatedButton.styleFrom(
@@ -203,9 +210,9 @@ class _GuruReportMainPageState extends State<GuruReportMainPage> {
                             'Buat Laporan',
                             style: TextStyle(
                               fontFamily: 'Poppins',
-                              fontSize: 20, 
+                              fontSize: 20,
                               fontWeight: FontWeight.w500,
-                              color: Colors.white
+                              color: Colors.white,
                             ),
                           ),
                         ),
