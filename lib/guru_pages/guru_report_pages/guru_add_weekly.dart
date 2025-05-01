@@ -215,7 +215,7 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
                   margin: const EdgeInsets.symmetric(vertical: 10),
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF0FAFF),
+                    color:  Colors.white,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Column(
