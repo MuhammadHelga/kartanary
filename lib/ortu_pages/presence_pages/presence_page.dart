@@ -103,202 +103,173 @@ class _PresencePageState extends State<PresencePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Pilih Tanggal',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      for (var item in [
-                        selectedDate.day.toString(),
-                        _monthName(selectedDate.month),
-                        selectedDate.year.toString(),
-                      ])
-                        GestureDetector(
-                          onTap: _selectDate,
-                          child: Container(
-                            width: MediaQuery.of(context).size.width * 0.28,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                              color: Color(0xffC5E7F7),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.shade400,
-                                  spreadRadius: 1,
-                                  blurRadius: 5,
-                                  offset: Offset(3, 3),
-                                ),
-                              ],
-                            ),
-                            alignment: Alignment.center,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 10,
-                            ),
-                            child: Text(
-                              item,
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
-                  SizedBox(height: 20),
-                  Text(
-                    'Total Kehadiran',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 10),
-                  Column(
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            width: (MediaQuery.of(context).size.width - 60) / 2,
-                            padding: EdgeInsets.symmetric(vertical: 5),
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: Color(0xffA8EE87),
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(15),
-                              ),
-                            ),
-                            child: Text(
-                              'Hadir',
-                              style: TextStyle(fontSize: 20),
-                            ),
-                          ),
-                          Container(
-                            width: (MediaQuery.of(context).size.width - 60) / 2,
-                            padding: EdgeInsets.symmetric(vertical: 5),
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: Color(0xffF8D96D),
-                              borderRadius: BorderRadius.only(
-                                topRight: Radius.circular(15),
-                              ),
-                            ),
-                            child: Text('Izin', style: TextStyle(fontSize: 20)),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            width: (MediaQuery.of(context).size.width - 60) / 2,
-                            padding: EdgeInsets.symmetric(vertical: 5),
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                width: 2,
-                                color: Color(0xffA8EE87),
-                              ),
-                            ),
-                            child: Text('1', style: TextStyle(fontSize: 20)),
-                          ),
-                          Container(
-                            width: (MediaQuery.of(context).size.width - 60) / 2,
-                            padding: EdgeInsets.symmetric(vertical: 5),
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                width: 2,
-                                color: Color(0xffF8D96D),
-                              ),
-                            ),
-                            child: Text('1', style: TextStyle(fontSize: 20)),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            width: (MediaQuery.of(context).size.width - 60) / 2,
-                            padding: EdgeInsets.symmetric(vertical: 5),
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(color: Color(0xffFFA470)),
-                            child: Text(
-                              'Sakit',
-                              style: TextStyle(fontSize: 20),
-                            ),
-                          ),
-                          Container(
-                            width: (MediaQuery.of(context).size.width - 60) / 2,
-                            padding: EdgeInsets.symmetric(vertical: 5),
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(color: Color(0xffFF6666)),
-                            child: Text(
-                              'Alpha',
-                              style: TextStyle(fontSize: 20),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            width: (MediaQuery.of(context).size.width - 60) / 2,
-                            padding: EdgeInsets.symmetric(vertical: 5),
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                width: 2,
-                                color: Color(0xffFFA470),
-                              ),
-                              borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(15),
-                              ),
-                            ),
-                            child: Text('1', style: TextStyle(fontSize: 20)),
-                          ),
-                          Container(
-                            width: (MediaQuery.of(context).size.width - 60) / 2,
-                            padding: EdgeInsets.symmetric(vertical: 5),
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                width: 2,
-                                color: Color(0xffFF6666),
-                              ),
-                              borderRadius: BorderRadius.only(
-                                bottomRight: Radius.circular(15),
-                              ),
-                            ),
-                            child: Text('1', style: TextStyle(fontSize: 20)),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 20),
-                  const Text(
-                    'Nama Anak',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 10),
-                ],
-              ),
+            SizedBox(height: 10),
+            const Text(
+              'Pilih Tanggal',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
+            SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                for (var item in [
+                  selectedDate.day.toString(),
+                  _monthName(selectedDate.month),
+                  selectedDate.year.toString(),
+                ])
+                  GestureDetector(
+                    onTap: _selectDate,
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.28,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        color: Color(0xffC5E7F7),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.shade400,
+                            spreadRadius: 1,
+                            blurRadius: 5,
+                            offset: Offset(3, 3),
+                          ),
+                        ],
+                      ),
+                      alignment: Alignment.center,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 10,
+                      ),
+                      child: Text(
+                        item,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+            SizedBox(height: 20),
+            Text(
+              'Total Kehadiran',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 10),
+            Column(
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: (MediaQuery.of(context).size.width - 60) / 2,
+                      padding: EdgeInsets.symmetric(vertical: 5),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: Color(0xffA8EE87),
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(15),
+                        ),
+                      ),
+                      child: Text('Hadir', style: TextStyle(fontSize: 20)),
+                    ),
+                    Container(
+                      width: (MediaQuery.of(context).size.width - 60) / 2,
+                      padding: EdgeInsets.symmetric(vertical: 5),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: Color(0xffF8D96D),
+                        borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(15),
+                        ),
+                      ),
+                      child: Text('Izin', style: TextStyle(fontSize: 20)),
+                    ),
+                  ],
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: (MediaQuery.of(context).size.width - 60) / 2,
+                      padding: EdgeInsets.symmetric(vertical: 5),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        border: Border.all(width: 2, color: Color(0xffA8EE87)),
+                      ),
+                      child: Text('1', style: TextStyle(fontSize: 20)),
+                    ),
+                    Container(
+                      width: (MediaQuery.of(context).size.width - 60) / 2,
+                      padding: EdgeInsets.symmetric(vertical: 5),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        border: Border.all(width: 2, color: Color(0xffF8D96D)),
+                      ),
+                      child: Text('1', style: TextStyle(fontSize: 20)),
+                    ),
+                  ],
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: (MediaQuery.of(context).size.width - 60) / 2,
+                      padding: EdgeInsets.symmetric(vertical: 5),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(color: Color(0xffFFA470)),
+                      child: Text('Sakit', style: TextStyle(fontSize: 20)),
+                    ),
+                    Container(
+                      width: (MediaQuery.of(context).size.width - 60) / 2,
+                      padding: EdgeInsets.symmetric(vertical: 5),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(color: Color(0xffFF6666)),
+                      child: Text('Alpha', style: TextStyle(fontSize: 20)),
+                    ),
+                  ],
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: (MediaQuery.of(context).size.width - 60) / 2,
+                      padding: EdgeInsets.symmetric(vertical: 5),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        border: Border.all(width: 2, color: Color(0xffFFA470)),
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(15),
+                        ),
+                      ),
+                      child: Text('1', style: TextStyle(fontSize: 20)),
+                    ),
+                    Container(
+                      width: (MediaQuery.of(context).size.width - 60) / 2,
+                      padding: EdgeInsets.symmetric(vertical: 5),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        border: Border.all(width: 2, color: Color(0xffFF6666)),
+                        borderRadius: BorderRadius.only(
+                          bottomRight: Radius.circular(15),
+                        ),
+                      ),
+                      child: Text('1', style: TextStyle(fontSize: 20)),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            SizedBox(height: 20),
+            const Text(
+              'Nama Anak',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 10),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 0),
