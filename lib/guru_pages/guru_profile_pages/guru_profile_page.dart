@@ -97,7 +97,7 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
                     ),
                   ),
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
+                    horizontal: 10,
                     vertical: 8,
                   ),
                   child: Column(
@@ -170,7 +170,7 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
                 ),
 
                 Padding(
-                  padding: const EdgeInsets.only(top: 20, left: 40, bottom: 10),
+                  padding: const EdgeInsets.only(bottom: 10, top: 20, left: 40),
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
@@ -200,7 +200,7 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
                           child: Row(
                             children: [
                               Padding(
-                                padding: const EdgeInsets.only(right: 10),
+                                padding: EdgeInsets.only(right: 10),
                                 child: Icon(
                                   Icons.settings_outlined,
                                   color: Color(0xff333333),
@@ -234,7 +234,7 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
                           child: Row(
                             children: [
                               Padding(
-                                padding: const EdgeInsets.only(right: 10),
+                                padding: EdgeInsets.only(right: 10),
                                 child: Icon(
                                   Icons.info_outlined,
                                   color: Color(0xff333333),
@@ -283,7 +283,7 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
                           child: Row(
                             children: [
                               Padding(
-                                padding: const EdgeInsets.only(right: 10),
+                                padding: EdgeInsets.only(right: 10),
                                 child: Icon(
                                   Icons.logout_outlined,
                                   color: Color(0xffDC040F),
