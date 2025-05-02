@@ -222,9 +222,9 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                         decoration: BoxDecoration(
-                          color: AppColors.primary50,
+                          color: AppColors.primary10,
                           borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(6),
                             topRight: Radius.circular(6),
@@ -247,7 +247,7 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
                                 decoration: const InputDecoration(
                                   hintText: 'Judul Minggu...',
                                   isDense: true,
-                                  contentPadding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                                  contentPadding: EdgeInsets.symmetric(vertical: 2, horizontal: 5),
                                   border: InputBorder.none,
                                 ),
                                 style: const TextStyle(fontSize: 14),
@@ -259,7 +259,7 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
                       // const SizedBox(height: 6),
                       Container(
                         decoration: BoxDecoration(
-                          color: AppColors.primary20, // Warna background deskripsi
+                          color: AppColors.primary5, // Warna background deskripsi
                           borderRadius: BorderRadius.only(
                             bottomLeft: Radius.circular(6),
                             bottomRight: Radius.circular(6),
@@ -267,10 +267,10 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
                         ),
                         child: TextField(
                           controller: deskripsiControllers[index],
-                          maxLines: 4,
+                          maxLines: 6,
                           decoration: const InputDecoration(
                             border: InputBorder.none,
-                            contentPadding: EdgeInsets.all(8),
+                            contentPadding: EdgeInsets.all(10),
                             hintText: 'Masukkan deskripsi tema...',
                           ),
                           style: const TextStyle(fontSize: 14),
@@ -325,7 +325,7 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
                     ),
                     TextField(
                       controller: pesanGuruController,
-                      maxLines: 4,
+                      maxLines: 6,
                       decoration: const InputDecoration(
                         border: InputBorder.none,
                         contentPadding: EdgeInsets.all(8),
