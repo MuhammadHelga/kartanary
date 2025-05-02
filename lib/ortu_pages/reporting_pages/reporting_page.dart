@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../widgets/bottom_navbar.dart';
+import '../../theme/AppColors.dart';
 import 'daily_reporting_page.dart';
 import 'weekly_reporting_page.dart';
 import 'semester_report_page.dart';
@@ -12,185 +13,175 @@ class ReportingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xffFFFFFF),
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: double.infinity,
-              decoration: BoxDecoration(color: Color(0xff1D99D3)),
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-              child: Row(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Color(0xffF2F9FD),
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    child: IconButton(
-                      icon: Icon(
-                        Icons.chevron_left,
-                        color: Color(0xff1D99D3),
-                        size: 34,
+      appBar: AppBar(
+        backgroundColor: AppColors.primary50,
+        elevation: 0,
+        title: Text(
+          'Laporan',
+          style: TextStyle(
+            fontSize: 30,
+            fontWeight: FontWeight.w600,
+            color: AppColors.primary5,
+          ),
+        ),
+        leading: IconButton(
+          padding: const EdgeInsets.only(left: 12.0),
+          icon: Container(
+            padding: EdgeInsets.all(3.0),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: AppColors.white,
+            ),
+            child: Icon(
+              Icons.chevron_left,
+              color: AppColors.primary50,
+              size: 38,
+            ),
+          ),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => BottomNavbar(role: role)),
+            );
+          },
+        ),
+        toolbarHeight: 70,
+      ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              child: Container(
+                padding: EdgeInsets.all(40),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Laporan Harian',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
                       ),
-                      onPressed: () {
+                    ),
+                    SizedBox(height: 10),
+                    GestureDetector(
+                      onTap: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => BottomNavbar(role: role),
+                            builder: (context) => DaysReportingPage(),
                           ),
                         );
                       },
-                      tooltip: 'Back',
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.shade400,
+                              blurRadius: 6,
+                              offset: Offset(0, 5),
+                            ),
+                          ],
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(16),
+                          child: Image.asset(
+                            'assets/images/lh_cover.png',
+                            width: double.infinity,
+                            height: 170,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 10),
-                    child: const Text(
-                      'Laporan',
+                    SizedBox(height: 20),
+                    Text(
+                      'Laporan Mingguan',
                       style: TextStyle(
-                        color: Color(0xffF2F9FD),
-                        fontWeight: FontWeight.w600,
-                        fontSize: 28,
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Container(
-                  padding: EdgeInsets.all(40),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Laporan Harian',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => DaysReportingPage(),
-                            ),
-                          );
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(16),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.shade400,
-                                blurRadius: 6,
-                                offset: Offset(0, 5),
-                              ),
-                            ],
+                    SizedBox(height: 10),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => WeeksReportingPage(),
                           ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(16),
-                            child: Image.asset(
-                              'assets/images/lh_cover.png',
-                              width: double.infinity,
-                              height: 170,
-                              fit: BoxFit.cover,
+                        );
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.shade400,
+                              blurRadius: 6,
+                              offset: Offset(0, 5),
                             ),
+                          ],
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(16),
+                          child: Image.asset(
+                            'assets/images/lm_cover.png',
+                            width: double.infinity,
+                            height: 170,
+                            fit: BoxFit.cover,
                           ),
                         ),
                       ),
-                      SizedBox(height: 20),
-                      Text(
-                        'Laporan Mingguan',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      'Laporan Semester',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
                       ),
-                      SizedBox(height: 10),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => WeeksReportingPage(),
-                            ),
-                          );
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(16),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.shade400,
-                                blurRadius: 6,
-                                offset: Offset(0, 5),
-                              ),
-                            ],
+                    ),
+                    SizedBox(height: 10),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SemesterReportPage(),
                           ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(16),
-                            child: Image.asset(
-                              'assets/images/lm_cover.png',
-                              width: double.infinity,
-                              height: 170,
-                              fit: BoxFit.cover,
+                        );
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.shade400,
+                              blurRadius: 6,
+                              offset: Offset(0, 5),
                             ),
-                          ),
+                          ],
                         ),
-                      ),
-                      SizedBox(height: 20),
-                      Text(
-                        'Laporan Semester',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => SemesterReportPage(),
-                            ),
-                          );
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(16),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.shade400,
-                                blurRadius: 6,
-                                offset: Offset(0, 5),
-                              ),
-                            ],
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(16),
-                            child: Image.asset(
-                              'assets/images/ls_cover.png',
-                              width: double.infinity,
-                              height: 170,
-                              fit: BoxFit.cover,
-                            ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(16),
+                          child: Image.asset(
+                            'assets/images/ls_cover.png',
+                            width: double.infinity,
+                            height: 170,
+                            fit: BoxFit.cover,
                           ),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

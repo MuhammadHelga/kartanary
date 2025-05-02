@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'profile_page.dart';
+import '../../theme/AppColors.dart';
 
 class EditProfile extends StatelessWidget {
   final String role;
@@ -9,6 +10,37 @@ class EditProfile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xffFFFFFF),
+      appBar: AppBar(
+        backgroundColor: AppColors.primary50,
+        elevation: 0,
+        title: Text(
+          'Profil',
+          style: TextStyle(
+            fontSize: 28,
+            fontWeight: FontWeight.w600,
+            color: AppColors.primary5,
+          ),
+        ),
+        leading: IconButton(
+          padding: const EdgeInsets.only(left: 12.0),
+          icon: Container(
+            padding: EdgeInsets.all(3.0),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: AppColors.white,
+            ),
+            child: Icon(
+              Icons.chevron_left,
+              color: AppColors.primary50,
+              size: 34,
+            ),
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        toolbarHeight: 70,
+      ),
       body: SafeArea(
         child: Stack(
           clipBehavior: Clip.none,
@@ -17,54 +49,13 @@ class EditProfile extends StatelessWidget {
               children: [
                 Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 16,
-                  ),
-                  decoration: const BoxDecoration(color: Color(0xFF1D91C6)),
-                  child: Row(
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Color(0xffF2F9FD),
-                          borderRadius: BorderRadius.circular(50),
-                        ),
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.chevron_left,
-                            color: Color(0xff1D99D3),
-                            size: 34,
-                          ),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          tooltip: 'Back',
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10),
-                        child: const Text(
-                          'Edit Profil',
-                          style: TextStyle(
-                            color: Color(0xffF2F9FD),
-                            fontWeight: FontWeight.w600,
-                            fontSize: 28,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  width: double.infinity,
-                  height: 80,
+                  height: 110,
                   padding: const EdgeInsets.symmetric(
                     horizontal: 16,
                     vertical: 16,
                   ),
                   decoration: const BoxDecoration(
-                    color: Color(0xFF1D91C6),
+                    color: AppColors.primary50,
                     borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(24),
                       bottomRight: Radius.circular(24),
@@ -240,7 +231,7 @@ class EditProfile extends StatelessWidget {
               ],
             ),
             Positioned(
-              top: 100,
+              top: 50,
               left: 0,
               right: 0,
               child: Center(
@@ -269,7 +260,7 @@ class EditProfile extends StatelessWidget {
               ),
             ),
             Positioned(
-              top: 160,
+              top: 120,
               right: 160,
               child: Container(
                 height: 40,

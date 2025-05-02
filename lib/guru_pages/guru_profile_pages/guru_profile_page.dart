@@ -51,7 +51,7 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
         title: Text(
           'Profile',
           style: TextStyle(
-            fontSize: 20,
+            fontSize: 30,
             fontWeight: FontWeight.w600,
             color: AppColors.primary5,
           ),
@@ -67,10 +67,17 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
             child: Icon(
               Icons.chevron_left,
               color: AppColors.primary50,
-              size: 22,
+              size: 38,
             ),
           ),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BottomNavbar(role: widget.role),
+              ),
+            );
+          },
         ),
         toolbarHeight: 70,
       ),
