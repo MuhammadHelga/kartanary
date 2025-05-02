@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:lifesync_capstone_project/guru_pages/guru_create_activity_pages.dart/guru_add_daily.dart';
-import 'package:lifesync_capstone_project/guru_pages/guru_create_activity_pages.dart/guru_add_semester.dart';
-import 'package:lifesync_capstone_project/guru_pages/guru_create_activity_pages.dart/guru_add_weekly.dart';
+import 'package:lifesync_capstone_project/guru_pages/guru_create_activity_pages/guru_add_daily.dart';
+import 'package:lifesync_capstone_project/guru_pages/guru_create_activity_pages/guru_add_semester.dart';
+import 'package:lifesync_capstone_project/guru_pages/guru_create_activity_pages/guru_add_weekly.dart';
 import '../../theme/AppColors.dart';
 import '../../widgets/bottom_navbar.dart';
 import 'guru_add_announcement.dart';
