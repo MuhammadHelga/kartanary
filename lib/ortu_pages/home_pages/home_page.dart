@@ -137,7 +137,9 @@ class _HomePageState extends State<HomePage> {
                       description:
                           'Lorem ipsum dolor sit amet consectetur. Dolor interdum odio quam sed aliquam.',
                       imageUrl: 'assets/images/placeholder_updates.jpg',
-                      onTap: () {},
+                      onTap: (
+                      ) {
+                      },
                     ),
                     UpdateCard(
                       title: 'Cooking Class',
