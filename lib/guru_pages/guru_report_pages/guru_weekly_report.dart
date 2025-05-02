@@ -18,9 +18,9 @@ class _GuruWeeklyReportPageState extends State<GuruWeeklyReportPage> {
         backgroundColor: AppColors.primary50,
         elevation: 0,
         title: Text(
-          'Laporan Harian',
+          'Laporan Mingguan',
           style: TextStyle(
-            fontSize: 30,
+            fontSize: 26,
             fontWeight: FontWeight.w600,
             color: AppColors.primary5,
           ),
@@ -36,7 +36,7 @@ class _GuruWeeklyReportPageState extends State<GuruWeeklyReportPage> {
             child: Icon(
               Icons.chevron_left,
               color: AppColors.primary50,
-              size: 38,
+              size: 26,
             ),
           ),
           onPressed: () {
