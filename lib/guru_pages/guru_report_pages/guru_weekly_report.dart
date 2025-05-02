@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../theme/AppColors.dart';
+import '../guru_create_activity_pages/guru_create_activity.dart';
+import 'guru_detail_weekly.dart';
 
 class GuruWeeklyReportPage extends StatefulWidget {
   const GuruWeeklyReportPage({super.key});
@@ -12,10 +14,10 @@ class _GuruWeeklyReportPageState extends State<GuruWeeklyReportPage> {
   DateTime selectedDate = DateTime.now();
 
   final List<String> temaList = [
-    'Tema 1: Keluargaku',
-    'Tema 2: Lingkunganku',
-    'Tema 3: Binatang dan Tumbuhan',
-    'Tema 4: Kesehatanku',
+    'Tema 1: Air,Udara, dan Api',
+    'Tema 2: Alat Transportasi',
+    'Tema 3: Diri Sendiri',
+    'Tema 4: Alam Semesta',
   ];
 
   @override
@@ -54,7 +56,7 @@ class _GuruWeeklyReportPageState extends State<GuruWeeklyReportPage> {
         toolbarHeight: 70,
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
         child: ListView.separated(
           itemCount: temaList.length,
           separatorBuilder: (context, index) => SizedBox(height: 10),
@@ -64,7 +66,12 @@ class _GuruWeeklyReportPageState extends State<GuruWeeklyReportPage> {
 
             return GestureDetector(
               onTap: () {
-                // Aksi ketika item diklik
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const DetailWeeklyReportPage()
+                  ),
+                );
               },
               child: Container(
                 width: double.infinity,
@@ -93,6 +100,24 @@ class _GuruWeeklyReportPageState extends State<GuruWeeklyReportPage> {
               ),
             );
           },
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const GuruCreateActivityPage(
+                initialLaporan: 'Mingguan',
+                isLocked: true,
+              ),
+            ),
+          );
+        },
+        child: const Icon(Icons.add, color: Colors.white),
+        backgroundColor: const Color(0xFF1D99D3),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30),
         ),
       ),
     );

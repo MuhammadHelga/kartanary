@@ -4,9 +4,9 @@ import '/guru_pages/list_student_page.dart';
 
 class InputStudentPage extends StatefulWidget {
 
-  final Function(String) onAddChild; // Callback untuk mengirim data ke halaman sebelumnya
+  // final Function(String) onAddChild; // Callback untuk mengirim data ke halaman sebelumnya
 
-  InputStudentPage({required this.onAddChild});
+  // InputStudentPage({required this.onAddChild});
 
   @override
   _InputStudentPageState createState() => _InputStudentPageState();
@@ -190,7 +190,7 @@ class _InputStudentPageState extends State<InputStudentPage> {
                         setState(() {
                           _childrenNames.add(_childName);
                         });
-                        widget.onAddChild(_childName);
+                        // widget.onAddChild(_childName);
 
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text('Anak berhasil ditambahkan!')),
@@ -226,8 +226,8 @@ class _InputStudentPageState extends State<InputStudentPage> {
                       if (_childrenNames.isNotEmpty) {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) => ListStudentPage(
-                              childrenNames: _childrenNames,
+                            builder: (context) => ListStudentPage(role: 'guru',
+                              // childrenNames: _childrenNames,
                             ),
                           ),
                         );
