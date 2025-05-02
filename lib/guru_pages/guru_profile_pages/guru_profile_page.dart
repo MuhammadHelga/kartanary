@@ -97,14 +97,14 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
                     ),
                   ),
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
+                    horizontal: 10,
                     vertical: 8,
                   ),
                   child: Column(
                     children: [
                       Padding(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 30,
+                          horizontal: 20,
                           vertical: 10,
                         ),
                         child: Row(
@@ -169,7 +169,7 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
                 ),
 
                 Padding(
-                  padding: const EdgeInsets.only(top: 20, left: 50),
+                  padding: const EdgeInsets.only(bottom: 10, top: 20, left: 40),
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
@@ -182,7 +182,7 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.symmetric(horizontal: 50),
+                  margin: EdgeInsets.symmetric(horizontal: 30),
                   decoration: BoxDecoration(
                     color: Color.fromARGB(255, 238, 242, 245),
                     borderRadius: BorderRadius.all(Radius.circular(20)),
@@ -198,10 +198,13 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
                         child: InkWell(
                           child: Row(
                             children: [
-                              Icon(
-                                Icons.settings_outlined,
-                                color: Color(0xff333333),
-                                size: 30,
+                              Padding(
+                                padding: EdgeInsets.only(right: 10),
+                                child: Icon(
+                                  Icons.settings_outlined,
+                                  color: Color(0xff333333),
+                                  size: 30,
+                                ),
                               ),
                               Text('Umum', style: TextStyle(fontSize: 20)),
                               Spacer(),
@@ -229,10 +232,13 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
                         child: InkWell(
                           child: Row(
                             children: [
-                              Icon(
-                                Icons.info_outlined,
-                                color: Color(0xff333333),
-                                size: 30,
+                              Padding(
+                                padding: EdgeInsets.only(right: 10),
+                                child: Icon(
+                                  Icons.info_outlined,
+                                  color: Color(0xff333333),
+                                  size: 30,
+                                ),
                               ),
                               Text('Tentang', style: TextStyle(fontSize: 20)),
                               Spacer(),
@@ -275,10 +281,13 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
                           },
                           child: Row(
                             children: [
-                              Icon(
-                                Icons.logout_outlined,
-                                color: Color(0xffDC040F),
-                                size: 30,
+                              Padding(
+                                padding: EdgeInsets.only(right: 10),
+                                child: Icon(
+                                  Icons.logout_outlined,
+                                  color: Color(0xffDC040F),
+                                  size: 30,
+                                ),
                               ),
                               Text(
                                 'LogOut',
