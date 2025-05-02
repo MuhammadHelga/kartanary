@@ -68,7 +68,7 @@ class _PresencePageState extends State<PresencePage> {
         title: Text(
           'Presensi',
           style: TextStyle(
-            fontSize: 30,
+            fontSize: 26,
             fontWeight: FontWeight.w600,
             color: AppColors.primary5,
           ),
@@ -84,7 +84,7 @@ class _PresencePageState extends State<PresencePage> {
             child: Icon(
               Icons.chevron_left,
               color: AppColors.primary50,
-              size: 38,
+              size: 26,
             ),
           ),
           onPressed: () {

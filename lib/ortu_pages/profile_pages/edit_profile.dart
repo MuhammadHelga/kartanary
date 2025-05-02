@@ -14,9 +14,9 @@ class EditProfile extends StatelessWidget {
         backgroundColor: AppColors.primary50,
         elevation: 0,
         title: Text(
-          'Profil',
+          'Edit Profil',
           style: TextStyle(
-            fontSize: 28,
+            fontSize: 26,
             fontWeight: FontWeight.w600,
             color: AppColors.primary5,
           ),
@@ -32,7 +32,7 @@ class EditProfile extends StatelessWidget {
             child: Icon(
               Icons.chevron_left,
               color: AppColors.primary50,
-              size: 34,
+              size: 26,
             ),
           ),
           onPressed: () {

@@ -1,73 +1,29 @@
-import 'package:flutter/material.dart';
-import '../../theme/AppColors.dart';
-import '../../widgets/bottom_navbar.dart';
+import 'dart:ffi';
 
-class GuruWeeklyReportPage extends StatefulWidget {
-  const GuruWeeklyReportPage({super.key});
+import 'package:flutter/material.dart';
+import '../reporting_page.dart';
+import '../../../theme/AppColors.dart';
+import '../weekly_reporting/first_week_report.dart';
+
+class WeeksReportingPage extends StatefulWidget {
+  const WeeksReportingPage({super.key});
 
   @override
-  State<GuruWeeklyReportPage> createState() => _GuruWeeklyReportPageState();
+  State<WeeksReportingPage> createState() => _WeeksReportingPageState();
 }
 
-class _GuruWeeklyReportPageState extends State<GuruWeeklyReportPage> {
-  DateTime selectedDate = DateTime.now();
-
-  void _selectDate() async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: selectedDate,
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: ColorScheme.light(
-              primary: Color(0xff1D99D3),
-              onPrimary: Colors.white,
-              onSurface: Colors.black,
-            ),
-          ),
-          child: child!,
-        );
-      },
-    );
-
-    if (picked != null && picked != selectedDate) {
-      setState(() {
-        selectedDate = picked;
-      });
-    }
-  }
-
-  String _monthName(int month) {
-    const months = [
-      'Januari',
-      'Februari',
-      'Maret',
-      'April',
-      'Mei',
-      'Juni',
-      'Juli',
-      'Agustus',
-      'September',
-      'Oktober',
-      'November',
-      'Desember',
-    ];
-    return months[month - 1];
-  }
-
+class _WeeksReportingPageState extends State<WeeksReportingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.primary5,
+      backgroundColor: Color(0xffF2F9FD),
       appBar: AppBar(
         backgroundColor: AppColors.primary50,
         elevation: 0,
         title: Text(
           'Laporan Mingguan',
           style: TextStyle(
-            fontSize: 30,
+            fontSize: 24,
             fontWeight: FontWeight.w600,
             color: AppColors.primary5,
           ),
@@ -83,7 +39,7 @@ class _GuruWeeklyReportPageState extends State<GuruWeeklyReportPage> {
             child: Icon(
               Icons.chevron_left,
               color: AppColors.primary50,
-              size: 38,
+              size: 32,
             ),
           ),
           onPressed: () {
@@ -97,7 +53,12 @@ class _GuruWeeklyReportPageState extends State<GuruWeeklyReportPage> {
         child: Column(
           children: [
             GestureDetector(
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => FirstWeekReport()),
+                );
+              },
               child: Container(
                 width: double.infinity,
                 padding: EdgeInsets.all(20),
@@ -107,12 +68,24 @@ class _GuruWeeklyReportPageState extends State<GuruWeeklyReportPage> {
                 ),
                 child: Row(
                   children: [
-                    Text(
-                      'Tema :',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    Row(
+                      children: [
+                        Text(
+                          'Tema :',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        Text(
+                          'Diri Sendiri',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
                     Spacer(),
                     Icon(Icons.chevron_right, size: 38),
