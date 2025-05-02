@@ -4,6 +4,8 @@ import '../pages/register_page.dart';
 import '../pages/forgot_password.dart';
 import '../widgets/bottom_navbar.dart';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 import '../services/auth_service.dart'; // pastikan path ini benar
 
 class LoginPage extends StatefulWidget {
@@ -19,6 +21,39 @@ class _LoginPageState extends State<LoginPage> {
 
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
+  //buat ingat saya
+  bool _rememberMe = false;
+  @override
+  void initState() {
+    super.initState();
+    _loadSavedCredentials();
+  }
+
+  void _loadSavedCredentials() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool remember = prefs.getBool('remember_me') ?? false;
+
+    if (remember) {
+      _emailController.text = prefs.getString('email') ?? '';
+      _passwordController.text = prefs.getString('password') ?? '';
+      setState(() {
+        _rememberMe = remember;
+      });
+    }
+  }
+
+  void _saveCredentials(String email, String password) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (_rememberMe) {
+      await prefs.setBool('remember_me', true);
+      await prefs.setString('email', email);
+      await prefs.setString('password', password);
+    } else {
+      await prefs.clear();
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +86,7 @@ class _LoginPageState extends State<LoginPage> {
                         icon: Icon(
                           Icons.chevron_left,
                           color: Color(0xff1D99D3),
-                          size: 36,
+                          size: 26,
                         ),
                         onPressed: () {
                           Navigator.push(
@@ -186,9 +221,20 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 SizedBox(height: 10),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
+                // Checkbox ingat saya"
+                Row(
+                  children: [
+                    Checkbox(
+                      value: _rememberMe,
+                      onChanged: (value) {
+                        setState(() {
+                          _rememberMe = value!;
+                        });
+                      },
+                    ),
+                    Text("Ingat Saya"),
+                    Spacer(),
+                    TextButton(
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -203,8 +249,10 @@ class _LoginPageState extends State<LoginPage> {
                       style: TextStyle(color: Colors.grey[600], fontSize: 16),
                     ),
                   ),
-                ),
+                  ]
+                ), 
                 SizedBox(height: 20),
+                
                 SizedBox(
                   height: 60,
                   width: double.infinity,
@@ -219,10 +267,13 @@ class _LoginPageState extends State<LoginPage> {
                         context,
                       );
 
-                      if (user == null) {
-                        ScaffoldMessenger.of(
-                          context,
-                        ).showSnackBar(SnackBar(content: Text('Login gagal')));
+                      if (user != null) {
+                        _saveCredentials(email, password);
+                        // Lanjut ke halaman berikutnya
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Login gagal')),
+                        );
                       }
                     },
                     style: ElevatedButton.styleFrom(
