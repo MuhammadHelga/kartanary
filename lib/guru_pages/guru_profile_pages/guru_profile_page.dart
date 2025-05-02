@@ -104,7 +104,7 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 30,
+                          horizontal: 20,
                           vertical: 10,
                         ),
                         child: Row(
@@ -125,7 +125,7 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
                                   _name ?? 'Loading...',
                                   style: TextStyle(
                                     fontSize: 28,
-                                    fontWeight: FontWeight.bold,
+                                    fontWeight: FontWeight.w600,
                                     color: Color(0xffF2F9FD),
                                   ),
                                 ),
@@ -137,10 +137,11 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
                                   ),
                                 ),
                                 Text(
-                                  'Kode Kelas',
+                                  'Kelas - Kode Kelas',
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: Color(0xffF2F9FD),
+                                    fontWeight: FontWeight.w600
                                   ),
                                 ),
                               ],
@@ -150,7 +151,7 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
                               icon: Icon(
                                 Icons.edit_square,
                                 color: Color(0xffF2F9FD),
-                                size: 30,
+                                size: 26,
                               ),
                               onPressed: () {
                                 // Navigator.push(
@@ -169,7 +170,7 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
                 ),
 
                 Padding(
-                  padding: const EdgeInsets.only(top: 20, left: 50),
+                  padding: const EdgeInsets.only(top: 20, left: 40, bottom: 10),
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
@@ -182,7 +183,7 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.symmetric(horizontal: 50),
+                  margin: EdgeInsets.symmetric(horizontal: 30),
                   decoration: BoxDecoration(
                     color: Color.fromARGB(255, 238, 242, 245),
                     borderRadius: BorderRadius.all(Radius.circular(20)),
@@ -198,10 +199,13 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
                         child: InkWell(
                           child: Row(
                             children: [
-                              Icon(
-                                Icons.settings_outlined,
-                                color: Color(0xff333333),
-                                size: 30,
+                              Padding(
+                                padding: const EdgeInsets.only(right: 10),
+                                child: Icon(
+                                  Icons.settings_outlined,
+                                  color: Color(0xff333333),
+                                  size: 30,
+                                ),
                               ),
                               Text('Umum', style: TextStyle(fontSize: 20)),
                               Spacer(),
@@ -229,10 +233,13 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
                         child: InkWell(
                           child: Row(
                             children: [
-                              Icon(
-                                Icons.info_outlined,
-                                color: Color(0xff333333),
-                                size: 30,
+                              Padding(
+                                padding: const EdgeInsets.only(right: 10),
+                                child: Icon(
+                                  Icons.info_outlined,
+                                  color: Color(0xff333333),
+                                  size: 30,
+                                ),
                               ),
                               Text('Tentang', style: TextStyle(fontSize: 20)),
                               Spacer(),
@@ -275,10 +282,13 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
                           },
                           child: Row(
                             children: [
-                              Icon(
-                                Icons.logout_outlined,
-                                color: Color(0xffDC040F),
-                                size: 30,
+                              Padding(
+                                padding: const EdgeInsets.only(right: 10),
+                                child: Icon(
+                                  Icons.logout_outlined,
+                                  color: Color(0xffDC040F),
+                                  size: 30,
+                                ),
                               ),
                               Text(
                                 'LogOut',
