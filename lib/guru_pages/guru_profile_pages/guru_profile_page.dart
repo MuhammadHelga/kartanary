@@ -136,6 +136,13 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
                                     color: Color(0xffF2F9FD),
                                   ),
                                 ),
+                                Text(
+                                  'Kode Kelas',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: Color(0xffF2F9FD),
+                                  ),
+                                ),
                               ],
                             ),
                             Spacer(),
