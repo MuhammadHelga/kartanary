@@ -136,7 +136,7 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
             children: [
               Container(
                 decoration: BoxDecoration(
-                  color: Color(0xff1D99D3),
+                  color: AppColors.primary50,
                   borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(24),
                     bottomRight: Radius.circular(24),
