@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../widgets/bottom_navbar.dart';
 import '../../theme/AppColors.dart';
-import 'daily_reporting_page.dart';
+import 'daily_report/daily_reporting_page.dart';
 import 'weekly_reporting/weekly_reporting_page.dart';
-import 'semester_report_page.dart';
+import 'semester_report/semester_report_page.dart';
 
 class ReportingPage extends StatelessWidget {
   final String role;
