@@ -6,9 +6,9 @@ import '../widgets/bottom_navbar.dart';
 
 class ListStudentPage extends StatefulWidget {
 
-  final List<String> childrenNames;
+  // final List<String> childrenNames;
 
-  ListStudentPage({Key? key, required this.childrenNames}) : super(key: key);
+  ListStudentPage({Key? key, required String role}) : super(key: key);
   
   @override
   _ListStudentPageState createState() => _ListStudentPageState();
@@ -17,13 +17,13 @@ class ListStudentPage extends StatefulWidget {
 class _ListStudentPageState extends State<ListStudentPage> {
 
   // const ListStudentPage({Key? key}) : super(key: key);
-  late List<String> childrenNames;
+  List<String> childrenNames = ['Dokja', 'Rafayel', 'Caleb', 'Moran', 'WKWK'];
 
-  @override
-  void initState() {
-    super.initState();
-    childrenNames = widget.childrenNames;
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   childrenNames = widget.childrenNames;
+  // }
 
   // // Fungsi untuk menambahkan anak baru ke dalam daftar
   // void _addChild(String name) {
@@ -168,11 +168,11 @@ class _ListStudentPageState extends State<ListStudentPage> {
             Navigator.of(context).push(
               MaterialPageRoute(
               builder: (context) => InputStudentPage(
-                onAddChild: (String newChild) {
-                  setState(() {
-                    childrenNames.add(newChild);
-                  });
-                },
+                // onAddChild: (String newChild) {
+                //   setState(() {
+                //     childrenNames.add(newChild);
+                //   });
+                // },
               ),
               ),
             );
