@@ -188,7 +188,10 @@ class _GuruDailyReportPageState extends State<GuruDailyReportPage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const GuruCreateActivityPage(),
+                        builder: (context) => const GuruCreateActivityPage(
+                          initialLaporan: 'Harian',
+                          isLocked: true,
+                        ),
                       ),
                     );
                   },

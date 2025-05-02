@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../theme/AppColors.dart';
-import '../../widgets/bottom_navbar.dart';
 
 class GuruWeeklyReportPage extends StatefulWidget {
   const GuruWeeklyReportPage({super.key});
@@ -10,6 +9,15 @@ class GuruWeeklyReportPage extends StatefulWidget {
 }
 
 class _GuruWeeklyReportPageState extends State<GuruWeeklyReportPage> {
+  DateTime selectedDate = DateTime.now();
+
+  final List<String> temaList = [
+    'Tema 1: Keluargaku',
+    'Tema 2: Lingkunganku',
+    'Tema 3: Binatang dan Tumbuhan',
+    'Tema 4: Kesehatanku',
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,10 +36,10 @@ class _GuruWeeklyReportPageState extends State<GuruWeeklyReportPage> {
         leading: IconButton(
           padding: const EdgeInsets.only(left: 12.0),
           icon: Container(
-            padding: EdgeInsets.all(3.0),
-            decoration: BoxDecoration(
+            padding: const EdgeInsets.all(3.0),
+            decoration: const BoxDecoration(
               shape: BoxShape.circle,
-              color: AppColors.white,
+              color: Colors.white,
             ),
             child: Icon(
               Icons.chevron_left,
@@ -47,108 +55,44 @@ class _GuruWeeklyReportPageState extends State<GuruWeeklyReportPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-        child: Column(
-          children: [
-            GestureDetector(
-              onTap: () {},
+        child: ListView.separated(
+          itemCount: temaList.length,
+          separatorBuilder: (context, index) => SizedBox(height: 10),
+          itemBuilder: (context, index) {
+            final isEven = index % 2 == 0;
+            final bgColor = isEven ? AppColors.primary10 : AppColors.secondary50;
+
+            return GestureDetector(
+              onTap: () {
+                // Aksi ketika item diklik
+              },
               child: Container(
                 width: double.infinity,
-                padding: EdgeInsets.all(20),
+                padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: AppColors.primary10,
-                  borderRadius: BorderRadius.all(Radius.circular(15)),
+                  color: bgColor,
+                  borderRadius: BorderRadius.circular(15),
                 ),
                 child: Row(
                   children: [
-                    Text(
-                      'Tema :',
-                      style: TextStyle(
+                    Expanded (
+                      child: Text(
+                      temaList[index],
+                      style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis, 
                     ),
-                    Spacer(),
-                    Icon(Icons.chevron_right, size: 38),
+                    ),
+                    // const Spacer(),
+                    const Icon(Icons.chevron_right, size: 38),
                   ],
                 ),
               ),
-            ),
-            SizedBox(height: 10),
-            GestureDetector(
-              onTap: () {},
-              child: Container(
-                width: double.infinity,
-                padding: EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: AppColors.secondary50,
-                  borderRadius: BorderRadius.all(Radius.circular(15)),
-                ),
-                child: Row(
-                  children: [
-                    Text(
-                      'Tema :',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Spacer(),
-                    Icon(Icons.chevron_right, size: 38),
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(height: 10),
-            GestureDetector(
-              onTap: () {},
-              child: Container(
-                width: double.infinity,
-                padding: EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: AppColors.primary10,
-                  borderRadius: BorderRadius.all(Radius.circular(15)),
-                ),
-                child: Row(
-                  children: [
-                    Text(
-                      'Tema :',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Spacer(),
-                    Icon(Icons.chevron_right, size: 38),
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(height: 10),
-            GestureDetector(
-              onTap: () {},
-              child: Container(
-                width: double.infinity,
-                padding: EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: AppColors.secondary50,
-                  borderRadius: BorderRadius.all(Radius.circular(15)),
-                ),
-                child: Row(
-                  children: [
-                    Text(
-                      'Tema :',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Spacer(),
-                    Icon(Icons.chevron_right, size: 38),
-                  ],
-                ),
-              ),
-            ),
-          ],
+            );
+          },
         ),
       ),
     );
