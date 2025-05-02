@@ -23,7 +23,7 @@ class _WeeksReportingPageState extends State<WeeksReportingPage> {
         title: Text(
           'Laporan Mingguan',
           style: TextStyle(
-            fontSize: 24,
+            fontSize: 26,
             fontWeight: FontWeight.w600,
             color: AppColors.primary5,
           ),
@@ -39,7 +39,7 @@ class _WeeksReportingPageState extends State<WeeksReportingPage> {
             child: Icon(
               Icons.chevron_left,
               color: AppColors.primary50,
-              size: 32,
+              size: 26,
             ),
           ),
           onPressed: () {
