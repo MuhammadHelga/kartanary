@@ -51,7 +51,7 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
         title: Text(
           'Profile',
           style: TextStyle(
-            fontSize: 30,
+            fontSize: 22,
             fontWeight: FontWeight.w600,
             color: AppColors.primary5,
           ),
@@ -67,7 +67,7 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
             child: Icon(
               Icons.chevron_left,
               color: AppColors.primary50,
-              size: 38,
+              size: 22,
             ),
           ),
           onPressed: () {
