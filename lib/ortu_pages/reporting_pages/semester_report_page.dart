@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../theme/AppColors.dart';
 
 class SemesterReportPage extends StatelessWidget {
   const SemesterReportPage({super.key});
@@ -7,49 +8,36 @@ class SemesterReportPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xffffffff),
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-              decoration: BoxDecoration(color: Color(0xff1D99D3)),
-              child: Row(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Color(0xffF2F9FD),
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    child: IconButton(
-                      icon: Icon(
-                        Icons.chevron_left,
-                        color: Color(0xff1D99D3),
-                        size: 34,
-                      ),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      tooltip: 'Back',
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 10),
-                    child: const Text(
-                      'Laporan Semester',
-                      style: TextStyle(
-                        color: Color(0xffF2F9FD),
-                        fontWeight: FontWeight.w600,
-                        fontSize: 28,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
+      appBar: AppBar(
+        backgroundColor: AppColors.primary50,
+        elevation: 0,
+        title: Text(
+          'Laporan Semester',
+          style: TextStyle(
+            fontSize: 30,
+            fontWeight: FontWeight.w600,
+            color: AppColors.primary5,
+          ),
         ),
+        leading: IconButton(
+          padding: const EdgeInsets.only(left: 12.0),
+          icon: Container(
+            padding: EdgeInsets.all(3.0),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: AppColors.white,
+            ),
+            child: Icon(
+              Icons.chevron_left,
+              color: AppColors.primary50,
+              size: 38,
+            ),
+          ),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        toolbarHeight: 70,
       ),
     );
   }

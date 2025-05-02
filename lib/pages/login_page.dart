@@ -84,7 +84,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 SizedBox(height: 30),
                 Text(
-                  'Login',
+                  'Masuk',
                   style: TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
@@ -112,7 +112,10 @@ class _LoginPageState extends State<LoginPage> {
                     hintStyle: TextStyle(fontSize: 20, color: Colors.grey),
                     filled: true,
                     fillColor: Color(0xffF8FAFC),
-                    contentPadding: EdgeInsets.symmetric(vertical: 20),
+                    contentPadding: EdgeInsets.symmetric(
+                      vertical: 20,
+                      horizontal: 28,
+                    ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(24),
                       borderSide: BorderSide(
@@ -229,7 +232,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     child: Text(
-                      'Login',
+                      'Masuk',
                       style: TextStyle(fontSize: 20, color: Colors.white),
                     ),
                   ),

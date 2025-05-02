@@ -25,7 +25,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
-  
+
 flutter:
   uses-material-design: true
   assets:
@@ -40,6 +40,7 @@ flutter:
     - assets/images/lh_cover.png
     - assets/images/lm_cover.png
     - assets/images/ls_cover.png
+    - assets/images/laporan_img.png
   fonts:
     - family: Poppins
       fonts:

@@ -13,9 +13,21 @@ class GuruPresencePage extends StatefulWidget {
 class _GuruPresencePageState extends State<GuruPresencePage> {
   DateTime selectedDate = DateTime.now();
 
-  final List<String> childrenNames = ['Dokja', 'Rafayel', 'Caleb', 'Moran', 'WKWK'];
-  final List<String> presenceStatus = ['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Hadir']; // Default all to "Hadir"
-  
+  final List<String> childrenNames = [
+    'Dokja',
+    'Rafayel',
+    'Caleb',
+    'Moran',
+    'WKWK',
+  ];
+  final List<String> presenceStatus = [
+    'Hadir',
+    'Hadir',
+    'Hadir',
+    'Hadir',
+    'Hadir',
+  ]; // Default all to "Hadir"
+
   // Map to store counts of each presence status
   Map<String, int> statusCounts = {
     'Hadir': 0,
@@ -34,20 +46,16 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
   // Method to update status counts
   void _updateStatusCounts() {
     // Reset all counts
-    statusCounts = {
-      'Hadir': 0,
-      'Sakit': 0,
-      'Izin': 0,
-      'Alpha': 0,
-    };
-    
+    statusCounts = {'Hadir': 0, 'Sakit': 0, 'Izin': 0, 'Alpha': 0};
+
     // Count occurrences
     for (var status in presenceStatus) {
       statusCounts[status] = (statusCounts[status] ?? 0) + 1;
     }
   }
 
-  String getInitial(String presence) => presence.isNotEmpty ? presence[0].toUpperCase() : '';
+  String getInitial(String presence) =>
+      presence.isNotEmpty ? presence[0].toUpperCase() : '';
 
   void _selectDate() async {
     final DateTime? picked = await showDatePicker(
@@ -78,8 +86,18 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
 
   String _monthName(int month) {
     const months = [
-      'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus',
-      'September', 'Oktober', 'November', 'Desember',
+      'Januari',
+      'Februari',
+      'Maret',
+      'April',
+      'Mei',
+      'Juni',
+      'Juli',
+      'Agustus',
+      'September',
+      'Oktober',
+      'November',
+      'Desember',
     ];
     return months[month - 1];
   }
@@ -94,7 +112,7 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
         title: Text(
           'Presensi',
           style: TextStyle(
-            fontSize: 20,
+            fontSize: 30,
             fontWeight: FontWeight.w600,
             color: AppColors.primary5,
           ),
@@ -110,10 +128,17 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
             child: Icon(
               Icons.chevron_left,
               color: AppColors.primary50,
-              size: 22,
+              size: 38,
             ),
           ),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BottomNavbar(role: widget.role),
+              ),
+            );
+          },
         ),
         toolbarHeight: 70,
       ),
@@ -158,7 +183,10 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
                               ],
                             ),
                             alignment: Alignment.center,
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 10,
+                            ),
                             child: Text(
                               item,
                               style: const TextStyle(
@@ -180,7 +208,10 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
                   Column(
                     children: [
                       Table(
-                        border: TableBorder.all(width: 0, color: Colors.transparent),
+                        border: TableBorder.all(
+                          width: 0,
+                          color: Colors.transparent,
+                        ),
                         children: [
                           TableRow(
                             children: [
@@ -190,7 +221,9 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
                                 alignment: Alignment.center,
                                 decoration: BoxDecoration(
                                   color: Color(0xffA8EE87),
-                                  borderRadius: BorderRadius.only(topLeft: Radius.circular(15)),
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(15),
+                                  ),
                                 ),
                                 child: Text(
                                   'Hadir',
@@ -203,9 +236,14 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
                                 alignment: Alignment.center,
                                 decoration: BoxDecoration(
                                   color: Color(0xffF8D96D),
-                                  borderRadius: BorderRadius.only(topRight: Radius.circular(15)),
+                                  borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(15),
+                                  ),
                                 ),
-                                child: Text('Izin', style: TextStyle(fontSize: 20)),
+                                child: Text(
+                                  'Izin',
+                                  style: TextStyle(fontSize: 20),
+                                ),
                               ),
                             ],
                           ),
@@ -221,7 +259,10 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
                                     color: Color(0xffA8EE87),
                                   ),
                                 ),
-                                child: Text('${statusCounts['Hadir']}', style: TextStyle(fontSize: 20)),
+                                child: Text(
+                                  '${statusCounts['Hadir']}',
+                                  style: TextStyle(fontSize: 20),
+                                ),
                               ),
                               Container(
                                 width: 170,
@@ -233,7 +274,10 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
                                     color: Color(0xffF8D96D),
                                   ),
                                 ),
-                                child: Text('${statusCounts['Izin']}', style: TextStyle(fontSize: 20)),
+                                child: Text(
+                                  '${statusCounts['Izin']}',
+                                  style: TextStyle(fontSize: 20),
+                                ),
                               ),
                             ],
                           ),
@@ -243,7 +287,9 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
                                 width: 170,
                                 padding: EdgeInsets.symmetric(vertical: 5),
                                 alignment: Alignment.center,
-                                decoration: BoxDecoration(color: Color(0xffFFA470)),
+                                decoration: BoxDecoration(
+                                  color: Color(0xffFFA470),
+                                ),
                                 child: Text(
                                   'Sakit',
                                   style: TextStyle(fontSize: 20),
@@ -253,7 +299,9 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
                                 width: 170,
                                 padding: EdgeInsets.symmetric(vertical: 5),
                                 alignment: Alignment.center,
-                                decoration: BoxDecoration(color: Color(0xffFF6666)),
+                                decoration: BoxDecoration(
+                                  color: Color(0xffFF6666),
+                                ),
                                 child: Text(
                                   'Alpha',
                                   style: TextStyle(fontSize: 20),
@@ -272,9 +320,14 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
                                     width: 2,
                                     color: Color(0xffFFA470),
                                   ),
-                                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(15)),
+                                  borderRadius: BorderRadius.only(
+                                    bottomLeft: Radius.circular(15),
+                                  ),
                                 ),
-                                child: Text('${statusCounts['Sakit']}', style: TextStyle(fontSize: 20)),
+                                child: Text(
+                                  '${statusCounts['Sakit']}',
+                                  style: TextStyle(fontSize: 20),
+                                ),
                               ),
                               Container(
                                 width: 170,
@@ -285,9 +338,14 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
                                     width: 2,
                                     color: Color(0xffFF6666),
                                   ),
-                                  borderRadius: BorderRadius.only(bottomRight: Radius.circular(15)),
+                                  borderRadius: BorderRadius.only(
+                                    bottomRight: Radius.circular(15),
+                                  ),
                                 ),
-                                child: Text('${statusCounts['Alpha']}', style: TextStyle(fontSize: 20)),
+                                child: Text(
+                                  '${statusCounts['Alpha']}',
+                                  style: TextStyle(fontSize: 20),
+                                ),
                               ),
                             ],
                           ),
@@ -319,61 +377,80 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
                     onTap: () {
                       showDialog(
                         context: context,
-                        builder: (context) => AlertDialog(
-                          backgroundColor: Color(0xffF7FAFC),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                          content: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                        builder:
+                            (context) => AlertDialog(
+                              backgroundColor: Color(0xffF7FAFC),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              content: Column(
+                                mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  CircleAvatar(
-                                    backgroundColor: presenceColor,
-                                    radius: 30,
-                                    child: Text(
-                                      initialPresence,
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 30,
-                                        fontWeight: FontWeight.bold,
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      CircleAvatar(
+                                        backgroundColor: presenceColor,
+                                        radius: 30,
+                                        child: Text(
+                                          initialPresence,
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 30,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
                                       ),
+                                      const SizedBox(width: 10),
+                                      Text(
+                                        presence,
+                                        style: const TextStyle(
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 20),
+                                  const Text(
+                                    'Ubah keterangan kehadiran:',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.black54,
                                     ),
                                   ),
-                                  const SizedBox(width: 10),
-                                  Text(
-                                    presence,
-                                    style: const TextStyle(
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black,
-                                    ),
+                                  const SizedBox(height: 20),
+                                  Wrap(
+                                    spacing: 10,
+                                    runSpacing: 10,
+                                    children: [
+                                      _buildPresenceButton(
+                                        'Hadir',
+                                        Color(0xffA8EE87),
+                                        index,
+                                      ),
+                                      _buildPresenceButton(
+                                        'Sakit',
+                                        Color(0xffFFA470),
+                                        index,
+                                      ),
+                                      _buildPresenceButton(
+                                        'Izin',
+                                        Color(0xffF8D96D),
+                                        index,
+                                      ),
+                                      _buildPresenceButton(
+                                        'Alpha',
+                                        Color(0xffFF6666),
+                                        index,
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
-                              const SizedBox(height: 20),
-                              const Text(
-                                'Ubah keterangan kehadiran:',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.black54,
-                                ),
-                              ),
-                              const SizedBox(height: 20),
-                              Wrap(
-                                spacing: 10,
-                                runSpacing: 10,
-                                children: [
-                                  _buildPresenceButton('Hadir', Color(0xffA8EE87), index),
-                                  _buildPresenceButton('Sakit', Color(0xffFFA470), index),
-                                  _buildPresenceButton('Izin', Color(0xffF8D96D), index),
-                                  _buildPresenceButton('Alpha', Color(0xffFF6666), index),
-                                ],
-                              )
-                            ],
-                          ),
-                        ),
+                            ),
                       );
                     },
                     child: Container(
@@ -381,7 +458,10 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
                         color: AppColors.primary10,
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
                       child: Row(
                         children: [
                           Expanded(
