@@ -52,7 +52,7 @@ class _ProfilePageState extends State<ProfilePage> {
         title: Text(
           'Profil',
           style: TextStyle(
-            fontSize: 30,
+            fontSize: 26,
             fontWeight: FontWeight.w600,
             color: AppColors.primary5,
           ),
@@ -68,7 +68,7 @@ class _ProfilePageState extends State<ProfilePage> {
             child: Icon(
               Icons.chevron_left,
               color: AppColors.primary50,
-              size: 38,
+              size: 26,
             ),
           ),
           onPressed: () {

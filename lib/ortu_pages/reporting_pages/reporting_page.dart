@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../widgets/bottom_navbar.dart';
 import '../../theme/AppColors.dart';
 import 'daily_reporting_page.dart';
-import 'weekly_reporting_page.dart';
+import 'weekly_reporting/weekly_reporting_page.dart';
 import 'semester_report_page.dart';
 
 class ReportingPage extends StatelessWidget {
@@ -19,7 +19,7 @@ class ReportingPage extends StatelessWidget {
         title: Text(
           'Laporan',
           style: TextStyle(
-            fontSize: 30,
+            fontSize: 26,
             fontWeight: FontWeight.w600,
             color: AppColors.primary5,
           ),
@@ -35,7 +35,7 @@ class ReportingPage extends StatelessWidget {
             child: Icon(
               Icons.chevron_left,
               color: AppColors.primary50,
-              size: 38,
+              size: 26,
             ),
           ),
           onPressed: () {
