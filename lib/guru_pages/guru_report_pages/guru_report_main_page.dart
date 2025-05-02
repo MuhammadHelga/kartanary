@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lifesync_capstone_project/guru_pages/guru_report_pages/guru_weekly_report.dart';
 import '../../theme/AppColors.dart';
 import '../../widgets/bottom_navbar.dart';
-import 'guru_create_activity.dart';
+import '../guru_create_activity_pages/guru_create_activity.dart';
 import 'guru_daily_report.dart';
 import 'guru_semester_report.dart';
 
@@ -25,7 +25,7 @@ class _GuruReportMainPageState extends State<GuruReportMainPage> {
         title: Text(
           'Laporan',
           style: TextStyle(
-            fontSize: 30,
+            fontSize: 26,
             fontWeight: FontWeight.w600,
             color: AppColors.primary5,
           ),
@@ -41,7 +41,7 @@ class _GuruReportMainPageState extends State<GuruReportMainPage> {
             child: Icon(
               Icons.chevron_left,
               color: AppColors.primary50,
-              size: 38,
+              size: 26,
             ),
           ),
           onPressed: () {

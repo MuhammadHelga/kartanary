@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:lifesync_capstone_project/guru_pages/guru_report_pages/guru_add_daily.dart';
-import 'package:lifesync_capstone_project/guru_pages/guru_report_pages/guru_add_semester.dart';
-import 'package:lifesync_capstone_project/guru_pages/guru_report_pages/guru_add_weekly.dart';
+import 'package:lifesync_capstone_project/guru_pages/guru_create_activity_pages/guru_add_daily.dart';
+import 'package:lifesync_capstone_project/guru_pages/guru_create_activity_pages/guru_add_semester.dart';
+import 'package:lifesync_capstone_project/guru_pages/guru_create_activity_pages/guru_add_weekly.dart';
 import '../../theme/AppColors.dart';
 import '../../widgets/bottom_navbar.dart';
 import 'guru_add_announcement.dart';
@@ -55,7 +55,7 @@ class _GuruCreateActivityPageState extends State<GuruCreateActivityPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.primary5,
+      backgroundColor: AppColors.white,
       appBar: AppBar(
         backgroundColor: AppColors.primary50,
         elevation: 0,
@@ -88,7 +88,7 @@ class _GuruCreateActivityPageState extends State<GuruCreateActivityPage> {
         toolbarHeight: 70,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(30, 34, 30, 40),
+        padding: const EdgeInsets.fromLTRB(30, 34, 30, 100),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
