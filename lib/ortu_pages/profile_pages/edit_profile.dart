@@ -1,10 +1,85 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../../services/auth_service.dart';
 import 'profile_page.dart';
 import '../../theme/AppColors.dart';
 
-class EditProfile extends StatelessWidget {
+class EditProfile extends StatefulWidget {
   final String role;
   const EditProfile({super.key, required this.role});
+
+  @override
+  State<EditProfile> createState() => _EditProfileState();
+}
+
+class _EditProfileState extends State<EditProfile> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  final nameController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    loadUserData();
+  }
+
+  Future<void> loadUserData() async {
+    final user = _auth.currentUser;
+    if (user != null) {
+      final doc = await _firestore.collection('users').doc(user.uid).get();
+      final data = doc.data();
+      if (data != null) {
+        setState(() {
+          nameController.text = data['name'] ?? '';
+          emailController.text = user.email ?? '';
+        });
+      }
+    }
+  }
+
+  Future<void> saveChanges() async {
+    final user = _auth.currentUser;
+    final newName = nameController.text.trim();
+    final newEmail = emailController.text.trim();
+
+    final currentEmail = user?.email ?? '';
+    final currentPassword = passwordController.text.trim();
+
+    if (user != null) {
+      try {
+        final authService = AuthService();
+
+        if (newEmail != currentEmail) {
+          final result = await authService.updateUserEmail(newEmail);
+
+          if (result != null) {
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(result)));
+            return;
+          }
+        }
+
+        await _firestore.collection('users').doc(user.uid).update({
+          'name': newName,
+          'email': newEmail,
+        });
+
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Data berhasil disimpan.')));
+        Navigator.pop(context);
+      } catch (e) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Terjadi kesalahan')));
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,8 +173,9 @@ class EditProfile extends StatelessWidget {
                                   ),
                                 ),
                                 TextField(
+                                  controller: nameController,
                                   decoration: InputDecoration(
-                                    hintText: 'Riani',
+                                    hintText: 'Nama',
                                     hintStyle: TextStyle(
                                       fontSize: 20,
                                       color: Colors.grey,
@@ -135,8 +211,9 @@ class EditProfile extends StatelessWidget {
                                   ),
                                 ),
                                 TextField(
+                                  controller: emailController,
                                   decoration: InputDecoration(
-                                    hintText: 'Riani@gmail.com',
+                                    hintText: 'Email',
                                     hintStyle: TextStyle(
                                       fontSize: 20,
                                       color: Colors.grey,
@@ -210,9 +287,7 @@ class EditProfile extends StatelessWidget {
                             height: 60,
                             width: 200,
                             child: ElevatedButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
+                              onPressed: saveChanges,
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Color(0xff1D99D3),
                                 shape: RoundedRectangleBorder(

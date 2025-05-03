@@ -146,8 +146,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                 color: Color(0xffF2F9FD),
                                 size: 30,
                               ),
-                              onPressed: () {
-                                Navigator.push(
+                              onPressed: () async {
+                                await Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     builder:
@@ -155,6 +155,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                             EditProfile(role: widget.role),
                                   ),
                                 );
+                                await _loadUserName();
                               },
                             ),
                           ],

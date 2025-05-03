@@ -7,12 +7,11 @@ class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   // Register
-  Future<User?> registerWithEmail(String email, String password,) async {
+  Future<User?> registerWithEmail(String email, String password) async {
     try {
       UserCredential cred = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
-
       );
 
       await cred.user!.sendEmailVerification();
@@ -24,11 +23,7 @@ class AuthService {
     }
   }
 
-  Future<void> saveUserData(
-    String uid,
-    String name,
-    String role
-  ) async {
+  Future<void> saveUserData(String uid, String name, String role) async {
     try {
       await _firestore.collection('users').doc(uid).set({
         'name': name,
@@ -93,5 +88,25 @@ class AuthService {
   // Logout
   Future<void> logout() async {
     await _auth.signOut();
+  }
+
+  Future<String?> updateUserEmail(String newEmail) async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+
+      if (user != null) {
+        await user.verifyBeforeUpdateEmail(newEmail);
+        return 'Verifikasi telah dikirim ke email baru. Silakan cek dan konfirmasi.';
+      } else {
+        return 'User tidak ditemukan.';
+      }
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'requires-recent-login') {
+        return 'Silakan login ulang untuk mengubah email.';
+      }
+      return 'Gagal mengubah email: ${e.message}';
+    } catch (e) {
+      return 'Terjadi kesalahan: $e';
+    }
   }
 }
