@@ -52,12 +52,12 @@ class DetailDailyReport extends StatelessWidget {
             alignment: Alignment.bottomCenter,
             child: Container(
               padding: EdgeInsets.only(
-                top: 70,
+                top: 100,
                 right: 30,
                 left: 30,
                 bottom: 50,
               ),
-              height: 520,
+              height: screenHeight * 0.8,
               width: double.infinity,
               margin: EdgeInsets.only(top: 300),
               decoration: BoxDecoration(
@@ -96,7 +96,7 @@ class DetailDailyReport extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: 10, horizontal: 50),
                 width: double.infinity,
-                margin: EdgeInsets.only(top: 300),
+                margin: EdgeInsets.only(top: screenHeight * 0.28),
                 decoration: BoxDecoration(
                   color: AppColors.secondary300,
                   borderRadius: BorderRadius.all(Radius.circular(20)),

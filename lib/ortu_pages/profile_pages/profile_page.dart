@@ -125,7 +125,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 Text(
                                   _name ?? 'Loading...',
                                   style: TextStyle(
-                                    fontSize: 28,
+                                    fontSize: 22,
                                     fontWeight: FontWeight.bold,
                                     color: Color(0xffF2F9FD),
                                   ),
@@ -133,7 +133,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 Text(
                                   'Orang Tua',
                                   style: TextStyle(
-                                    fontSize: 18,
+                                    fontSize: 14,
                                     color: Color(0xffF2F9FD),
                                   ),
                                 ),
