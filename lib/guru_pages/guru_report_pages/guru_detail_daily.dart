@@ -1,19 +1,12 @@
 import 'package:flutter/material.dart';
 import '../../theme/AppColors.dart';
 
-class DetailDailyReportPage extends StatefulWidget {
+class DetailDailyReportPage extends StatelessWidget {
   const DetailDailyReportPage({super.key});
 
   @override
-  State<DetailDailyReportPage> createState() => _DetailDailyReportPageState();
-}
-
-class _DetailDailyReportPageState extends State<DetailDailyReportPage> {
-
-  final List<String> childrenNames = ['Dokja', 'Rafayel', 'Caleb', 'Moran', 'WKWK'];
-
-  @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: AppColors.primary5,
       appBar: AppBar(
@@ -47,8 +40,90 @@ class _DetailDailyReportPageState extends State<DetailDailyReportPage> {
         ),
         toolbarHeight: 70,
       ),
-      body: SingleChildScrollView(
-
+      body: Stack(
+        children: [
+          Image.asset(
+            'assets/images/laporan_img.png',
+            height: screenHeight * 0.4,
+            width: double.infinity,
+            fit: BoxFit.cover,
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              padding: EdgeInsets.only(
+                top: 100,
+                right: 30,
+                left: 30,
+                bottom: 50,
+              ),
+              height: screenHeight * 0.8,
+              width: double.infinity,
+              margin: EdgeInsets.only(top: 300),
+              decoration: BoxDecoration(
+                color: AppColors.neutral50,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(50),
+                  topRight: Radius.circular(50),
+                ),
+              ),
+              child: SingleChildScrollView(
+                child: Text(
+                  'Ananda mulai menunjukkan pemahaman mengenai identitas dirinya. '
+                  'Ananda mulai menunjukkan pemahaman mengenai identitas dirinya. '
+                  'Ananda mulai menunjukkan pemahaman mengenai identitas dirinya. '
+                  'Ananda mulai menunjukkan pemahaman mengenai identitas dirinya. '
+                  'Ananda mulai menunjukkan pemahaman mengenai identitas dirinya. '
+                  'Ananda mulai menunjukkan pemahaman mengenai identitas dirinya. '
+                  'Ananda mulai menunjukkan pemahaman mengenai identitas dirinya. '
+                  'Ananda mulai menunjukkan pemahaman mengenai identitas dirinya. '
+                  'Ananda mulai menunjukkan pemahaman mengenai identitas dirinya. '
+                  'Ananda mulai menunjukkan pemahaman mengenai identitas dirinya. '
+                  'Ananda mulai menunjukkan pemahaman mengenai identitas dirinya. '
+                  'Ananda mulai menunjukkan pemahaman mengenai identitas dirinya. '
+                  'Ananda mulai menunjukkan pemahaman mengenai identitas dirinya. '
+                  'Ananda mulai menunjukkan pemahaman mengenai identitas dirinya. ',
+                  style: TextStyle(fontSize: 16),
+                  textAlign: TextAlign.justify,
+                ),
+              ),
+            ),
+          ),
+          Align(
+            alignment: Alignment.topCenter,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 60),
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 50),
+                width: double.infinity,
+                margin: EdgeInsets.only(top: screenHeight * 0.28),
+                decoration: BoxDecoration(
+                  color: AppColors.secondary300,
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'KB - A1 Belajar Menggambar',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      'Jumat, 2 Mei 2025',
+                      style: TextStyle(fontSize: 16),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import '../../theme/AppColors.dart';
 import '../../widgets/bottom_navbar.dart';
 import '../../pages/login_page.dart';
+import './guru_edit_profile.dart';
 
 import '../../services/auth_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
-
 
 class GuruProfilePage extends StatefulWidget {
   final String role;
@@ -49,7 +48,10 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       final doc =
-          await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(user.uid)
+              .get();
       if (doc.exists) {
         setState(() {
           _name = doc['name'];
@@ -84,10 +86,9 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
               ],
             ),
           ),
-          if (!kelas.aktif)
-            Icon(Icons.chevron_right, color: Colors.black54),
+          if (!kelas.aktif) Icon(Icons.chevron_right, color: Colors.black54),
         ],
-      )
+      ),
     );
   }
 
@@ -125,174 +126,220 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
               context,
               MaterialPageRoute(
                 builder: (context) => BottomNavbar(role: widget.role),
-              )
+              ),
             );
           },
         ),
         toolbarHeight: 70,
       ),
       body: SafeArea(
-          child: Column(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: AppColors.primary50,
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(24),
-                    bottomRight: Radius.circular(24),
-                  ),
+        child: Column(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: AppColors.primary50,
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(24),
+                  bottomRight: Radius.circular(24),
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  child: Row(
-                    children: [
-                      ClipOval(
-                        child: Image.asset(
-                          'assets/images/photo1.png',
-                          width: 100,
-                          height: 100,
-                          fit: BoxFit.cover,
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 10,
+                ),
+                child: Row(
+                  children: [
+                    ClipOval(
+                      child: Image.asset(
+                        'assets/images/photo1.png',
+                        width: 100,
+                        height: 100,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    SizedBox(width: 15),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          _name ?? 'Loading...',
+                          style: TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xffF2F9FD),
+                          ),
+                        ),
+                        Text(
+                          'Guru',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Color(0xffF2F9FD),
+                          ),
+                        ),
+                        Text(
+                          'Kelas - Kode Kelas',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Color(0xffF2F9FD),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Spacer(),
+                    IconButton(
+                      icon: Icon(
+                        Icons.edit_square,
+                        color: Color(0xffF2F9FD),
+                        size: 26,
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => GuruEditProfile(),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        bottom: 10,
+                        top: 20,
+                        left: 40,
+                      ),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'PENGATURAN',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                      SizedBox(width: 15),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                    ),
+                    Container(
+                      margin: EdgeInsets.symmetric(horizontal: 30),
+                      decoration: BoxDecoration(
+                        color: Color.fromARGB(255, 238, 242, 245),
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 18,
+                        vertical: 18,
+                      ),
+                      child: Column(
                         children: [
-                          Text(
-                            _name ?? 'Loading...',
-                            style: TextStyle(
-                              fontSize: 28,
-                              fontWeight: FontWeight.w600,
-                              color: Color(0xffF2F9FD),
-                            ),
-                          ),
-                          Text(
-                            'Guru',
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Color(0xffF2F9FD),
-                            ),
-                          ),
-                          Text(
-                            'Kelas - Kode Kelas',
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Color(0xffF2F9FD),
-                              fontWeight: FontWeight.w600,
+                          buildSettingItem(Icons.settings_outlined, 'Umum'),
+                          buildDivider(),
+                          buildSettingItem(Icons.info_outlined, 'Tentang'),
+                          buildDivider(),
+                          InkWell(
+                            onTap: () async {
+                              await AuthService().logout();
+                              if (!context.mounted) return;
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                  builder:
+                                      (context) => LoginPage(role: widget.role),
+                                ),
+                                (route) => false,
+                              );
+                            },
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(right: 10),
+                                  child: Icon(
+                                    Icons.logout_outlined,
+                                    color: Color(0xffDC040F),
+                                    size: 30,
+                                  ),
+                                ),
+                                Text(
+                                  'LogOut',
+                                  style: TextStyle(
+                                    color: Color(0xffDC040F),
+                                    fontSize: 20,
+                                  ),
+                                ),
+                                Spacer(),
+                                Icon(
+                                  Icons.chevron_right,
+                                  color: Color(0xffA8A8A8),
+                                  size: 30,
+                                ),
+                              ],
                             ),
                           ),
                         ],
                       ),
-                      Spacer(),
-                      IconButton(
-                        icon: Icon(
-                          Icons.edit_square,
-                          color: Color(0xffF2F9FD),
-                          size: 26,
-                        ),
-                        onPressed: () {
-                          // Implement edit functionality
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column (
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 10, top: 20, left: 40),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            'PENGATURAN',
-                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.symmetric(horizontal: 30),
-                        decoration: BoxDecoration(
-                          color: Color.fromARGB(255, 238, 242, 245),
-                          borderRadius: BorderRadius.all(Radius.circular(20)),
-                        ),
-                        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 18),
-                        child: Column(
-                          children: [
-                            buildSettingItem(Icons.settings_outlined, 'Umum'),
-                            buildDivider(),
-                            buildSettingItem(Icons.info_outlined, 'Tentang'),
-                            buildDivider(),
-                            InkWell(
-                              onTap: () async {
-                                await AuthService().logout();
-                                if (!context.mounted) return;
-                                Navigator.pushAndRemoveUntil(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => LoginPage(role: widget.role)),
-                                  (route) => false,
-                                );
-                              },
-                              child: Row(
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.only(right: 10),
-                                    child: Icon(Icons.logout_outlined, color: Color(0xffDC040F), size: 30),
-                                  ),
-                                  Text(
-                                    'LogOut',
-                                    style: TextStyle(color: Color(0xffDC040F), fontSize: 20),
-                                  ),
-                                  Spacer(),
-                                  Icon(Icons.chevron_right, color: Color(0xffA8A8A8), size: 30),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                    ),
 
-                      // Kelas Aktif
-                      Padding(
-                        padding: const EdgeInsets.only(top: 20, bottom: 8, left: 40),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            'Kelas Aktif',
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                    // Kelas Aktif
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        top: 20,
+                        bottom: 8,
+                        left: 40,
+                      ),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Kelas Aktif',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ),
-                      ...semuaKelas
+                    ),
+                    ...semuaKelas
                         .where((kelas) => kelas.aktif)
                         .map((kelas) => buildKelasCard(kelas))
                         .toList(),
 
-                      // Riwayat Kelas
-                      Padding(
-                        padding: const EdgeInsets.only(top: 20, bottom: 8, left: 40),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            'Riwayat Kelas',
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                    // Riwayat Kelas
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        top: 20,
+                        bottom: 8,
+                        left: 40,
+                      ),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Riwayat Kelas',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ),
-                      ...semuaKelas
+                    ),
+                    ...semuaKelas
                         .where((kelas) => !kelas.aktif)
                         .map((kelas) => buildKelasCard(kelas))
                         .toList(),
                   ],
                 ),
               ),
-            )
-          ]  
+            ),
+          ],
         ),
-      )
+      ),
     );
   }
 
