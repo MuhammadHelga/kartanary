@@ -47,7 +47,6 @@ class _EditProfileState extends State<EditProfile> {
     final newEmail = emailController.text.trim();
 
     final currentEmail = user?.email ?? '';
-    final currentPassword = passwordController.text.trim();
 
     if (user != null) {
       try {
@@ -143,168 +142,164 @@ class _EditProfileState extends State<EditProfile> {
                   SizedBox(height: 40),
                   Padding(
                     padding: const EdgeInsets.all(40),
-                    child: Container(
-                      child: Column(
-                        children: [
-                          Container(
-                            padding: EdgeInsets.all(24),
-                            width: double.infinity,
-                            decoration: const BoxDecoration(
-                              color: Color(0xFF98D5F1),
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(20),
+                    child: Column(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.all(24),
+                          width: double.infinity,
+                          decoration: const BoxDecoration(
+                            color: Color(0xFF98D5F1),
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey,
+                                blurRadius: 6,
+                                offset: Offset(0, 5),
                               ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey,
-                                  blurRadius: 6,
-                                  offset: Offset(0, 5),
-                                ),
-                              ],
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Nama',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                TextField(
-                                  controller: nameController,
-                                  decoration: InputDecoration(
-                                    hintText: 'Nama',
-                                    hintStyle: TextStyle(
-                                      fontSize: 20,
-                                      color: Colors.grey,
-                                    ),
-                                    filled: true,
-                                    fillColor: Color(0xffF8FAFC),
-                                    contentPadding: EdgeInsets.symmetric(
-                                      vertical: 20,
-                                      horizontal: 20,
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(24),
-                                      borderSide: BorderSide(
-                                        color: Color(0xff1D99D3),
-                                        width: 3,
-                                      ),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(24),
-                                      borderSide: BorderSide(
-                                        color: Color(0xff1D99D3),
-                                        width: 3,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(height: 10),
-                                Text(
-                                  'Email',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                TextField(
-                                  controller: emailController,
-                                  decoration: InputDecoration(
-                                    hintText: 'Email',
-                                    hintStyle: TextStyle(
-                                      fontSize: 20,
-                                      color: Colors.grey,
-                                    ),
-                                    filled: true,
-                                    fillColor: Color(0xffF8FAFC),
-                                    contentPadding: EdgeInsets.symmetric(
-                                      vertical: 20,
-                                      horizontal: 20,
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(24),
-                                      borderSide: BorderSide(
-                                        color: Color(0xff1D99D3),
-                                        width: 3,
-                                      ),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(24),
-                                      borderSide: BorderSide(
-                                        color: Color(0xff1D99D3),
-                                        width: 3,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(height: 10),
-                                Text(
-                                  'Role',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                TextField(
-                                  readOnly: true,
-                                  decoration: InputDecoration(
-                                    hintText: 'Orang Tua',
-                                    hintStyle: TextStyle(
-                                      fontSize: 20,
-                                      color: Colors.black,
-                                    ),
-                                    filled: true,
-                                    fillColor: Color(0xffF8FAFC),
-                                    contentPadding: EdgeInsets.symmetric(
-                                      vertical: 20,
-                                      horizontal: 20,
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(24),
-                                      borderSide: BorderSide(
-                                        color: Color(0xff1D99D3),
-                                        width: 3,
-                                      ),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(24),
-                                      borderSide: BorderSide(
-                                        color: Color(0xff1D99D3),
-                                        width: 3,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(height: 10),
-                              ],
-                            ),
+                            ],
                           ),
-                          SizedBox(height: 50),
-                          SizedBox(
-                            height: 60,
-                            width: 200,
-                            child: ElevatedButton(
-                              onPressed: saveChanges,
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Color(0xff1D99D3),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                              ),
-                              child: Text(
-                                'Simpan',
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Nama',
                                 style: TextStyle(
                                   fontSize: 20,
-                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
                                 ),
+                              ),
+                              TextField(
+                                controller: nameController,
+                                decoration: InputDecoration(
+                                  hintText: 'Nama',
+                                  hintStyle: TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.grey,
+                                  ),
+                                  filled: true,
+                                  fillColor: Color(0xffF8FAFC),
+                                  contentPadding: EdgeInsets.symmetric(
+                                    vertical: 20,
+                                    horizontal: 20,
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(24),
+                                    borderSide: BorderSide(
+                                      color: Color(0xff1D99D3),
+                                      width: 3,
+                                    ),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(24),
+                                    borderSide: BorderSide(
+                                      color: Color(0xff1D99D3),
+                                      width: 3,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              Text(
+                                'Email',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              TextField(
+                                controller: emailController,
+                                decoration: InputDecoration(
+                                  hintText: 'Email',
+                                  hintStyle: TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.grey,
+                                  ),
+                                  filled: true,
+                                  fillColor: Color(0xffF8FAFC),
+                                  contentPadding: EdgeInsets.symmetric(
+                                    vertical: 20,
+                                    horizontal: 20,
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(24),
+                                    borderSide: BorderSide(
+                                      color: Color(0xff1D99D3),
+                                      width: 3,
+                                    ),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(24),
+                                    borderSide: BorderSide(
+                                      color: Color(0xff1D99D3),
+                                      width: 3,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              Text(
+                                'Role',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              TextField(
+                                readOnly: true,
+                                decoration: InputDecoration(
+                                  hintText: 'Orang Tua',
+                                  hintStyle: TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.black,
+                                  ),
+                                  filled: true,
+                                  fillColor: Color(0xffF8FAFC),
+                                  contentPadding: EdgeInsets.symmetric(
+                                    vertical: 20,
+                                    horizontal: 20,
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(24),
+                                    borderSide: BorderSide(
+                                      color: Color(0xff1D99D3),
+                                      width: 3,
+                                    ),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(24),
+                                    borderSide: BorderSide(
+                                      color: Color(0xff1D99D3),
+                                      width: 3,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 50),
+                        SizedBox(
+                          height: 60,
+                          width: 200,
+                          child: ElevatedButton(
+                            onPressed: saveChanges,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Color(0xff1D99D3),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                            ),
+                            child: Text(
+                              'Simpan',
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.white,
                               ),
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
