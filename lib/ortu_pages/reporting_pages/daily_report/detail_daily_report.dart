@@ -123,38 +123,6 @@ class DetailDailyReport extends StatelessWidget {
               ),
             ),
           ),
-          // Positioned(
-          //   top: screenHeight * 0.35,
-          //   left: 0,
-          //   right: 0,
-          //   bottom: 0,
-          //   child: SingleChildScrollView(
-          //     padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-          //     child: Column(
-          //       children: [
-          //         Text(
-          //           'Ananda mulai menunjukkan pemahaman mengenai identitas dirinya. '
-          //           'Ananda mulai menunjukkan pemahaman mengenai identitas dirinya. '
-          //           'Ananda mulai menunjukkan pemahaman mengenai identitas dirinya. '
-          //           'Ananda mulai menunjukkan pemahaman mengenai identitas dirinya. '
-          //           'Ananda mulai menunjukkan pemahaman mengenai identitas dirinya. '
-          //           'Ananda mulai menunjukkan pemahaman mengenai identitas dirinya. '
-          //           'Ananda mulai menunjukkan pemahaman mengenai identitas dirinya. '
-          //           'Ananda mulai menunjukkan pemahaman mengenai identitas dirinya. '
-          //           'Ananda mulai menunjukkan pemahaman mengenai identitas dirinya. '
-          //           'Ananda mulai menunjukkan pemahaman mengenai identitas dirinya. '
-          //           'Ananda mulai menunjukkan pemahaman mengenai identitas dirinya. '
-          //           'Ananda mulai menunjukkan pemahaman mengenai identitas dirinya. '
-          //           'Ananda mulai menunjukkan pemahaman mengenai identitas dirinya. '
-          //           'Ananda mulai menunjukkan pemahaman mengenai identitas dirinya. ',
-          //           style: TextStyle(fontSize: 16),
-          //           textAlign: TextAlign.justify,
-          //         ),
-          //         SizedBox(height: 20),
-          //       ],
-          //     ),
-          //   ),
-          // ),
         ],
       ),
     );

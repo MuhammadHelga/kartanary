@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import './detail_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -137,16 +138,12 @@ class _HomePageState extends State<HomePage> {
                       description:
                           'Lorem ipsum dolor sit amet consectetur. Dolor interdum odio quam sed aliquam.',
                       imageUrl: 'assets/images/placeholder_updates.jpg',
-                      onTap: (
-                      ) {
-                      },
                     ),
                     UpdateCard(
                       title: 'Cooking Class',
                       description:
                           'Lorem ipsum dolor sit amet consectetur. Dolor interdum odio quam sed aliquam.',
                       imageUrl: 'assets/images/placeholder_updates.jpg',
-                      onTap: () {},
                     ),
                   ],
                 ),
@@ -246,13 +243,11 @@ class UpdateCard extends StatelessWidget {
   final String title;
   final String description;
   final String imageUrl;
-  final VoidCallback onTap;
 
   UpdateCard({
     required this.title,
     required this.description,
     required this.imageUrl,
-    required this.onTap,
   });
 
   @override
@@ -261,7 +256,19 @@ class UpdateCard extends StatelessWidget {
       color: Color(0xFFC5E7F7),
       margin: EdgeInsets.symmetric(vertical: 8),
       child: InkWell(
-        onTap: onTap,
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder:
+                  (context) => DetailPage(
+                    title: title,
+                    description: description,
+                    imageUrl: imageUrl,
+                  ),
+            ),
+          );
+        },
         child: ListTile(
           leading: Image.asset(
             imageUrl,

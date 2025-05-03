@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import '../../../theme/AppColors.dart';
 
-class DetailPage extends StatelessWidget {
+class GuruDetailPage extends StatelessWidget {
   final String title;
   final String description;
   final String imageUrl;
 
-  const DetailPage({
+  const GuruDetailPage({
     Key? key,
     required this.title,
     required this.description,

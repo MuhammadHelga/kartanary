@@ -20,25 +20,32 @@ class RoleOptionPage extends StatelessWidget {
         child: Scaffold(
           backgroundColor: Colors.transparent,
           body: Center(
-            child: Column(
-              // mainAxisAlignment: MainAxisAlignment.center,
-              // crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(height: 100),
-                Image.asset(
-                  'assets/images/logo_paud.png',
-                  height: 200,
-                  width: 300,
-                  fit: BoxFit.cover,
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      'assets/images/logo_paud.png',
+                      height: 200,
+                      width: 300,
+                      fit: BoxFit.cover,
+                    ),
+                    SizedBox(height: 50),
+                    Text(
+                      'Pilih Role',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 30,
+                      ),
+                    ),
+                    roleBtn('Guru', 'assets/images/logo_guru.png'),
+                    roleBtn('Orang Tua', 'assets/images/logo_ortu.png'),
+                  ],
                 ),
-                SizedBox(height: 50),
-                Text(
-                  'Pilih Role',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
-                ),
-                roleBtn('Guru', 'assets/images/logo_guru.png'),
-                roleBtn('Orang Tua', 'assets/images/logo_ortu.png'),
-              ],
+              ),
             ),
           ),
         ),
