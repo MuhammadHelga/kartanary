@@ -54,7 +54,6 @@ class _EditProfileState extends State<EditProfile> {
       final authService = AuthService();
       final isEmailChanged = newEmail != currentEmail;
 
-      // Jika email diubah
       if (isEmailChanged) {
         final confirm = await showDialog<bool>(
           context: context,
@@ -78,7 +77,6 @@ class _EditProfileState extends State<EditProfile> {
         );
 
         if (confirm == true) {
-          // Kirim verifikasi dan simpan role sebelum logout
           final uid = user.uid;
 
           DocumentSnapshot userDoc =
@@ -93,14 +91,12 @@ class _EditProfileState extends State<EditProfile> {
             ).showSnackBar(SnackBar(content: Text(result)));
           }
 
-          // Simpan nama baru (jika ada)
           if (newName.isNotEmpty) {
             await _firestore.collection('users').doc(uid).update({
               'name': newName,
             });
           }
 
-          // Logout dan navigasi ke login
           await authService.logout();
 
           if (!mounted) return;
@@ -113,7 +109,6 @@ class _EditProfileState extends State<EditProfile> {
           return;
         }
       } else {
-        // Hanya nama yang diubah
         await _firestore.collection('users').doc(user.uid).update({
           'name': newName,
         });

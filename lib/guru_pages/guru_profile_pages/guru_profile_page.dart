@@ -199,7 +199,8 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
                         await Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => GuruEditProfile(),
+                            builder:
+                                (context) => GuruEditProfile(role: widget.role),
                           ),
                         );
                         await _loadUserName();
