@@ -39,13 +39,23 @@ class AuthService {
   Future<User?> loginWithEmail(
     String email,
     String password,
-    BuildContext context,
-  ) async {
+    BuildContext context, {
+    required String selectedRole,
+  }) async {
     try {
       UserCredential cred = await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
+
+      User? user = cred.user;
+
+      // Ambil data user dari Firestore
+      DocumentSnapshot userDoc =
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(user!.uid)
+              .get();
 
       if (!cred.user!.emailVerified) {
         await _auth.signOut();
@@ -56,20 +66,23 @@ class AuthService {
         );
         return null;
       }
+      ;
 
-      DocumentSnapshot userDoc =
-          await _firestore.collection('users').doc(cred.user!.uid).get();
+      String storedRole = userDoc['role'];
 
-      if (userDoc.exists) {
-        String role = userDoc['role'];
-
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => BottomNavbar(role: role)),
+      if (storedRole != selectedRole) {
+        await FirebaseAuth.instance.signOut();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Akun ini bukan untuk role ${selectedRole.toLowerCase()}',
+            ),
+          ),
         );
+        return null;
       }
 
-      return cred.user;
+      return user;
     } catch (e) {
       debugPrint('Error saat login: $e');
       return null;
