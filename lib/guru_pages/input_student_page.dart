@@ -66,7 +66,11 @@ class _InputStudentPageState extends State<InputStudentPage> {
                     SizedBox(height: 20),
                     Text(
                       'Nama Anak',
-                      style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     SizedBox(height: 10),
                     TextField(
@@ -91,22 +95,31 @@ class _InputStudentPageState extends State<InputStudentPage> {
                         contentPadding: EdgeInsets.symmetric(vertical: 15),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(24),
-                          borderSide: BorderSide(color: Color(0xff1D99D3), width: 3),
+                          borderSide: BorderSide(
+                            color: Color(0xff1D99D3),
+                            width: 3,
+                          ),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(24),
-                          borderSide: BorderSide(color: Color(0xff1D99D3), width: 3),
+                          borderSide: BorderSide(
+                            color: Color(0xff1D99D3),
+                            width: 3,
+                          ),
                         ),
                       ),
                     ),
                     SizedBox(height: 20),
                     Text(
                       'Umur Anak',
-                      style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     SizedBox(height: 10),
                     TextField(
-    
                       decoration: InputDecoration(
                         prefixIcon: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -123,18 +136,28 @@ class _InputStudentPageState extends State<InputStudentPage> {
                         contentPadding: EdgeInsets.symmetric(vertical: 15),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(24),
-                          borderSide: BorderSide(color: Color(0xff1D99D3), width: 3),
+                          borderSide: BorderSide(
+                            color: Color(0xff1D99D3),
+                            width: 3,
+                          ),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(24),
-                          borderSide: BorderSide(color: Color(0xff1D99D3), width: 3),
+                          borderSide: BorderSide(
+                            color: Color(0xff1D99D3),
+                            width: 3,
+                          ),
                         ),
                       ),
                     ),
                     SizedBox(height: 20),
                     Text(
                       'Jenis Kelamin Anak',
-                      style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     SizedBox(height: 10),
                     Row(
@@ -145,8 +168,12 @@ class _InputStudentPageState extends State<InputStudentPage> {
                               value: 'Laki-laki',
                               groupValue: _selectedGender,
                               activeColor: Color(0xff1D99D3),
-                              visualDensity: VisualDensity(horizontal: 0, vertical: -2),
-                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              visualDensity: VisualDensity(
+                                horizontal: 0,
+                                vertical: -2,
+                              ),
+                              materialTapTargetSize:
+                                  MaterialTapTargetSize.shrinkWrap,
                               onChanged: (value) {
                                 setState(() {
                                   _selectedGender = value;
@@ -163,8 +190,12 @@ class _InputStudentPageState extends State<InputStudentPage> {
                               value: 'Perempuan',
                               groupValue: _selectedGender,
                               activeColor: Color(0xff1D99D3),
-                              visualDensity: VisualDensity(horizontal: 0, vertical: -2),
-                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              visualDensity: VisualDensity(
+                                horizontal: 0,
+                                vertical: -2,
+                              ),
+                              materialTapTargetSize:
+                                  MaterialTapTargetSize.shrinkWrap,
                               onChanged: (value) {
                                 setState(() {
                                   _selectedGender = value;
@@ -228,9 +259,7 @@ class _InputStudentPageState extends State<InputStudentPage> {
                       if (_childrenNames.isNotEmpty) {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) => ListStudentPage(role: 'Guru',
-                              // childrenNames: _childrenNames,
-                            ),
+                            builder: (context) => ListStudentPage(role: 'Guru'),
                           ),
                         );
                       } else {
