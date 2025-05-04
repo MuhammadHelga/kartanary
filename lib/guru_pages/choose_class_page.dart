@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
 import '../theme/AppColors.dart';
 import 'create_class_page.dart';
+import '../widgets/bottom_navbar.dart';
 import 'join_class_page.dart';
 
-class ChooseClassPage extends StatelessWidget {
-  const ChooseClassPage({Key? key}) : super(key: key);
+class ChooseClassPage extends StatefulWidget {
+  final String role;
+  const ChooseClassPage({Key? key, required this.role}) : super(key: key);
 
+  @override
+  State<ChooseClassPage> createState() => _ChooseClassPageState();
+}
+
+class _ChooseClassPageState extends State<ChooseClassPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,12 +38,16 @@ class ChooseClassPage extends StatelessWidget {
         ),
       ),
       body: SafeArea(
-        child: SingleChildScrollView( // Menambahkan SingleChildScrollView
+        child: SingleChildScrollView(
+          // Menambahkan SingleChildScrollView
           child: Padding(
-            padding: const EdgeInsets.only(top: 100), // Menambahkan padding agar konten naik
+            padding: const EdgeInsets.only(
+              top: 100,
+            ), // Menambahkan padding agar konten naik
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.start, // Mengubah alignment jadi start
+              mainAxisAlignment:
+                  MainAxisAlignment.start, // Mengubah alignment jadi start
               children: <Widget>[
                 // Logo
                 Image.asset(
@@ -48,20 +59,15 @@ class ChooseClassPage extends StatelessWidget {
                 const SizedBox(height: 10),
                 const Text(
                   'Tambahkan kelas untuk memulai',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.black,
-                  ),
+                  style: TextStyle(fontSize: 16, color: Colors.black),
                 ),
                 const SizedBox(height: 30),
 
-                // Tombol horizontal
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 40),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // Tombol Bergabung ke Kelas
                       Expanded(
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
@@ -76,7 +82,9 @@ class ChooseClassPage extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => JoinClassPage(),
+                                builder:
+                                    (context) =>
+                                        BottomNavbar(role: widget.role),
                               ),
                             );
                           },
@@ -92,7 +100,6 @@ class ChooseClassPage extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 16),
-                      // Tombol Buat Kelas Baru
                       Expanded(
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(

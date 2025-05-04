@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../screens/role_option_page.dart';
 import '../pages/register_page.dart';
 import '../pages/forgot_password.dart';
+import '../widgets/bottom_navbar.dart';
+import '../guru_pages/choose_class_page.dart';
 import '../services/auth_service.dart';
 
 class LoginPage extends StatefulWidget {
@@ -211,24 +213,32 @@ class _LoginPageState extends State<LoginPage> {
         width: double.infinity,
         child: ElevatedButton(
           onPressed: () async {
-            final email = _emailController.text.trim();
-            final password = _passwordController.text.trim();
-
             final user = await AuthService().loginWithEmail(
-              email,
-              password,
+              _emailController.text.trim(),
+              _passwordController.text.trim(),
               context,
               selectedRole: widget.role,
             );
 
-            if (user == null) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Login gagal. Email atau Password salah.'),
-                ),
-              );
+            if (user != null) {
+              if (widget.role == 'Guru') {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ChooseClassPage(role: widget.role),
+                  ),
+                );
+              } else if (widget.role == 'Orang Tua') {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => BottomNavbar(role: widget.role),
+                  ),
+                );
+              }
             }
           },
+
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xff1D99D3),
             shape: RoundedRectangleBorder(
