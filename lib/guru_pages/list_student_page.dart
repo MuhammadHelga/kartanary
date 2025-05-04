@@ -8,30 +8,12 @@ class ListStudentPage extends StatefulWidget {
   final String role;
   const ListStudentPage({super.key, required this.role});
 
-  // final List<String> childrenNames;
-
-  // ListStudentPage({Key? key, required String role}) : super(key: key);
-
   @override
   _ListStudentPageState createState() => _ListStudentPageState();
 }
 
 class _ListStudentPageState extends State<ListStudentPage> {
-  // const ListStudentPage({Key? key}) : super(key: key);
   List<String> childrenNames = ['Dokja', 'Rafayel', 'Caleb', 'Moran', 'WKWK'];
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   childrenNames = widget.childrenNames;
-  // }
-
-  // // Fungsi untuk menambahkan anak baru ke dalam daftar
-  // void _addChild(String name) {
-  //   setState(() {
-  //     childrenNames.add(name); // Menambahkan nama anak baru ke list
-  //   });
-  // }
 
   String getInitial(String name) {
     if (name.isEmpty) return '';
@@ -179,15 +161,7 @@ class _ListStudentPageState extends State<ListStudentPage> {
           onPressed: () {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder:
-                    (context) => InputStudentPage(
-                      role: widget.role,
-                      // onAddChild: (String newChild) {
-                      //   setState(() {
-                      //     childrenNames.add(newChild);
-                      //   });
-                      // },
-                    ),
+                builder: (context) => InputStudentPage(role: widget.role),
               ),
             );
           },
