@@ -218,6 +218,7 @@ class _LoginPageState extends State<LoginPage> {
               email,
               password,
               context,
+              selectedRole: widget.role,
             );
 
             if (user == null) {
