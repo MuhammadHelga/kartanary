@@ -221,9 +221,11 @@ class _LoginPageState extends State<LoginPage> {
             );
 
             if (user == null) {
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(const SnackBar(content: Text('Login gagal')));
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Login gagal. Email atau Password salah.'),
+                ),
+              );
             }
           },
           style: ElevatedButton.styleFrom(

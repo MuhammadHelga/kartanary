@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../pages/login_page.dart';
-import '../services/auth_gate.dart';
 import '../widgets/bottom_navbar.dart';
 
 class RoleOptionPage extends StatelessWidget {

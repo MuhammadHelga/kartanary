@@ -306,7 +306,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             await AuthService().logout();
 
                             if (!context.mounted)
-                              return; // Pastikan context masih aman digunakan
+                              return;
 
                             Navigator.pushAndRemoveUntil(
                               context,
@@ -314,7 +314,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 builder:
                                     (context) => LoginPage(role: widget.role),
                               ),
-                              (route) => false, // Hapus semua rute sebelumnya
+                              (route) => false,
                             );
                           },
                           child: Row(
