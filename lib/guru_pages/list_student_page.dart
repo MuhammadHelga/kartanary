@@ -5,17 +5,18 @@ import '../theme/AppColors.dart';
 import '../widgets/bottom_navbar.dart';
 
 class ListStudentPage extends StatefulWidget {
+  final String role;
+  const ListStudentPage({super.key, required this.role});
 
   // final List<String> childrenNames;
 
-  ListStudentPage({Key? key, required String role}) : super(key: key);
-  
+  // ListStudentPage({Key? key, required String role}) : super(key: key);
+
   @override
   _ListStudentPageState createState() => _ListStudentPageState();
 }
 
 class _ListStudentPageState extends State<ListStudentPage> {
-
   // const ListStudentPage({Key? key}) : super(key: key);
   List<String> childrenNames = ['Dokja', 'Rafayel', 'Caleb', 'Moran', 'WKWK'];
 
@@ -73,7 +74,12 @@ class _ListStudentPageState extends State<ListStudentPage> {
         toolbarHeight: 70,
       ),
       body: Padding(
-        padding: const EdgeInsets.only(top: 30, bottom: 50, left: 30, right: 30),
+        padding: const EdgeInsets.only(
+          top: 30,
+          bottom: 50,
+          left: 30,
+          right: 30,
+        ),
         child: Column(
           children: [
             Expanded(
@@ -88,7 +94,10 @@ class _ListStudentPageState extends State<ListStudentPage> {
                       color: AppColors.primary10,
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -118,7 +127,10 @@ class _ListStudentPageState extends State<ListStudentPage> {
                           ],
                         ),
                         IconButton(
-                          icon: const Icon(Icons.delete_outline, color: AppColors.primary300),
+                          icon: const Icon(
+                            Icons.delete_outline,
+                            color: AppColors.primary300,
+                          ),
                           onPressed: () {},
                         ),
                       ],
@@ -132,10 +144,10 @@ class _ListStudentPageState extends State<ListStudentPage> {
               width: double.infinity,
               height: 50,
               child: ElevatedButton(
-                onPressed: () {                    
+                onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                    builder: (context) => BottomNavbar(role: 'guru',),
+                      builder: (context) => BottomNavbar(role: 'Guru'),
                     ),
                   );
                 },
@@ -150,37 +162,38 @@ class _ListStudentPageState extends State<ListStudentPage> {
                 child: Text(
                   'Selesai',
                   style: TextStyle(
-                  fontFamily: 'Poppins',
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.primary50,
+                    fontFamily: 'Poppins',
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.primary50,
                   ),
+                ),
               ),
             ),
-          ),
           ],
         ),
       ),
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 80.0), // move button up a bit
         child: FloatingActionButton(
-          onPressed: () {                    
+          onPressed: () {
             Navigator.of(context).push(
               MaterialPageRoute(
-              builder: (context) => InputStudentPage(
-                // onAddChild: (String newChild) {
-                //   setState(() {
-                //     childrenNames.add(newChild);
-                //   });
-                // },
-              ),
+                builder:
+                    (context) => InputStudentPage(
+                      role: widget.role,
+                      // onAddChild: (String newChild) {
+                      //   setState(() {
+                      //     childrenNames.add(newChild);
+                      //   });
+                      // },
+                    ),
               ),
             );
           },
           backgroundColor: AppColors.primary50,
           shape: const CircleBorder(), // ensure fully circular
           child: const Icon(Icons.add, size: 28, color: AppColors.white),
-          
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,

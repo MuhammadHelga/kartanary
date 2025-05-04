@@ -128,7 +128,7 @@ class _ChooseClassPageState extends State<ChooseClassPage> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => CreateClassPage(),
+                                  builder: (context) => CreateClassPage(role: widget.role,),
                                 ),
                               );
                             },
