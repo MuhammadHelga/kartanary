@@ -3,6 +3,8 @@ import '../theme/AppColors.dart';
 import '/guru_pages/list_student_page.dart';
 
 class InputStudentPage extends StatefulWidget {
+  final String role;
+  const InputStudentPage({super.key, required this.role});
 
   // final Function(String) onAddChild; // Callback untuk mengirim data ke halaman sebelumnya
 
@@ -226,7 +228,7 @@ class _InputStudentPageState extends State<InputStudentPage> {
                       if (_childrenNames.isNotEmpty) {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) => ListStudentPage(role: 'guru',
+                            builder: (context) => ListStudentPage(role: 'Guru',
                               // childrenNames: _childrenNames,
                             ),
                           ),

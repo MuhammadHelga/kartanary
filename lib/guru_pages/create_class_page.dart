@@ -3,6 +3,8 @@ import 'package:lifesync_capstone_project/guru_pages/input_student_page.dart';
 import '/theme/AppColors.dart';
 
 class CreateClassPage extends StatefulWidget {
+  final String role;
+  const CreateClassPage({super.key, required this.role});
   @override
   _CreateClassPageState createState() => _CreateClassPageState();
 }
@@ -137,7 +139,7 @@ class _CreateClassPageState extends State<CreateClassPage> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => InputStudentPage()),
+                    MaterialPageRoute(builder: (context) => InputStudentPage(role: widget.role,)),
                   );
                 },
                 style: ElevatedButton.styleFrom(
