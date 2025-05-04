@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:lifesync_capstone_project/guru_pages/guru_profile_pages/guru_profile_page.dart';
+import '../../pages/login_page.dart';
+import './guru_profile_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../services/auth_service.dart';
 import '../../theme/AppColors.dart';
 
 class GuruEditProfile extends StatefulWidget {
-  const GuruEditProfile({super.key});
+  final String role;
+  const GuruEditProfile({super.key, required this.role});
 
   @override
   State<GuruEditProfile> createState() => _GuruEditProfileState();
@@ -43,38 +47,88 @@ class _GuruEditProfileState extends State<GuruEditProfile> {
     final user = _auth.currentUser;
     final newName = nameController.text.trim();
     final newEmail = emailController.text.trim();
-
     final currentEmail = user?.email ?? '';
 
-    if (user != null) {
-      try {
-        final authService = AuthService();
+    if (user == null) return;
 
-        if (newEmail != currentEmail) {
+    try {
+      final authService = AuthService();
+      final isEmailChanged = newEmail != currentEmail;
+
+      if (isEmailChanged) {
+        final confirm = await showDialog<bool>(
+          context: context,
+          builder:
+              (context) => AlertDialog(
+                title: Text('Konfirmasi Ubah Email'),
+                content: Text(
+                  'Mengubah email akan mengharuskan login ulang. Lanjutkan?',
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(false),
+                    child: Text('Batal'),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(true),
+                    child: Text('Lanjutkan'),
+                  ),
+                ],
+              ),
+        );
+
+        if (confirm == true) {
+          final uid = user.uid;
+
+          DocumentSnapshot userDoc =
+              await _firestore.collection('users').doc(uid).get();
+          String role = userDoc['role'] ?? 'user';
+
           final result = await authService.updateUserEmail(newEmail);
 
           if (result != null) {
             ScaffoldMessenger.of(
               context,
             ).showSnackBar(SnackBar(content: Text(result)));
-            return;
           }
-        }
 
+          if (newName.isNotEmpty) {
+            await _firestore.collection('users').doc(uid).update({
+              'name': newName,
+            });
+          }
+
+          await authService.logout();
+
+          if (!mounted) return;
+
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => LoginPage(role: role)),
+            (route) => false,
+          );
+          return;
+        }
+      } else {
         await _firestore.collection('users').doc(user.uid).update({
           'name': newName,
-          'email': newEmail,
         });
 
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Data berhasil disimpan.')));
-        Navigator.pop(context);
-      } catch (e) {
-        ScaffoldMessenger.of(
+        ).showSnackBar(SnackBar(content: Text('Profil berhasil diperbarui.')));
+
+        Navigator.pushReplacement(
           context,
-        ).showSnackBar(SnackBar(content: Text('Terjadi kesalahan')));
+          MaterialPageRoute(
+            builder: (context) => GuruProfilePage(role: widget.role),
+          ),
+        );
       }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Terjadi kesalahan. Silakan coba lagi.')),
+      );
     }
   }
 
