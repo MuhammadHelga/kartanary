@@ -6,11 +6,11 @@ import '../services/auth_service.dart';
 
 class InputStudentPage extends StatefulWidget {
   final String role;
-  final String className;
+  final String classId;
   const InputStudentPage({
     super.key,
     required this.role,
-    required this.className,
+    required this.classId,
   });
 
   // final Function(String) onAddChild; // Callback untuk mengirim data ke halaman sebelumnya
@@ -25,6 +25,9 @@ class _InputStudentPageState extends State<InputStudentPage> {
   String? _selectedGender;
   String _childName = '';
   List<String> _childrenNames = [];
+
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _ageController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -81,11 +84,7 @@ class _InputStudentPageState extends State<InputStudentPage> {
                     ),
                     SizedBox(height: 10),
                     TextField(
-                      onChanged: (value) {
-                        setState(() {
-                          _childName = value;
-                        });
-                      },
+                      controller: _nameController,
                       decoration: InputDecoration(
                         prefixIcon: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -127,6 +126,8 @@ class _InputStudentPageState extends State<InputStudentPage> {
                     ),
                     SizedBox(height: 10),
                     TextField(
+                      keyboardType: TextInputType.number,
+                      controller: _ageController,
                       decoration: InputDecoration(
                         prefixIcon: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -226,13 +227,16 @@ class _InputStudentPageState extends State<InputStudentPage> {
                   height: 50,
                   child: ElevatedButton(
                     onPressed: () async {
-                      if (_childName.isNotEmpty && _selectedGender != null) {
+                      if (_nameController.text.isNotEmpty &&
+                          _selectedGender != null) {
                         try {
                           await AuthService().tambahAnak(
-                            name: _childName,
+                            name: _nameController.text,
                             gender: _selectedGender!,
-                            className: widget.className,
+                            classId: widget.classId,
                           );
+                          _nameController.clear();
+                          _ageController.clear();
                           setState(() {
                             _childrenNames.add(_childName);
                             _childName = '';
@@ -266,7 +270,7 @@ class _InputStudentPageState extends State<InputStudentPage> {
                                     ),
                                     SizedBox(width: 10),
                                     Text(
-                                      'Anak berhasil ditambahkan ke ${widget.className}!',
+                                      'Anak berhasil ditambahkan ke ${widget.classId}!',
                                       style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
@@ -356,7 +360,7 @@ class _InputStudentPageState extends State<InputStudentPage> {
                             builder:
                                 (context) => ListStudentPage(
                                   role: 'Guru',
-                                  className: widget.className,
+                                  classId: widget.classId,
                                 ),
                           ),
                         );

@@ -6,13 +6,9 @@ import '../widgets/bottom_navbar.dart';
 
 class ListStudentPage extends StatefulWidget {
   final String role;
-  final String className;
+  final String classId;
 
-  const ListStudentPage({
-    super.key,
-    required this.role,
-    required this.className,
-  });
+  const ListStudentPage({super.key, required this.role, required this.classId});
 
   @override
   _ListStudentPageState createState() => _ListStudentPageState();
@@ -62,7 +58,7 @@ class _ListStudentPageState extends State<ListStudentPage> {
   @override
   void initState() {
     super.initState();
-    print('📌 DEBUG className yang dikirim: ${widget.className}');
+    print('📌 DEBUG className yang dikirim: ${widget.classId}');
   }
 
   @override
@@ -113,8 +109,10 @@ class _ListStudentPageState extends State<ListStudentPage> {
               child: StreamBuilder<QuerySnapshot>(
                 stream:
                     FirebaseFirestore.instance
+                        .collection('kelas')
+                        .doc(widget.classId)
                         .collection('anak')
-                        .where('className', isEqualTo: widget.className)
+                        .orderBy('createdAt', descending: false)
                         .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -233,7 +231,7 @@ class _ListStudentPageState extends State<ListStudentPage> {
                 builder:
                     (context) => InputStudentPage(
                       role: widget.role,
-                      className: widget.className,
+                      classId: widget.classId,
                     ),
               ),
             );
