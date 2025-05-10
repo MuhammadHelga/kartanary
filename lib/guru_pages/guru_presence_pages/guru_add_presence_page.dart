@@ -5,7 +5,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class GuruPresencePage extends StatefulWidget {
   final String role;
-  const GuruPresencePage({super.key, required this.role});
+  final String classId;
+  const GuruPresencePage({
+    super.key,
+    required this.role,
+    required this.classId,
+  });
 
   @override
   State<GuruPresencePage> createState() => _GuruPresencePageState();
@@ -30,7 +35,11 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
   }
 
   void _fetchChildrenData() async {
-    final snapshot = await FirebaseFirestore.instance.collection('anak').get();
+    final snapshot =
+        await FirebaseFirestore.instance
+            .collection('anak')
+            .where('classId', isEqualTo: widget.classId)
+            .get();
     setState(() {
       childrenNames =
           snapshot.docs.map((doc) => doc['name'] as String).toList();

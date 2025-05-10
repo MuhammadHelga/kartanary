@@ -145,7 +145,7 @@ class AuthService {
   }
 
   // Tambah kelas
-  Future<void> simpanKelas({
+  Future<String> simpanKelas({
     required String namaKelas,
     required String ruangan,
     required String tahunAjaran,
@@ -167,29 +167,38 @@ class AuthService {
 
     final String kodeKelas = _generateKodeKelas();
 
-    await _firestore.collection('kelas').add({
-      'kode_kelas': kodeKelas,
-      'nama_kelas': namaKelas,
-      'ruangan': ruangan,
-      'tahun_ajaran': tahunAjaran,
-      'dibuat_oleh': user.uid,
-      'dibuat_pada': FieldValue.serverTimestamp(),
-    });
+    try {
+      final docRef = await _firestore.collection('kelas').add({
+        'kode_kelas': kodeKelas,
+        'nama_kelas': namaKelas,
+        'ruangan': ruangan,
+        'tahun_ajaran': tahunAjaran,
+        'dibuat_oleh': user.uid,
+        'dibuat_pada': FieldValue.serverTimestamp(),
+      });
+      return docRef.id;
+    } catch (e) {
+      debugPrint('Error saat menyimpan kelas: $e');
+      throw e;
+    }
   }
 
   //Tambah Anak
   Future<void> tambahAnak({
     required String name,
     required String gender,
-    required String className,
+    required String classId,
   }) async {
     try {
-      await _firestore.collection('anak').add({
-        'name': name,
-        'gender': gender,
-        'className': className,
-        'createdAt': FieldValue.serverTimestamp(),
-      });
+      await FirebaseFirestore.instance
+          .collection('kelas')
+          .doc(classId)
+          .collection('anak')
+          .add({
+            'name': name,
+            'gender': gender,
+            'createdAt': FieldValue.serverTimestamp(),
+          });
     } catch (e) {
       debugPrint('Error saat menambah anak: $e');
       throw e; // Melempar kembali error jika terjadi

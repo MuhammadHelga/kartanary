@@ -30,7 +30,7 @@ class _CreateClassPageState extends State<CreateClassPage> {
     }
 
     try {
-      await AuthService().simpanKelas(
+      final classId = await AuthService().simpanKelas(
         namaKelas: namaKelas,
         ruangan: ruangan,
         tahunAjaran: tahunAjaran,
@@ -41,7 +41,7 @@ class _CreateClassPageState extends State<CreateClassPage> {
         MaterialPageRoute(
           builder:
               (context) =>
-                  InputStudentPage(role: widget.role, className: namaKelas),
+                  InputStudentPage(role: widget.role, classId: classId),
         ),
       );
     } catch (e) {

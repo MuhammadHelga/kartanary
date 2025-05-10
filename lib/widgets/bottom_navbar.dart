@@ -35,7 +35,7 @@ class _BottomNavbarState extends State<BottomNavbar> {
     ];
     List<Widget> guru_pages = [
       GuruHomePage(),
-      GuruPresencePage(role: widget.role),
+      GuruPresencePage(role: widget.role, classId: ' '),
       GuruReportMainPage(role: widget.role),
       GuruProfilePage(role: widget.role),
     ];
