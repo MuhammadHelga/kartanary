@@ -5,6 +5,7 @@ import '../pages/forgot_password.dart';
 import '../widgets/bottom_navbar.dart';
 import '../guru_pages/choose_class_page.dart';
 import '../services/auth_service.dart';
+import '../ortu_pages/class_options.dart';
 
 class LoginPage extends StatefulWidget {
   final String role;
@@ -243,7 +244,7 @@ class _LoginPageState extends State<LoginPage> {
                   context,
                   MaterialPageRoute(
                     builder:
-                        (context) => BottomNavbar(
+                        (context) => ClassOptions(
                           role: widget.role,
                           classId: widget.classId,
                         ),
