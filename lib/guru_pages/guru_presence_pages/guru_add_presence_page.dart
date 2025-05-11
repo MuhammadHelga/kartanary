@@ -35,11 +35,14 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
   }
 
   void _fetchChildrenData() async {
+    print("📌 Mengambil anak dari classId: ${widget.classId}");
     final snapshot =
         await FirebaseFirestore.instance
+            .collection('kelas')
+            .doc(widget.classId)
             .collection('anak')
-            .where('classId', isEqualTo: widget.classId)
             .get();
+
     setState(() {
       childrenNames =
           snapshot.docs.map((doc) => doc['name'] as String).toList();
@@ -137,7 +140,7 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => BottomNavbar(role: widget.role),
+                builder: (context) => BottomNavbar(role: widget.role, classId: widget.classId,),
               ),
             );
           },

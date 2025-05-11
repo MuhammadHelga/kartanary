@@ -4,7 +4,8 @@ import '../../widgets/bottom_navbar.dart';
 
 class PresencePage extends StatefulWidget {
   final String role;
-  const PresencePage({super.key, required this.role});
+  final String classId;
+  const PresencePage({super.key, required this.role, required this.classId});
 
   @override
   State<PresencePage> createState() => _PresencePageState();
@@ -91,7 +92,11 @@ class _PresencePageState extends State<PresencePage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => BottomNavbar(role: widget.role),
+                builder:
+                    (context) => BottomNavbar(
+                      role: widget.role,
+                      classId: widget.classId,
+                    ),
               ),
             );
           },

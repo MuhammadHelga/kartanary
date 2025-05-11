@@ -24,13 +24,13 @@ class _ClassOptionsState extends State<ClassOptions> {
       await prefs.setString('studentName', studentName);
 
       // Navigate to BottomNavbar after saving
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder:
-              (context) => BottomNavbar(role: 'Ortu'), // Pass role as 'Ortu'
-        ),
-      );
+      // Navigator.pushReplacement(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder:
+      //         (context) => BottomNavbar(role: 'Ortu'), // Pass role as 'Ortu'
+      //   ),
+      // );
     } else {
       // Show error if fields are empty
       ScaffoldMessenger.of(context).showSnackBar(

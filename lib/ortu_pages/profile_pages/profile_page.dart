@@ -10,7 +10,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class ProfilePage extends StatefulWidget {
   final String role;
-  const ProfilePage({super.key, required this.role});
+  final String classId;
+  const ProfilePage({super.key, required this.role, required this.classId});
 
   @override
   _ProfilePageState createState() => _ProfilePageState();
@@ -75,7 +76,11 @@ class _ProfilePageState extends State<ProfilePage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => BottomNavbar(role: widget.role),
+                builder:
+                    (context) => BottomNavbar(
+                      role: widget.role,
+                      classId: widget.classId,
+                    ),
               ),
             );
           },
@@ -151,8 +156,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                   context,
                                   MaterialPageRoute(
                                     builder:
-                                        (context) =>
-                                            EditProfile(role: widget.role),
+                                        (context) => EditProfile(
+                                          role: widget.role,
+                                          classId: widget.classId,
+                                        ),
                                   ),
                                 );
                                 await _loadUserName();
@@ -305,14 +312,16 @@ class _ProfilePageState extends State<ProfilePage> {
                           onTap: () async {
                             await AuthService().logout();
 
-                            if (!context.mounted)
-                              return;
+                            if (!context.mounted) return;
 
                             Navigator.pushAndRemoveUntil(
                               context,
                               MaterialPageRoute(
                                 builder:
-                                    (context) => LoginPage(role: widget.role),
+                                    (context) => LoginPage(
+                                      role: widget.role,
+                                      classId: widget.classId,
+                                    ),
                               ),
                               (route) => false,
                             );
