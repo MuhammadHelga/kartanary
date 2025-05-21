@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -31,6 +32,7 @@ class _ClassOptionsState extends State<ClassOptions> {
           await FirebaseFirestore.instance
               .collection('kelas')
               .where('kode_kelas', isEqualTo: kodeKelas)
+              .limit(1)
               .get();
 
       if (snapshot.docs.isEmpty) {
@@ -42,6 +44,18 @@ class _ClassOptionsState extends State<ClassOptions> {
 
       final classDoc = snapshot.docs.first;
       final classId = classDoc.id;
+
+      // ✅ Update joinedClassId di Firestore untuk user yang login
+      final user = FirebaseFirestore.instance.collection('users');
+      final uid = await _getCurrentUserId();
+      if (uid == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Gagal mendapatkan UID pengguna')),
+        );
+        return;
+      }
+
+      await user.doc(uid).update({'joinedClassId': kodeKelas});
 
       print('✅ Bergabung ke classId: $classId');
 
@@ -59,6 +73,11 @@ class _ClassOptionsState extends State<ClassOptions> {
         context,
       ).showSnackBar(SnackBar(content: Text('Terjadi kesalahan: $e')));
     }
+  }
+
+  Future<String?> _getCurrentUserId() async {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    return uid;
   }
 
   @override
