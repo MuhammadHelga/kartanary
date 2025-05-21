@@ -1,12 +1,19 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:lifesync_capstone_project/services/fcm_services.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import '../../services/notif_service.dart';
 import '../../theme/AppColors.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../widgets/bottom_navbar.dart';
+import 'package:lifesync_capstone_project/services/get_services_key.dart';
 
 class AddAnnouncementPage extends StatefulWidget {
-  const AddAnnouncementPage({super.key});
+  final String classId;
+  const AddAnnouncementPage({super.key, required this.classId});
 
   @override
   State<AddAnnouncementPage> createState() => _AddAnnouncementPageState();
@@ -14,10 +21,12 @@ class AddAnnouncementPage extends StatefulWidget {
 
 class _AddAnnouncementPageState extends State<AddAnnouncementPage> {
   DateTime selectedDate = DateTime.now();
+  String? _classIdFromFirestore; // Define the variable
 
   final TextEditingController namaKegiatanController = TextEditingController();
   final TextEditingController lokasiController = TextEditingController();
   final TextEditingController deskripsiController = TextEditingController();
+  final NotificationService _notificationService = NotificationService();
 
   final ImagePicker _picker = ImagePicker();
   List<File> _selectedImages = [];
@@ -25,6 +34,144 @@ class _AddAnnouncementPageState extends State<AddAnnouncementPage> {
   bool kirimSekarang = true;
   bool satuHariSebelum = true;
   bool duaBelasJamSebelum = true;
+
+  // Fungsi untuk mengirimkan notifikasi berdasarkan status reminder
+  // Future<void> _sendAnnouncementNotification(String classId) async {
+  //   final String title = namaKegiatanController.text;
+  //   final String body = deskripsiController.text;
+
+  //   if (kirimSekarang) {
+  //     await _notificationService.sendNotificationToOrangtua(
+  //       classId: classId,
+  //       title: title,
+  //       body: body,
+  //     );
+  //   }
+  //   if (satuHariSebelum) {
+  //     final reminderDate = selectedDate.subtract(Duration(days: 1));
+  //     // Implementasi logika pengingat 1 hari sebelumnya (misalnya, menggunakan scheduler)
+  //     _scheduleNotification(
+  //       reminderDate,
+  //       classId,
+  //       title,
+  //       body,
+  //       "1 hari sebelumnya",
+  //     );
+  //   }
+  //   if (duaBelasJamSebelum) {
+  //     final reminderDate = selectedDate.subtract(Duration(hours: 12));
+  //     // Implementasi logika pengingat 12 jam sebelumnya (misalnya, menggunakan scheduler)
+  //     _scheduleNotification(
+  //       reminderDate,
+  //       classId,
+  //       title,
+  //       body,
+  //       "12 jam sebelumnya",
+  //     );
+  //   }
+  // }
+
+  // Fungsi untuk menjadwalkan notifikasi pada waktu tertentu
+  Future<void> _scheduleNotification(
+    DateTime date,
+    String classId,
+    String title,
+    String body,
+    String reminderLabel,
+  ) async {
+    // Kamu bisa menggunakan paket seperti `flutter_local_notifications` untuk menjadwalkan notifikasi lokal
+    print('Notifikasi $reminderLabel dijadwalkan pada: $date');
+    // Placeholder logika untuk notifikasi yang dijadwalkan
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadClassId();
+  }
+
+  Future<void> _loadClassId() async {
+    final uid = Supabase.instance.client.auth.currentUser?.id;
+
+    if (uid == null) return;
+
+    final snapshot =
+        await FirebaseFirestore.instance
+            .collection('kelas')
+            .where('guruId', isEqualTo: uid)
+            .limit(1)
+            .get();
+
+    if (snapshot.docs.isNotEmpty) {
+      setState(() {
+        _classIdFromFirestore = snapshot.docs.first.id;
+      });
+    }
+  }
+
+  Future<String?> uploadImageToSupabase(File imageFile, String fileName) async {
+    final supabase = Supabase.instance.client;
+    final bytes = await imageFile.readAsBytes();
+
+    // String tanggal = DateFormat('yyyyMMdd').format(DateTime.now());
+    // int timestamp = DateTime.now().millisecondsSinceEpoch;
+    // String extension = imageFile.path.split('.').last;
+    // String fileName =
+    //     'Pengumuman_${widget.classId}_$tanggal\_$timestamp.$extension';
+
+    final response = await supabase.storage
+        .from('pengumuman')
+        .uploadBinary(
+          'images/$fileName',
+          bytes,
+          fileOptions: const FileOptions(upsert: true),
+        );
+
+    if (response.isEmpty) return null;
+
+    final publicUrl = supabase.storage
+        .from('pengumuman')
+        .getPublicUrl('images/$fileName');
+
+    return publicUrl;
+  }
+
+  Future<void> simpanPengumuman({
+    required String nama_kegiatan,
+    required String lokasi,
+    required DateTime tanggal,
+    required String deskripsi,
+    required String classId,
+    required List<File> images,
+  }) async {
+    final String dateKey = DateFormat('yyyy-MM-dd').format(tanggal);
+
+    List<String> imageUrls = [];
+
+    for (var image in images) {
+      String fileName =
+          '${DateTime.now().millisecondsSinceEpoch}_${image.path.split('/').last}';
+      String? url = await uploadImageToSupabase(image, fileName);
+      if (url != null) {
+        imageUrls.add(url);
+      }
+    }
+
+    await FirebaseFirestore.instance
+        .collection('kelas')
+        .doc(classId)
+        .collection('pengumuman')
+        .doc(dateKey)
+        .set({
+          'title': nama_kegiatan,
+          'lokasi': lokasi,
+          'deskripsi': deskripsi,
+          'tanggal': tanggal,
+          'classId': _classIdFromFirestore ?? widget.classId,
+          'imageUrls': imageUrls,
+          'createdAt': FieldValue.serverTimestamp(),
+        });
+  }
 
   void _selectDate() async {
     final DateTime? picked = await showDatePicker(
@@ -394,10 +541,12 @@ class _AddAnnouncementPageState extends State<AddAnnouncementPage> {
 
           Center(
             child: ElevatedButton(
-              onPressed: () {
-                if (namaKegiatanController.text.isEmpty ||
-                    deskripsiController.text.isEmpty ||
-                    _selectedImages.isEmpty) {
+              onPressed: () async {
+                final nama = namaKegiatanController.text.trim();
+                final lokasi = lokasiController.text.trim();
+                final deskripsi = deskripsiController.text.trim();
+
+                if (nama.isEmpty || lokasi.isEmpty || deskripsi.isEmpty) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text("Harap isi semua kolom dan upload gambar."),
@@ -407,26 +556,56 @@ class _AddAnnouncementPageState extends State<AddAnnouncementPage> {
                   return;
                 }
 
-                print("Nama: ${namaKegiatanController.text}");
-                print("Deskripsi: ${deskripsiController.text}");
-                for (var img in _selectedImages) {
-                  print("Image path: ${img.path}");
+                try {
+                  await simpanPengumuman(
+                    nama_kegiatan: nama,
+                    lokasi: lokasi,
+                    tanggal: selectedDate,
+                    deskripsi: deskripsi,
+                    classId: widget.classId,
+                    images: _selectedImages,
+                  );
+
+                  // await _sendAnnouncementNotification(widget.classId);
+
+                  showDialog(
+                    context: context,
+                    builder:
+                        (context) => AlertDialog(
+                          title: const Text("Berhasil"),
+                          content: const Text("Pengumuman berhasil disimpan."),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: const Text("OK"),
+                            ),
+                          ],
+                        ),
+                  );
+
+                  // Bersihkan form hanya setelah semua proses selesai
+                  setState(() {
+                    namaKegiatanController.clear();
+                    lokasiController.clear();
+                    deskripsiController.clear();
+                    _selectedImages.clear();
+                    selectedDate = DateTime.now();
+                  });
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("Terjadi kesalahan: ${e.toString()}"),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
                 }
 
-                showDialog(
-                  context: context,
-                  builder:
-                      (context) => AlertDialog(
-                        title: const Text("Berhasil"),
-                        content: const Text("Pengumuman berhasil disimpan."),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.pop(context),
-                            child: const Text("OK"),
-                          ),
-                        ],
-                      ),
-                );
+                //Noti
+                GetServerKey getServerKey = GetServerKey();
+                String accessToken = await getServerKey.getServerKeyToken();
+                print(accessToken);
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary50,

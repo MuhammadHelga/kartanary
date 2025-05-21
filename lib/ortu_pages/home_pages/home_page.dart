@@ -1,21 +1,87 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:intl/intl.dart';
 import './detail_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class HomePage extends StatefulWidget {
+  final String classId;
+  const HomePage({super.key, required this.classId});
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
   String? _name;
+  List<Map<String, dynamic>> _announcements = [];
+
+  Future<void> _fetchAnnouncements() async {
+    try {
+      final snapshot =
+          await FirebaseFirestore.instance
+              .collection('kelas')
+              .doc(widget.classId)
+              .collection('pengumuman')
+              .orderBy('tanggal', descending: false)
+              .get();
+
+      final now = DateTime.now();
+      final today = DateTime(now.year, now.month, now.day);
+
+      final List<Map<String, dynamic>> loadedAnnouncements =
+          snapshot.docs
+              .map((doc) {
+                final data = doc.data();
+                final Timestamp tanggal =
+                    data['tanggal'] is Timestamp
+                        ? data['tanggal']
+                        : Timestamp.fromDate(DateTime.parse(data['tanggal']));
+                return {
+                  'title': data['title'],
+                  'tanggal':
+                      data['tanggal'] is Timestamp
+                          ? data['tanggal'] as Timestamp
+                          : Timestamp.fromDate(DateTime.parse(data['tanggal'])),
+                  'lokasi': data['lokasi'],
+                  'description': data['deskripsi'],
+                  'imageUrl':
+                      (data['imageUrls'] as List<dynamic>).isNotEmpty
+                          ? (data['imageUrls'] as List<dynamic>)[0] as String
+                          : 'assets/images/placeholder_updates.png',
+                };
+              })
+              .where((announcement) {
+                final tgl = (announcement['tanggal'] as Timestamp).toDate();
+                final tanggalTanpaWaktu = DateTime(
+                  tgl.year,
+                  tgl.month,
+                  tgl.day,
+                );
+                return !tanggalTanpaWaktu.isBefore(
+                  today,
+                ); // hari ini atau masa depan
+              })
+              .toList();
+      // Sort by date ascending (paling dekat ke atas)
+      loadedAnnouncements.sort((a, b) {
+        final dateA = (a['tanggal'] as Timestamp).toDate();
+        final dateB = (b['tanggal'] as Timestamp).toDate();
+        return dateA.compareTo(dateB);
+      });
+      setState(() {
+        _announcements = loadedAnnouncements;
+      });
+    } catch (error) {
+      print('Error fetching announcements: $error');
+    }
+  }
 
   @override
   void initState() {
     super.initState();
     _loadUserName();
+    _fetchAnnouncements();
   }
 
   Future<void> _loadUserName() async {
@@ -133,18 +199,15 @@ class _HomePageState extends State<HomePage> {
                     ),
                     SizedBox(height: 10),
 
-                    UpdateCard(
-                      title: 'Kado Cinta Ramadhan',
-                      description:
-                          'Lorem ipsum dolor sit amet consectetur. Dolor interdum odio quam sed aliquam.',
-                      imageUrl: 'assets/images/placeholder_updates.jpg',
-                    ),
-                    UpdateCard(
-                      title: 'Cooking Class',
-                      description:
-                          'Lorem ipsum dolor sit amet consectetur. Dolor interdum odio quam sed aliquam.',
-                      imageUrl: 'assets/images/placeholder_updates.jpg',
-                    ),
+                    ..._announcements.map((announcement) {
+                      return UpdateCard(
+                        tanggal: announcement['tanggal'],
+                        lokasi: announcement['lokasi'],
+                        title: announcement['title'],
+                        description: announcement['description'],
+                        imageUrl: announcement['imageUrl'],
+                      );
+                    }).toList(),
                   ],
                 ),
               ),
@@ -170,7 +233,7 @@ class _HomePageState extends State<HomePage> {
                   child: Stack(
                     children: [
                       ClipRRect(
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(20),
                         child: Image.asset(
                           outingClass['image']!,
                           fit: BoxFit.cover,
@@ -242,10 +305,14 @@ class _HomePageState extends State<HomePage> {
 class UpdateCard extends StatelessWidget {
   final String title;
   final String description;
+  final Timestamp tanggal;
+  final String lokasi;
   final String imageUrl;
 
   UpdateCard({
     required this.title,
+    required this.lokasi,
+    required this.tanggal,
     required this.description,
     required this.imageUrl,
   });
@@ -264,20 +331,36 @@ class UpdateCard extends StatelessWidget {
                   (context) => DetailPage(
                     title: title,
                     description: description,
+                    lokasi: lokasi,
+                    tanggal: tanggal,
                     imageUrl: imageUrl,
                   ),
             ),
           );
         },
         child: ListTile(
-          leading: Image.asset(
-            imageUrl,
-            fit: BoxFit.cover,
-            width: 60,
-            height: 60,
-          ),
+          leading:
+              imageUrl.startsWith('http')
+                  ? Image.network(
+                    imageUrl,
+                    fit: BoxFit.cover,
+                    width: 60,
+                    height: 60,
+                  )
+                  : Image.asset(
+                    imageUrl,
+                    fit: BoxFit.cover,
+                    width: 60,
+                    height: 60,
+                  ),
           title: Text(title, style: TextStyle(fontWeight: FontWeight.bold)),
-          subtitle: Text(description),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(DateFormat('dd MMMM yyyy').format(tanggal.toDate())),
+              Text(description, maxLines: 1, overflow: TextOverflow.ellipsis),
+            ],
+          ),
         ),
       ),
     );

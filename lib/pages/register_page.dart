@@ -5,12 +5,12 @@ import '../pages/login_page.dart';
 import '../widgets/bottom_navbar.dart';
 
 import '../services/auth_service.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 class RegisterPage extends StatefulWidget {
   final String role;
   final String classId;
-  const RegisterPage({super.key, required this.role,
-    required this.classId,});
+  const RegisterPage({super.key, required this.role, required this.classId});
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();
@@ -67,8 +67,10 @@ class _RegisterPageState extends State<RegisterPage> {
                                   context,
                                   MaterialPageRoute(
                                     builder:
-                                        (context) =>
-                                            LoginPage(role: widget.role, classId: widget.classId,),
+                                        (context) => LoginPage(
+                                          role: widget.role,
+                                          classId: widget.classId,
+                                        ),
                                   ),
                                 );
                               },
@@ -244,7 +246,14 @@ class _RegisterPageState extends State<RegisterPage> {
               );
 
               if (user != null) {
-                await AuthService().saveUserData(user.uid, name, widget.role);
+                String? fcmToken = await FirebaseMessaging.instance.getToken();
+                await AuthService().saveUserData(
+                  user.uid,
+                  name,
+                  widget.role,
+                  fcmToken: fcmToken ?? '',
+                  joinedClassId: widget.classId,
+                );
 
                 if (!mounted) return;
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -258,7 +267,11 @@ class _RegisterPageState extends State<RegisterPage> {
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => LoginPage(role: widget.role, classId: widget.classId,),
+                    builder:
+                        (context) => LoginPage(
+                          role: widget.role,
+                          classId: widget.classId,
+                        ),
                   ),
                 );
               }
@@ -290,7 +303,9 @@ class _RegisterPageState extends State<RegisterPage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => LoginPage(role: widget.role, classId: widget.classId,),
+                builder:
+                    (context) =>
+                        LoginPage(role: widget.role, classId: widget.classId),
               ),
             );
           },

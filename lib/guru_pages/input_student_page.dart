@@ -233,6 +233,7 @@ class _InputStudentPageState extends State<InputStudentPage> {
                           await AuthService().tambahAnak(
                             name: _nameController.text,
                             gender: _selectedGender!,
+                            age: _ageController.text,
                             classId: widget.classId,
                           );
                           _nameController.clear();

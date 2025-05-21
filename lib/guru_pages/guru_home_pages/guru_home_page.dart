@@ -1,22 +1,102 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:intl/intl.dart';
+import 'package:lifesync_capstone_project/firebase_options.dart';
+import 'package:lifesync_capstone_project/services/fcm_services.dart';
+import '../../services/notif_service.dart';
 import './guru_detail_page.dart';
 import 'package:lifesync_capstone_project/theme/AppColors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'guru_notif_page.dart';
+
 class GuruHomePage extends StatefulWidget {
+  final String classId;
+  const GuruHomePage({super.key, required this.classId});
+
   @override
   State<GuruHomePage> createState() => _GuruHomePageState();
 }
 
 class _GuruHomePageState extends State<GuruHomePage> {
   String? _name;
+  List<Map<String, dynamic>> _announcements = [];
+  NotificationService notificationService = NotificationService();
+
+  Future<void> _fetchAnnouncements() async {
+    try {
+      final snapshot =
+          await FirebaseFirestore.instance
+              .collection('kelas')
+              .doc(widget.classId)
+              .collection('pengumuman')
+              .orderBy('tanggal', descending: false)
+              .get();
+
+      final now = DateTime.now();
+      final today = DateTime(now.year, now.month, now.day);
+
+      final List<Map<String, dynamic>> loadedAnnouncements =
+          snapshot.docs
+              .map((doc) {
+                final data = doc.data();
+                final Timestamp tanggal =
+                    data['tanggal'] is Timestamp
+                        ? data['tanggal']
+                        : Timestamp.fromDate(DateTime.parse(data['tanggal']));
+                return {
+                  'title': data['title'],
+                  'tanggal':
+                      data['tanggal'] is Timestamp
+                          ? data['tanggal'] as Timestamp
+                          : Timestamp.fromDate(DateTime.parse(data['tanggal'])),
+                  'lokasi': data['lokasi'],
+                  'description': data['deskripsi'],
+                  'imageUrl':
+                      (data['imageUrls'] as List<dynamic>).isNotEmpty
+                          ? (data['imageUrls'] as List<dynamic>)[0] as String
+                          : 'assets/images/placeholder_updates.png',
+                };
+              })
+              .where((announcement) {
+                final tgl = (announcement['tanggal'] as Timestamp).toDate();
+                final tanggalTanpaWaktu = DateTime(
+                  tgl.year,
+                  tgl.month,
+                  tgl.day,
+                );
+                return !tanggalTanpaWaktu.isBefore(
+                  today,
+                ); // hari ini atau masa depan
+              })
+              .toList();
+      // Sort by date ascending (paling dekat ke atas)
+      loadedAnnouncements.sort((a, b) {
+        final dateA = (a['tanggal'] as Timestamp).toDate();
+        final dateB = (b['tanggal'] as Timestamp).toDate();
+        return dateA.compareTo(dateB);
+      });
+      setState(() {
+        _announcements = loadedAnnouncements;
+      });
+    } catch (error) {
+      print('Error fetching announcements: $error');
+    }
+  }
 
   @override
   void initState() {
     super.initState();
     _loadUserName();
+    _fetchAnnouncements();
+    notificationService.requestNotificationPermission();
+    notificationService.getDeviceToken();
+    notificationService.firebaseInit(context);
+    notificationService.setupInteractMessage(context);
+    // FcmService.firebaseInit();
   }
 
   Future<void> _loadUserName() async {
@@ -58,15 +138,21 @@ class _GuruHomePageState extends State<GuruHomePage> {
     return Scaffold(
       backgroundColor: Color(0xffFFFFFF),
       appBar: AppBar(
-        backgroundColor: AppColors.primary50, // Ganti warna sesuai kebutuhan
+        backgroundColor: AppColors.primary50,
         elevation: 0,
         automaticallyImplyLeading: false,
         actions: [
           IconButton(
             icon: Icon(Icons.notifications, color: Colors.white, size: 38),
             onPressed: () {
-              // Tindakan ketika notifikasi diklik
-              print("Notifikasi diklik");
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder:
+                      (context) =>
+                          GuruNotificationPage(classId: widget.classId),
+                ),
+              );
             },
           ),
         ],
@@ -75,69 +161,58 @@ class _GuruHomePageState extends State<GuruHomePage> {
             bottomLeft: Radius.circular(30),
             bottomRight: Radius.circular(30),
           ),
-        ), // Menambahkan radius di bagian bawah
+        ),
         clipBehavior: Clip.hardEdge,
         toolbarHeight: 70,
       ),
       body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Hai,',
-                      style: TextStyle(
-                        fontFamily: 'Poppins',
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      _name != null ? 'Miss $_name' : 'Loading...',
-                      style: TextStyle(
-                        fontFamily: 'Poppins',
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-
-                    SizedBox(height: 16),
-
-                    // Slider
-                    _buildOutingClassSlider(),
-
-                    // School Updates
-                    Text(
-                      'Update Kegiatan Sekolah',
-                      style: TextStyle(
-                        fontFamily: 'Poppins',
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    SizedBox(height: 10),
-
-                    UpdateCard(
-                      title: 'Kado Cinta Ramadhan',
-                      description:
-                          'Lorem ipsum dolor sit amet consectetur. Dolor interdum odio quam sed aliquam.',
-                      imageUrl: 'assets/images/placeholder_updates.jpg',
-                    ),
-                    UpdateCard(
-                      title: 'Cooking Class',
-                      description:
-                          'Lorem ipsum dolor sit amet consectetur. Dolor interdum odio quam sed aliquam.',
-                      imageUrl: 'assets/images/placeholder_updates.jpg',
-                    ),
-                  ],
+        child: SingleChildScrollView(
+          padding: EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Hai,',
+                style: TextStyle(
+                  fontFamily: 'Poppins',
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-            ),
-          ],
+              Text(
+                _name != null ? 'Miss $_name' : 'Loading...',
+                style: TextStyle(
+                  fontFamily: 'Poppins',
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 16),
+
+              // Slider
+              _buildOutingClassSlider(),
+
+              // School Updates
+              Text(
+                'Update Kegiatan Sekolah',
+                style: TextStyle(
+                  fontFamily: 'Poppins',
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              SizedBox(height: 10),
+              ..._announcements.map((announcement) {
+                return UpdateCard(
+                  tanggal: announcement['tanggal'],
+                  lokasi: announcement['lokasi'],
+                  title: announcement['title'],
+                  description: announcement['description'],
+                  imageUrl: announcement['imageUrl'],
+                );
+              }).toList(),
+            ],
+          ),
         ),
       ),
     );
@@ -177,6 +252,13 @@ class _GuruHomePageState extends State<GuruHomePage> {
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
                             color: Colors.white,
+                            shadows: [
+                              Shadow(
+                                offset: Offset(0, 1),
+                                blurRadius: 4,
+                                color: Colors.black54,
+                              ),
+                            ],
                           ),
                         ),
                       ),
@@ -208,8 +290,11 @@ class _GuruHomePageState extends State<GuruHomePage> {
                   },
                   child: Container(
                     width: 10.0,
-                    height: 30.0,
-                    margin: const EdgeInsets.symmetric(horizontal: 4.0),
+                    height: 10.0,
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: 4.0,
+                      vertical: 10,
+                    ),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color:
@@ -230,10 +315,14 @@ class _GuruHomePageState extends State<GuruHomePage> {
 class UpdateCard extends StatelessWidget {
   final String title;
   final String description;
+  final Timestamp tanggal;
+  final String lokasi;
   final String imageUrl;
 
   UpdateCard({
     required this.title,
+    required this.lokasi,
+    required this.tanggal,
     required this.description,
     required this.imageUrl,
   });
@@ -252,160 +341,38 @@ class UpdateCard extends StatelessWidget {
                   (context) => GuruDetailPage(
                     title: title,
                     description: description,
+                    lokasi: lokasi,
+                    tanggal: tanggal,
                     imageUrl: imageUrl,
                   ),
             ),
           );
         },
         child: ListTile(
-          leading: Image.asset(
-            imageUrl,
-            fit: BoxFit.cover,
-            width: 60,
-            height: 60,
-          ),
+          leading:
+              imageUrl.startsWith('http')
+                  ? Image.network(
+                    imageUrl,
+                    fit: BoxFit.cover,
+                    width: 60,
+                    height: 60,
+                  )
+                  : Image.asset(
+                    imageUrl,
+                    fit: BoxFit.cover,
+                    width: 60,
+                    height: 60,
+                  ),
           title: Text(title, style: TextStyle(fontWeight: FontWeight.bold)),
-          subtitle: Text(description),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(DateFormat('dd MMMM yyyy').format(tanggal.toDate())),
+              Text(description, maxLines: 1, overflow: TextOverflow.ellipsis),
+            ],
+          ),
         ),
       ),
-    );
-  }
-}
-
-class OutingClassSlider extends StatefulWidget {
-  @override
-  State<OutingClassSlider> createState() => _OutingClassSliderState();
-}
-
-class _OutingClassSliderState extends State<OutingClassSlider> {
-  int _currentIndex = 0;
-  final CarouselController _controller = CarouselController();
-
-  final List<Map<String, String>> outingClasses = [
-    {
-      'image': 'assets/images/placeholder_slider.jpg',
-      'title': 'Outing Class "Balai Pengkajian Teknologi Pertanian (BPTP)"',
-    },
-    {
-      'image': 'assets/images/placeholder_slider.jpg',
-      'title': 'Outing Class "Balai Pengkajian Teknologi Pertanian (BPTP)"',
-    },
-    {
-      'image': 'assets/images/placeholder_slider.jpg',
-      'title': 'Outing Class "Balai Pengkajian Teknologi Pertanian (BPTP)"',
-    },
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        CarouselSlider(
-          items:
-              outingClasses.map((outingClass) {
-                return Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16), // Radius pada card
-                  ),
-                  elevation: 4, // Menambahkan bayangan pada card
-                  child: Column(
-                    children: [
-                      // Stack untuk menempatkan gambar di bawah dan teks di atas
-                      Stack(
-                        children: [
-                          // Gambar
-                          ClipRRect(
-                            borderRadius: BorderRadius.vertical(
-                              top: Radius.circular(16),
-                              bottom: Radius.circular(16),
-                            ), // Radius pada gambar
-                            child: Container(
-                              height:
-                                  212, // Menyesuaikan tinggi card dengan gambar
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(16),
-                                  bottom: Radius.circular(16),
-                                ),
-                                boxShadow: [
-                                  BoxShadow(color: Colors.black),
-                                  BoxShadow(
-                                    color: Colors.white70,
-                                    blurRadius: 20.0,
-                                    spreadRadius: -7.0,
-                                  ),
-                                ],
-                              ),
-                              child: Image.asset(
-                                outingClass['image']!,
-                                fit: BoxFit.cover,
-                                height: 212,
-                                width: double.infinity,
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            bottom: 8, // Jarak teks dari bawah
-                            left: 16,
-                            right: 16,
-                            child: Text(
-                              outingClass['title']!,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                );
-              }).toList(),
-          options: CarouselOptions(
-            height: 220,
-            viewportFraction: 0.8,
-            enableInfiniteScroll: true,
-            autoPlay: true,
-            onPageChanged: (index, reason) {
-              setState(() {
-                _currentIndex = index; // Update index saat halaman berubah
-              });
-            },
-          ),
-        ),
-        // Indikator titik untuk carousel
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children:
-              outingClasses.asMap().entries.map((entry) {
-                return GestureDetector(
-                  onTap: () {
-                    // Menggunakan setState untuk perubahan halaman
-                    setState(() {
-                      _currentIndex = entry.key;
-                    });
-                  },
-                  child: Container(
-                    width: 10.0,
-                    height: 30.0,
-                    margin: const EdgeInsets.symmetric(horizontal: 4.0),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color:
-                          _currentIndex == entry.key
-                              ? Colors.blueAccent
-                              : Colors.grey.shade300,
-                    ),
-                  ),
-                );
-              }).toList(),
-        ),
-        SizedBox(height: 16),
-      ],
     );
   }
 }

@@ -24,11 +24,19 @@ class AuthService {
     }
   }
 
-  Future<void> saveUserData(String uid, String name, String role) async {
+  Future<void> saveUserData(
+    String uid,
+    String name,
+    String role, {
+    String fcmToken = '',
+    String joinedClassId = '',
+  }) async {
     try {
       await _firestore.collection('users').doc(uid).set({
         'name': name,
         'role': role,
+        'fcmToken': fcmToken,
+        'joinedClassId': joinedClassId,
         'created_at': FieldValue.serverTimestamp(),
       });
     } catch (e) {
@@ -187,6 +195,7 @@ class AuthService {
   Future<void> tambahAnak({
     required String name,
     required String gender,
+    required String age,
     required String classId,
   }) async {
     try {
@@ -197,6 +206,7 @@ class AuthService {
           .add({
             'name': name,
             'gender': gender,
+            'age': age,
             'createdAt': FieldValue.serverTimestamp(),
           });
     } catch (e) {

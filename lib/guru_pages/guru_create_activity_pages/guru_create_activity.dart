@@ -59,7 +59,7 @@ class _GuruCreateActivityPageState extends State<GuruCreateActivityPage> {
       case 'Semester':
         return const AddSemesterPage();
       case 'Pengumuman':
-        return const AddAnnouncementPage();
+        return AddAnnouncementPage(classId: widget.classId);
       default:
         return const SizedBox(); // Default page empty or placeholder
     }

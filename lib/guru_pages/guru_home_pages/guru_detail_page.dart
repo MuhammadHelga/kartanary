@@ -1,21 +1,31 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../../../theme/AppColors.dart';
 
 class GuruDetailPage extends StatelessWidget {
   final String title;
+  final Timestamp tanggal;
+  final String lokasi;
   final String description;
   final String imageUrl;
 
   const GuruDetailPage({
     Key? key,
     required this.title,
+    required this.tanggal,
+    required this.lokasi,
     required this.description,
     required this.imageUrl,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final formattedDate = DateFormat('dd MMMM yyyy').format(tanggal.toDate());
+    final screenWidth = MediaQuery.of(context).size.width * (300 / 399);
+
     return Scaffold(
+      backgroundColor: AppColors.white,
       appBar: AppBar(
         backgroundColor: AppColors.primary50,
         elevation: 0,
@@ -47,27 +57,88 @@ class GuruDetailPage extends StatelessWidget {
         ),
         toolbarHeight: 70,
       ),
-      body: Padding(
-        padding: EdgeInsets.all(16),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(30),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.asset(
-              imageUrl,
-              width: double.infinity,
-              height: 200,
-              fit: BoxFit.cover,
+            Stack(
+              alignment: Alignment.bottomCenter,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: AspectRatio(
+                    aspectRatio: 399 / 300,
+                    child:
+                        imageUrl.startsWith('http')
+                            ? Image.network(
+                              imageUrl,
+                              width: double.infinity,
+                              // height: 200,
+                              fit: BoxFit.fitWidth,
+                            )
+                            : Image.asset(
+                              imageUrl,
+                              width: double.infinity,
+                              // height: 200,
+                              fit: BoxFit.fitWidth,
+                            ),
+                  ),
+                ),
+                Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(16),
+                      bottomRight: Radius.circular(16),
+                    ),
+                    gradient: LinearGradient(
+                      colors: [
+                        Colors.black.withOpacity(0.7),
+                        Colors.transparent,
+                      ],
+                      begin: Alignment.bottomCenter,
+                      end: Alignment.topCenter,
+                    ),
+                  ),
+                  padding: EdgeInsets.all(12),
+                  child: Text(
+                    title,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
             ),
-            SizedBox(height: 16),
-            Text(
-              title,
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
+            SizedBox(height: 20),
+            _buildInfoRow('Tanggal', formattedDate),
             SizedBox(height: 8),
-            Text(description),
+            _buildInfoRow('Lokasi', lokasi),
+            SizedBox(height: 10),
+            Text('Deskripsi :', style: TextStyle(fontWeight: FontWeight.bold)),
+            SizedBox(height: 6),
+            Text(
+              description,
+              textAlign: TextAlign.justify,
+              style: TextStyle(height: 1.5),
+            ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildInfoRow(String label, String value) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('$label : ', style: TextStyle(fontWeight: FontWeight.bold)),
+        Expanded(child: Text(value)),
+      ],
     );
   }
 }

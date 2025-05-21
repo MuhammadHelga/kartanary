@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:lifesync_capstone_project/services/notif_service.dart';
 import '../screens/role_option_page.dart';
 import '../pages/register_page.dart';
 import '../pages/forgot_password.dart';
@@ -222,6 +224,9 @@ class _LoginPageState extends State<LoginPage> {
         width: double.infinity,
         child: ElevatedButton(
           onPressed: () async {
+            NotificationService notificationService = NotificationService();
+            String userDeviceToken = await notificationService.getDeviceToken();
+
             final user = await AuthService().loginWithEmail(
               _emailController.text.trim(),
               _passwordController.text.trim(),
@@ -230,6 +235,11 @@ class _LoginPageState extends State<LoginPage> {
             );
 
             if (user != null) {
+              // Simpan device token ke Firestore
+              await FirebaseFirestore.instance
+                  .collection('users')
+                  .doc(user.uid)
+                  .update({'deviceToken': userDeviceToken});
               if (widget.role == 'Guru') {
                 Navigator.pushReplacement(
                   context,

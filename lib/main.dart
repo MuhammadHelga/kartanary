@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'screens/splash_screen.dart';
 
@@ -7,6 +8,11 @@ import 'firebase_options.dart';
 
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+@pragma('vm:entry-point')
+Future<void> _firebaseBackgroudHandler(RemoteMessage message) async {
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -15,6 +21,7 @@ void main() async {
     anonKey:
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdiYWtodmtjamFicWlhdndvcnJsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU1NzAxODgsImV4cCI6MjA2MTE0NjE4OH0.myGZmOil-NqeCr00Mgs3CFMbvSoXNqIPvtBIcJAG-vw',
   );
+  FirebaseMessaging.onBackgroundMessage(_firebaseBackgroudHandler);
   runApp(const MyApp());
 }
 
@@ -23,6 +30,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    FirebaseMessaging.instance.getToken().then((token) {
+      print('Firebase Messaging Token: $token');
+    });
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'LifeSync',
