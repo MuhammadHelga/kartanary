@@ -55,9 +55,9 @@ class _GuruCreateActivityPageState extends State<GuruCreateActivityPage> {
       case 'Harian':
         return AddDailyPage(classId: widget.classId);
       case 'Mingguan':
-        return const AddWeeklyPage();
+        return AddWeeklyPage(classId: widget.classId);
       case 'Semester':
-        return const AddSemesterPage();
+        return AddSemesterPage(classId: widget.classId);
       case 'Pengumuman':
         return const AddAnnouncementPage();
       default:

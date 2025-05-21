@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:lifesync_capstone_project/guru_pages/guru_report_pages/guru_weekly_report.dart';
 import '../../theme/AppColors.dart';
+import '../guru_report_pages/guru_weekly_reports/guru_weekly_report.dart';
 import '../../widgets/bottom_navbar.dart';
 import '../guru_create_activity_pages/guru_create_activity.dart';
 import 'guru_daily_report.dart';
-import 'guru_semester_report.dart';
+import './guru_semester_report.dart';
 
 class GuruReportMainPage extends StatefulWidget {
   final String role;

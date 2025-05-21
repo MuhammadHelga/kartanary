@@ -1,45 +1,137 @@
 import 'package:flutter/material.dart';
 import '../../theme/AppColors.dart';
-import '../../widgets/bottom_navbar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AddWeeklyPage extends StatefulWidget {
-  const AddWeeklyPage({Key? key}) : super(key: key);
+  final String classId;
+  const AddWeeklyPage({Key? key, required this.classId}) : super(key: key);
 
   @override
   State<AddWeeklyPage> createState() => _AddWeeklyPageState();
 }
 
 class _AddWeeklyPageState extends State<AddWeeklyPage> {
-  
-  List<Map<String, TextEditingController>> weeklyThemes = [];
-  List<TextEditingController> judulMingguControllers = [];
-  
-  final List<String> childrenNames = ['Dokja', 'Rafayel', 'Caleb', 'Moran', 'WKWK'];
+  List<String> childrenNames = [];
   String? _selectedLaporan;
   DateTime selectedDate = DateTime.now();
+
   final TextEditingController judulTemaController = TextEditingController();
   final TextEditingController pesanGuruController = TextEditingController();
 
-  int get currentWeekCount => weeklyThemes.length;
+  List<Map<String, TextEditingController>> weeklyThemes = [];
+  List<TextEditingController> judulMingguControllers = [];
+  List<TextEditingController> deskripsiControllers = [];
 
-  void _addWeeklyTheme() {
-    setState(() {
-      weeklyThemes.add({
-        'title': TextEditingController(text: 'Minggu ${currentWeekCount + 1} :'),
-        'desc': TextEditingController(),
-      });
-    });
+  @override
+  void initState() {
+    super.initState();
+    _addWeeklyBlock();
+    _fetchChildren();
   }
 
-  List<TextEditingController> deskripsiControllers = [];
+  Future<void> _fetchChildren() async {
+    try {
+      final snapshot =
+          await FirebaseFirestore.instance
+              .collection('kelas')
+              .doc(widget.classId)
+              .collection('anak')
+              .get();
+
+      print('Jumlah anak yang diambil: ${snapshot.docs.length}'); // Debugging
+
+      setState(() {
+        childrenNames =
+            snapshot.docs.map((doc) => doc['name'] as String).toList();
+      });
+
+      print('Daftar anak: $childrenNames');
+    } catch (e) {
+      print('Gagal mengambil daftar anak: $e');
+    }
+  }
 
   void _addWeeklyBlock() {
     setState(() {
-      deskripsiControllers.add(TextEditingController());
       judulMingguControllers.add(TextEditingController());
+      deskripsiControllers.add(TextEditingController());
     });
   }
-  
+
+  Future<void> _simpanLaporan() async {
+    bool isValid =
+        _selectedLaporan != null &&
+        judulTemaController.text.trim().isNotEmpty &&
+        pesanGuruController.text.trim().isNotEmpty &&
+        deskripsiControllers.every((c) => c.text.trim().isNotEmpty) &&
+        judulMingguControllers.every((c) => c.text.trim().isNotEmpty);
+
+    if (!isValid) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Harap isi semua kolom sebelum menyimpan."),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    try {
+      // Buat data minggu
+      List<Map<String, String>> mingguData = [];
+      for (int i = 0; i < deskripsiControllers.length; i++) {
+        mingguData.add({
+          'judul': judulMingguControllers[i].text.trim(),
+          'deskripsi': deskripsiControllers[i].text.trim(),
+        });
+      }
+
+      // Simpan laporan mingguan ke Firestore
+      DocumentReference temaRef = FirebaseFirestore.instance
+          .collection('laporan_mingguan')
+          .doc(_selectedLaporan); // Menggunakan tema yang dipilih
+
+      // Simpan data minggu ke sub-koleksi
+      for (var minggu in mingguData) {
+        await temaRef.collection('minggu').add(minggu);
+      }
+
+      // Simpan informasi tema
+      await temaRef.set({
+        'nama': _selectedLaporan,
+        'kelasId': widget.classId,
+        'tema': judulTemaController.text.trim(),
+        'tanggal': selectedDate,
+        'pesanGuru': pesanGuruController.text.trim(),
+      }, SetOptions(merge: true)); // Menggunakan merge untuk memperbarui data
+
+      showDialog(
+        context: context,
+        builder:
+            (_) => AlertDialog(
+              title: Text("Berhasil"),
+              content: Text("Laporan berhasil disimpan."),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pop();
+                  },
+                  child: Text("OK"),
+                ),
+              ],
+            ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Gagal menyimpan: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
   void _selectDate() async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -67,20 +159,23 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    _addWeeklyBlock(); // Awal ada Minggu 1
-  }
-
   String _monthName(int month) {
     const months = [
-      'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus',
-      'September', 'Oktober', 'November', 'Desember',
+      'Januari',
+      'Februari',
+      'Maret',
+      'April',
+      'Mei',
+      'Juni',
+      'Juli',
+      'Agustus',
+      'September',
+      'Oktober',
+      'November',
+      'Desember',
     ];
     return months[month - 1];
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -124,12 +219,13 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
                   color: AppColors.black,
                   fontSize: 14,
                 ),
-                items: childrenNames.map((String name) {
-                  return DropdownMenuItem<String>(
-                    value: name,
-                    child: Text(name),
-                  );
-                }).toList(),
+                items:
+                    childrenNames.map((String name) {
+                      return DropdownMenuItem<String>(
+                        value: name,
+                        child: Text(name),
+                      );
+                    }).toList(),
                 onChanged: (String? newValue) {
                   setState(() {
                     _selectedLaporan = newValue;
@@ -152,44 +248,44 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
                 _monthName(selectedDate.month),
                 selectedDate.year.toString(),
               ])
-              GestureDetector(
-                onTap: _selectDate,
-                child: Container(
-                  width: MediaQuery.of(context).size.width * 0.28,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: Color(0xffC5E7F7),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.shade400,
-                        spreadRadius: 1,
-                        blurRadius: 5,
-                        offset: Offset(3, 3),
+                GestureDetector(
+                  onTap: _selectDate,
+                  child: Container(
+                    width: MediaQuery.of(context).size.width * 0.28,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      color: Color(0xffC5E7F7),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.shade400,
+                          spreadRadius: 1,
+                          blurRadius: 5,
+                          offset: Offset(3, 3),
+                        ),
+                      ],
+                    ),
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 10,
+                    ),
+                    child: Text(
+                      item,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
                       ),
-                    ],
-                  ),
-                  alignment: Alignment.center,
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                  child: Text(
-                    item,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
                     ),
                   ),
                 ),
-              ),
             ],
           ),
           const SizedBox(height: 24),
           Center(
             child: Text(
               'Tema',
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 20,
-              ),
+              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
             ),
           ),
           const SizedBox(height: 10),
@@ -215,14 +311,17 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
                   margin: const EdgeInsets.symmetric(vertical: 10),
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color:  Colors.white,
+                    color: Colors.white,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 6,
+                        ),
                         decoration: BoxDecoration(
                           color: AppColors.primary10,
                           borderRadius: BorderRadius.only(
@@ -247,7 +346,10 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
                                 decoration: const InputDecoration(
                                   hintText: 'Judul Minggu...',
                                   isDense: true,
-                                  contentPadding: EdgeInsets.symmetric(vertical: 2, horizontal: 5),
+                                  contentPadding: EdgeInsets.symmetric(
+                                    vertical: 2,
+                                    horizontal: 5,
+                                  ),
                                   border: InputBorder.none,
                                 ),
                                 style: const TextStyle(fontSize: 14),
@@ -259,7 +361,8 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
                       // const SizedBox(height: 6),
                       Container(
                         decoration: BoxDecoration(
-                          color: AppColors.primary5, // Warna background deskripsi
+                          color:
+                              AppColors.primary5, // Warna background deskripsi
                           borderRadius: BorderRadius.only(
                             bottomLeft: Radius.circular(6),
                             bottomRight: Radius.circular(6),
@@ -336,19 +439,24 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
                   ],
                 ),
               ),
-              
+
               Center(
                 child: ElevatedButton(
                   onPressed: () {
                     // Validasi semua TextField
-                    bool isValid = _selectedLaporan != null &&
+                    bool isValid =
+                        _selectedLaporan != null &&
                         judulTemaController.text.trim().isNotEmpty &&
                         pesanGuruController.text.trim().isNotEmpty &&
-                        deskripsiControllers.every((c) => c.text.trim().isNotEmpty) &&
-                        judulMingguControllers.every((c) => c.text.trim().isNotEmpty);
+                        deskripsiControllers.every(
+                          (c) => c.text.trim().isNotEmpty,
+                        ) &&
+                        judulMingguControllers.every(
+                          (c) => c.text.trim().isNotEmpty,
+                        );
 
                     if (isValid) {
-                      // Tampilkan pop up sukses
+                      _simpanLaporan();
                       showDialog(
                         context: context,
                         builder: (BuildContext context) {
@@ -358,8 +466,7 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
                             actions: [
                               TextButton(
                                 onPressed: () {
-                                  Navigator.of(context).pop(); // Tutup dialog
-                                  Navigator.of(context).pop(); // Kembali ke halaman sebelumnya
+                                  Navigator.pop(context);
                                 },
                                 child: const Text("OK"),
                               ),
@@ -371,7 +478,9 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
                       // Tampilkan error jika ada field kosong
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                          content: Text("Harap isi semua kolom sebelum menyimpan."),
+                          content: Text(
+                            "Harap isi semua kolom sebelum menyimpan.",
+                          ),
                           backgroundColor: Colors.red,
                         ),
                       );
@@ -381,9 +490,12 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primary50,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15)
+                      borderRadius: BorderRadius.circular(15),
                     ),
-                    padding: const EdgeInsets.symmetric(horizontal: 50, vertical:10),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 50,
+                      vertical: 10,
+                    ),
                     elevation: 5,
                     shadowColor: Colors.black.withOpacity(0.25),
                   ),

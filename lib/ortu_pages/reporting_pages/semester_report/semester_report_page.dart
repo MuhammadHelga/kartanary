@@ -1,16 +1,150 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:dio/dio.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../../../theme/AppColors.dart';
+import 'dart:io';
 
 class SemesterReportPage extends StatefulWidget {
-  const SemesterReportPage({super.key});
+  final String classId;
+  const SemesterReportPage({super.key, required this.classId});
 
   @override
   State<SemesterReportPage> createState() => _SemesterReportPageState();
 }
 
 class _SemesterReportPageState extends State<SemesterReportPage> {
-  List<String> semester1Reports = ['Liana Almira'];
-  List<String> semester2Reports = ['Liana Almira'];
+  List<Map<String, dynamic>> semester1Reports = [];
+  List<Map<String, dynamic>> semester2Reports = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchLaporanSemester();
+  }
+
+  Future<void> fetchLaporanSemester() async {
+    try {
+      // Ambil semua anak dari kelas
+      final anakSnapshot =
+          await FirebaseFirestore.instance
+              .collection('kelas')
+              .doc(widget.classId)
+              .collection('anak')
+              .get();
+
+      List<Map<String, dynamic>> s1 = [];
+      List<Map<String, dynamic>> s2 = [];
+
+      for (var anakDoc in anakSnapshot.docs) {
+        final anakId = anakDoc.id;
+        final anakName = anakDoc['name'];
+
+        // Ambil laporan Semester 1
+        final laporan1 =
+            await FirebaseFirestore.instance
+                .collection('anak')
+                .doc(anakId)
+                .collection('laporanSemester')
+                .doc('Semester 1')
+                .get();
+
+        if (laporan1.exists && laporan1.data()?['pdfUrl'] != null) {
+          s1.add({
+            'anakName': anakName,
+            'fileUrl': laporan1['pdfUrl'],
+            'uploadedAt':
+                laporan1['uploadedAt'] != null
+                    ? (laporan1['uploadedAt'] as Timestamp).toDate().toString()
+                    : 'Tanggal tidak tersedia',
+          });
+        }
+
+        // Ambil laporan Semester 2
+        final laporan2 =
+            await FirebaseFirestore.instance
+                .collection('anak')
+                .doc(anakId)
+                .collection('laporanSemester')
+                .doc('Semester 2')
+                .get();
+
+        if (laporan2.exists && laporan2.data()?['pdfUrl'] != null) {
+          s2.add({
+            'anakName': anakName,
+            'fileUrl': laporan2['pdfUrl'],
+            'uploadedAt':
+                laporan2['uploadedAt'] != null
+                    ? (laporan2['uploadedAt'] as Timestamp).toDate().toString()
+                    : 'Tanggal tidak tersedia',
+          });
+        }
+      }
+
+      setState(() {
+        semester1Reports = s1;
+        semester2Reports = s2;
+        isLoading = false;
+      });
+    } catch (e) {
+      print('Error fetching laporan: $e');
+      setState(() => isLoading = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Gagal mengambil data laporan: $e')),
+      );
+    }
+  }
+
+  Future<void> downloadFile(String url, String fileName) async {
+    try {
+      // Minta izin penyimpanan (hanya di Android)
+      if (Platform.isAndroid) {
+        var status = await Permission.storage.request();
+        if (!status.isGranted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Izin penyimpanan ditolak')),
+          );
+          return;
+        }
+      }
+
+      // Ambil direktori unduhan
+      Directory directory;
+      if (Platform.isAndroid) {
+        directory = Directory('/storage/emulated/0/Download');
+      } else {
+        directory = await getApplicationDocumentsDirectory();
+      }
+
+      final filePath = '${directory.path}/$fileName';
+
+      Dio dio = Dio();
+      await dio.download(url, filePath);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Laporan berhasil diunduh ke $filePath')),
+      );
+    } catch (e) {
+      print('Error saat download: $e');
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Gagal mengunduh file')));
+    }
+  }
+
+  Future<void> _launchUrl(String url) async {
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('URL tidak valid atau tidak bisa dibuka')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,75 +175,106 @@ class _SemesterReportPageState extends State<SemesterReportPage> {
               size: 26,
             ),
           ),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
+          onPressed: () => Navigator.of(context).pop(),
         ),
         toolbarHeight: 70,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildSemesterSection('Semester 1', semester1Reports),
-            const SizedBox(height: 30),
-            _buildSemesterSection('Semester 2', semester2Reports),
-          ],
-        ),
-      ),
+      body:
+          isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 20,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildSemesterSection('Semester 1', semester1Reports),
+                    const SizedBox(height: 30),
+                    _buildSemesterSection('Semester 2', semester2Reports),
+                  ],
+                ),
+              ),
     );
   }
 
-  Widget _buildSemesterSection(String title, List<String> reportList) {
+  Widget _buildSemesterSection(
+    String title,
+    List<Map<String, dynamic>> reports,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           title,
-          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          style: const TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+            color: Colors.black87,
+          ),
         ),
         const SizedBox(height: 10),
-        Column(
-          children:
-              reportList.map((name) {
-                return Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: AppColors.primary10,
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: Row(
-                    children: [
-                      const Icon(Icons.picture_as_pdf, color: Colors.red),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Text(
-                          name,
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+        reports.isEmpty
+            ? Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: Text(
+                'Belum ada laporan untuk $title',
+                style: const TextStyle(fontSize: 16, color: Colors.grey),
+              ),
+            )
+            : Column(
+              children:
+                  reports.map((report) {
+                    return Card(
+                      color: AppColors.primary10,
+                      margin: const EdgeInsets.only(bottom: 15),
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.picture_as_pdf,
+                              size: 24,
+                              color: AppColors.error300,
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Text(
+                                report['anakName'],
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                            IconButton(
+                              icon: const Icon(
+                                Icons.download,
+                                color: Colors.blue,
+                                size: 24,
+                              ),
+                              onPressed: () {
+                                final url = report['fileUrl'];
+                                final name = report['anakName'];
+                                if (url != null && url.isNotEmpty) {
+                                  downloadFile(
+                                    url,
+                                    '$name-${title.replaceAll(' ', '_')}.pdf',
+                                  );
+                                }
+                              },
+                            ),
+                          ],
                         ),
                       ),
-                      IconButton(
-                        icon: const Icon(Icons.download, color: Colors.blue),
-                        onPressed: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Mendownload Laporan...'),
-                            ),
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                );
-              }).toList(),
-        ),
+                    );
+                  }).toList(),
+            ),
       ],
     );
   }

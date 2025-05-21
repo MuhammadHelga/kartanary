@@ -1,38 +1,107 @@
-import 'package:flutter/material.dart';
 import 'dart:io';
-import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
 import '../../theme/AppColors.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AddSemesterPage extends StatefulWidget {
-  const AddSemesterPage({Key? key}) : super(key: key);
+  final String classId;
+
+  const AddSemesterPage({Key? key, required this.classId}) : super(key: key);
 
   @override
   State<AddSemesterPage> createState() => _AddSemesterPageState();
 }
 
 class _AddSemesterPageState extends State<AddSemesterPage> {
-  final List<String> childrenNames = ['Dokja', 'Rafayel', 'Caleb', 'Moran', 'WKWK'];
-  final List<String> semesterOptions = [
-    'Semester 1',
-    'Semester 2',
-    'Semester 3',
-    'Semester 4',
-    'Semester 5',
-  ];
+  final List<String> semesterOptions = ['Semester 1', 'Semester 2'];
 
-  String? _selectedLaporan;
+  List<Map<String, dynamic>> _children = [];
+  bool _isLoadingChildren = true;
+
+  String? _selectedChildId;
   String? _selectedSemester;
   File? _selectedFile;
+
+  @override
+  void initState() {
+    super.initState();
+    print('classId dari widget: ${widget.classId}');
+    fetchChildrenFromFirestore();
+  }
+
+  Future<void> fetchChildrenFromFirestore() async {
+    try {
+      final snapshot =
+          await FirebaseFirestore.instance
+              .collection('kelas')
+              .doc(widget.classId)
+              .collection('anak')
+              .get();
+
+      print('Ditemukan ${snapshot.docs.length} anak');
+      for (var doc in snapshot.docs) {
+        print('Anak: ${doc.id}, data: ${doc.data()}');
+      }
+
+      setState(() {
+        _children =
+            snapshot.docs
+                .map((doc) => {'id': doc.id, 'name': doc['name']})
+                .toList();
+        _isLoadingChildren = false;
+      });
+    } catch (e) {
+      print('Gagal mengambil data anak: $e');
+      setState(() => _isLoadingChildren = false);
+    }
+  }
+
+  Future<void> uploadPdfAndSaveToFirebase(
+    String anakId,
+    String semester,
+    File file,
+  ) async {
+    final fileName = '${anakId}_$semester.pdf';
+    final supabase = Supabase.instance.client;
+
+    try {
+      final filePath = 'laporan/$fileName';
+
+      await supabase.storage
+          .from('semester-report')
+          .upload(filePath, file, fileOptions: const FileOptions(upsert: true));
+
+      final publicUrl = supabase.storage
+          .from('semester-report')
+          .getPublicUrl(filePath);
+
+      await FirebaseFirestore.instance
+          .collection('anak')
+          .doc(anakId)
+          .collection('laporanSemester')
+          .doc(semester)
+          .set({
+            'pdfUrl': publicUrl,
+            'uploadedAt': Timestamp.now(),
+            'semester': semester,
+          });
+
+      _showSuccessDialog(publicUrl);
+    } catch (e) {
+      print('Error saat upload: $e');
+      _showErrorSnackBar("Gagal mengunggah file.");
+    }
+  }
 
   Future<void> _pickDocument() async {
     if (Platform.isAndroid) {
       final deviceInfo = await DeviceInfoPlugin().androidInfo;
 
       if (deviceInfo.version.sdkInt >= 33) {
-        // Android 13+ biasanya tidak butuh izin storage untuk FilePicker
-        // Tapi kalau perlu bisa pakai Permission.manageExternalStorage
         var status = await Permission.manageExternalStorage.request();
         if (!status.isGranted) {
           _showDeniedSnackBar();
@@ -49,56 +118,83 @@ class _AddSemesterPageState extends State<AddSemesterPage> {
 
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
-      allowedExtensions: ['pdf', 'doc', 'docx'],
+      allowedExtensions: ['pdf'],
     );
 
     if (result != null && result.files.single.path != null) {
       setState(() {
-      _selectedFile = File(result.files.single.path!);
+        _selectedFile = File(result.files.single.path!);
       });
     }
   }
 
-
   void _showDeniedSnackBar() {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Permission ditolak')));
+  }
+
+  void _showErrorSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Permission ditolak')),
+      SnackBar(content: Text(message), backgroundColor: Colors.red),
     );
   }
 
+  void _showSuccessDialog(String url) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Berhasil"),
+          content: const Text("Laporan berhasil diunggah."),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+              },
+              child: const Text("OK"),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 0),
+      padding: const EdgeInsets.symmetric(vertical: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // const SizedBox(height: 20),
-          _buildDropdown(
-            hint: 'Pilih nama anak',
-            value: _selectedLaporan,
-            items: childrenNames,
-            onChanged: (val) => setState(() => _selectedLaporan = val),
-          ),
+          _isLoadingChildren
+              ? const Center(child: CircularProgressIndicator())
+              : _buildDropdown(
+                hint: 'Pilih nama anak',
+                value: _selectedChildId,
+                items: _children.map((e) => e['id'] as String).toList(),
+                itemLabels: _children.map((e) => e['name'] as String).toList(),
+                onChanged: (val) => setState(() => _selectedChildId = val),
+              ),
           const SizedBox(height: 20),
           _buildDropdown(
             hint: 'Pilih Semester',
             value: _selectedSemester,
             items: semesterOptions,
+            itemLabels: semesterOptions,
             onChanged: (val) => setState(() => _selectedSemester = val),
           ),
-          const SizedBox(height: 50),
+          const SizedBox(height: 40),
           const Text(
             'Upload Laporan Pembelajaran',
             style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
           ),
           const SizedBox(height: 20),
           Center(
-            child: GestureDetector(
-              // onTap: _pickDocument,
-              child: _selectedFile != null
-                  ? Container(
+            child:
+                _selectedFile != null
+                    ? Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
                         color: Colors.green.shade50,
@@ -110,7 +206,7 @@ class _AddSemesterPageState extends State<AddSemesterPage> {
                         style: const TextStyle(fontSize: 16),
                       ),
                     )
-                  : OutlinedButton(
+                    : OutlinedButton(
                       onPressed: _pickDocument,
                       style: OutlinedButton.styleFrom(
                         fixedSize: const Size(270, 120),
@@ -122,59 +218,44 @@ class _AddSemesterPageState extends State<AddSemesterPage> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: const [
-                          Icon(Icons.upload_file, size: 32, color: AppColors.primary30),
+                          Icon(
+                            Icons.upload_file,
+                            size: 32,
+                            color: AppColors.primary30,
+                          ),
                           SizedBox(height: 8),
-                          Text('Unggah PDF/Dokumen'),
+                          Text('Unggah PDF'),
                         ],
                       ),
                     ),
-            ),
           ),
-          SizedBox(height: 200),
-          
+          const SizedBox(height: 100),
           Center(
             child: ElevatedButton(
               onPressed: () {
-                // Validasi semua TextField
-                bool isValid = _selectedLaporan != null &&
+                if (_selectedChildId != null &&
                     _selectedSemester != null &&
-                    _selectedFile != null;
-                if (isValid) {
-                  // Tampilkan pop up sukses
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: const Text("Berhasil"),
-                        content: const Text("Laporan berhasil disimpan."),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop(); // Tutup dialog
-                              Navigator.of(context).pop(); // Kembali ke halaman sebelumnya
-                            },
-                            child: const Text("OK"),
-                          ),
-                        ],
-                      );
-                    },
+                    _selectedFile != null) {
+                  uploadPdfAndSaveToFirebase(
+                    _selectedChildId!,
+                    _selectedSemester!,
+                    _selectedFile!,
                   );
                 } else {
-                  // Tampilkan error jika ada field kosong
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("Harap isi semua kolom sebelum menyimpan."),
-                      backgroundColor: Colors.red,
-                    ),
+                  _showErrorSnackBar(
+                    "Harap lengkapi semua kolom dan unggah dokumen.",
                   );
                 }
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary50,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15)
+                  borderRadius: BorderRadius.circular(15),
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 50, vertical:10),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 50,
+                  vertical: 10,
+                ),
                 elevation: 5,
                 shadowColor: Colors.black.withOpacity(0.25),
               ),
@@ -197,6 +278,7 @@ class _AddSemesterPageState extends State<AddSemesterPage> {
     required String hint,
     required String? value,
     required List<String> items,
+    required List<String> itemLabels,
     required Function(String?) onChanged,
   }) {
     return Container(
@@ -218,14 +300,7 @@ class _AddSemesterPageState extends State<AddSemesterPage> {
         child: DropdownButton<String>(
           isExpanded: true,
           value: value,
-          hint: Text(
-            hint,
-            style: const TextStyle(
-              fontFamily: 'Poppins',
-              color: Colors.grey,
-              fontSize: 14,
-            ),
-          ),
+          hint: Text(hint),
           icon: const Icon(Icons.arrow_drop_down),
           iconSize: 24,
           style: const TextStyle(
@@ -233,12 +308,12 @@ class _AddSemesterPageState extends State<AddSemesterPage> {
             color: AppColors.black,
             fontSize: 14,
           ),
-          items: items.map((String name) {
+          items: List.generate(items.length, (index) {
             return DropdownMenuItem<String>(
-              value: name,
-              child: Text(name),
+              value: items[index],
+              child: Text(itemLabels[index]),
             );
-          }).toList(),
+          }),
           onChanged: onChanged,
         ),
       ),

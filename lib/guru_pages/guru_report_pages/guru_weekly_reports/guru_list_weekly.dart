@@ -1,24 +1,51 @@
 import 'package:flutter/material.dart';
-import 'package:lifesync_capstone_project/ortu_pages/reporting_pages/weekly_reporting/first_week_report.dart';
-import '../../theme/AppColors.dart';
+import '../guru_weekly_reports/guru_detail_weekly_report.dart';
+import '../../../theme/AppColors.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-class DetailWeeklyReportPage extends StatefulWidget {
-  const DetailWeeklyReportPage({super.key});
+class GuruListWeekly extends StatefulWidget {
+  final String tema;
+  final String classId;
+
+  const GuruListWeekly({super.key, required this.tema, required this.classId});
 
   @override
-  State<DetailWeeklyReportPage> createState() => _DetailWeeklyReportPageState();
+  State<GuruListWeekly> createState() => _GuruListWeeklyState();
 }
 
-class _DetailWeeklyReportPageState extends State<DetailWeeklyReportPage> {
-  
-  final List<String> childrenNames = ['Dokja', 'Rafayel', 'Caleb', 'Moran', 'WKWK'];
-  
-  
+class _GuruListWeeklyState extends State<GuruListWeekly> {
+  List<String> childrenNames = [];
+
   String getInitial(String name) {
     if (name.isEmpty) return '';
     return name.trim()[0].toUpperCase();
   }
 
+  @override
+  void initState() {
+    super.initState();
+    _fetchChildrenWithReports();
+  }
+
+  Future<void> _fetchChildrenWithReports() async {
+    try {
+      final snapshot =
+          await FirebaseFirestore.instance
+              .collection('laporan_mingguan')
+              .where('kelasId', isEqualTo: widget.classId)
+              .where('tema', isEqualTo: widget.tema)
+              .get();
+
+      final names =
+          snapshot.docs.map((doc) => doc['nama'] as String).toSet().toList();
+
+      setState(() {
+        childrenNames = names;
+      });
+    } catch (e) {
+      print('Gagal mengambil anak dengan laporan mingguan: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,10 +94,7 @@ class _DetailWeeklyReportPageState extends State<DetailWeeklyReportPage> {
                     'Tema',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
-                  Text(
-                    'Diri Sendiri',
-                    style: TextStyle(fontSize: 20),
-                  ),
+                  Text(widget.tema, style: TextStyle(fontSize: 20)),
                   const SizedBox(height: 10),
                   Container(
                     width: double.infinity,
@@ -92,7 +116,9 @@ class _DetailWeeklyReportPageState extends State<DetailWeeklyReportPage> {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const FirstWeekReport()),
+                        MaterialPageRoute(
+                          builder: (context) => const GuruDetailWeeklyReport(),
+                        ),
                       );
                     },
                     child: Container(
@@ -100,7 +126,10 @@ class _DetailWeeklyReportPageState extends State<DetailWeeklyReportPage> {
                         color: AppColors.primary10,
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 15,
+                      ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -130,35 +159,49 @@ class _DetailWeeklyReportPageState extends State<DetailWeeklyReportPage> {
                             ],
                           ),
                           IconButton(
-                          icon: const Icon(Icons.delete, color: Colors.blue),
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                title: Text('Konfirmasi'),
-                                content: Text('Yakin ingin menghapus Laporan Mingguan ${childrenNames[index]}" dari daftar?'),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () => Navigator.of(context).pop(), // Tutup dialog
-                                    child: Text('Batal'),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        childrenNames.removeAt(index); // Hapus anak
-                                      });
-                                      Navigator.of(context).pop(); // Tutup dialog
-                                    },
-                                    child: Text('Hapus', style: TextStyle(color: Colors.red)),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
+                            icon: const Icon(Icons.delete, color: Colors.blue),
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder:
+                                    (context) => AlertDialog(
+                                      title: Text('Konfirmasi'),
+                                      content: Text(
+                                        'Yakin ingin menghapus Laporan Mingguan ${childrenNames[index]}" dari daftar?',
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed:
+                                              () =>
+                                                  Navigator.of(
+                                                    context,
+                                                  ).pop(), // Tutup dialog
+                                          child: Text('Batal'),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              childrenNames.removeAt(
+                                                index,
+                                              ); // Hapus anak
+                                            });
+                                            Navigator.of(
+                                              context,
+                                            ).pop(); // Tutup dialog
+                                          },
+                                          child: Text(
+                                            'Hapus',
+                                            style: TextStyle(color: Colors.red),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                              );
+                            },
+                          ),
                         ],
                       ),
-                    )
+                    ),
                   );
                 },
               ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../theme/AppColors.dart';
 import '../guru_create_activity_pages/guru_create_activity.dart';
-import 'guru_detail_Semester.dart';
+import './guru_detail_semester.dart';
 
 class GuruSemesterReportPage extends StatefulWidget {
   final String classId;
@@ -64,7 +64,11 @@ class _GuruSemesterReportPageState extends State<GuruSemesterReportPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const DetailSemesterReportPage(),
+                    builder:
+                        (context) => DetailSemesterReportPage(
+                          classId: widget.classId,
+                          selectedSemester: semesterList[index],
+                        ),
                   ),
                 );
               },

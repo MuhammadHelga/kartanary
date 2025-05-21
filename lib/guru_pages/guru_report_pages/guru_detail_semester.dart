@@ -1,15 +1,83 @@
 import 'package:flutter/material.dart';
 import '../../theme/AppColors.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DetailSemesterReportPage extends StatefulWidget {
-  const DetailSemesterReportPage({super.key});
+  final String classId;
+  final String selectedSemester;
+  const DetailSemesterReportPage({
+    super.key,
+    required this.classId,
+    required this.selectedSemester,
+  });
 
   @override
-  State<DetailSemesterReportPage> createState() => _DetailSemesterReportPageState();
+  State<DetailSemesterReportPage> createState() =>
+      _DetailSemesterReportPageState();
 }
 
 class _DetailSemesterReportPageState extends State<DetailSemesterReportPage> {
-  List<String> childrenNames = ['Dokja', 'Rafayel', 'Caleb', 'Moran', 'WKWK'];
+  List<Map<String, dynamic>> laporanList = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchLaporanSemester();
+  }
+
+  Future<void> fetchLaporanSemester() async {
+    try {
+      // 1. Ambil semua anak dari kelas
+      final anakSnapshot =
+          await FirebaseFirestore.instance
+              .collection('kelas')
+              .doc(widget.classId)
+              .collection('anak')
+              .get();
+
+      List<Map<String, dynamic>> laporan = [];
+
+      // 2. Untuk setiap anak, ambil laporan semester mereka
+      for (var anakDoc in anakSnapshot.docs) {
+        final anakId = anakDoc.id;
+        final anakName = anakDoc['name'];
+
+        // 3. Akses koleksi laporanSemester dari dokumen anak di root collection
+        final laporanDoc =
+            await FirebaseFirestore.instance
+                .collection('anak')
+                .doc(anakId)
+                .collection('laporanSemester')
+                .doc(widget.selectedSemester)
+                .get();
+
+        if (laporanDoc.exists) {
+          final data = laporanDoc.data()!;
+          laporan.add({
+            'anakName': anakName,
+            'semester': data['semester'],
+            'fileUrl': data['pdfUrl'],
+            'uploadedAt': (data['uploadedAt'] as Timestamp).toDate(),
+            'anakId': anakId,
+          });
+        }
+      }
+
+      setState(() {
+        laporanList = laporan;
+        isLoading = false;
+      });
+    } catch (e) {
+      print('Error fetching laporan: $e');
+      setState(() => isLoading = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Gagal mengambil data laporan: $e')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +123,7 @@ class _DetailSemesterReportPageState extends State<DetailSemesterReportPage> {
               child: Column(
                 children: [
                   Text(
-                    'Semester 1',
+                    widget.selectedSemester,
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 10),
@@ -69,72 +137,63 @@ class _DetailSemesterReportPageState extends State<DetailSemesterReportPage> {
             ),
             const SizedBox(height: 20),
             Expanded(
-              child: ListView.builder(
-                itemCount: childrenNames.length,
-                itemBuilder: (context, index) {
-                  return Container(
-                    width: double.infinity,
-                    margin: const EdgeInsets.only(bottom: 10),
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: AppColors.primary10,
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.picture_as_pdf, color: Colors.red),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: Text(
-                            childrenNames[index],
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
+              child:
+                  isLoading
+                      ? Center(child: CircularProgressIndicator())
+                      : laporanList.isEmpty
+                      ? Center(
+                        child: Text('Belum ada laporan untuk semester ini.'),
+                      )
+                      : ListView.builder(
+                        itemCount: laporanList.length,
+                        itemBuilder: (context, index) {
+                          final laporan = laporanList[index];
+                          return Container(
+                            width: double.infinity,
+                            margin: const EdgeInsets.only(bottom: 10),
+                            padding: const EdgeInsets.all(20),
+                            decoration: BoxDecoration(
+                              color: AppColors.primary10,
+                              borderRadius: BorderRadius.circular(15),
                             ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.delete, color: Colors.blue),
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                title: Text('Konfirmasi'),
-                                content: Text('Yakin ingin menghapus Laporan Semester ${childrenNames[index]}" dari daftar?'),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () => Navigator.of(context).pop(), // Tutup dialog
-                                    child: Text('Batal'),
+                            child: Row(
+                              children: [
+                                const Icon(
+                                  Icons.picture_as_pdf,
+                                  color: Colors.red,
+                                ),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: Text(
+                                    '${laporan['anakName']}',
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                  TextButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        childrenNames.removeAt(index); // Hapus anak
-                                      });
-                                      Navigator.of(context).pop(); // Tutup dialog
-                                    },
-                                    child: Text('Hapus', style: TextStyle(color: Colors.red)),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                  );
-                },
-                
-              ),
-              
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.download),
+                                  onPressed: () async {
+                                    final url = laporan['fileUrl'];
+                                    if (await canLaunchUrl(Uri.parse(url))) {
+                                      launchUrl(
+                                        Uri.parse(url),
+                                        mode: LaunchMode.externalApplication,
+                                      );
+                                    }
+                                  },
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
             ),
-            
           ],
-          
         ),
-        
       ),
     );
   }

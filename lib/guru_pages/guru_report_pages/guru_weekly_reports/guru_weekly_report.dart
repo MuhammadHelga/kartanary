@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../theme/AppColors.dart';
-import '../guru_create_activity_pages/guru_create_activity.dart';
-import 'guru_detail_weekly.dart';
+import '../../../theme/AppColors.dart';
+import '../../guru_create_activity_pages/guru_create_activity.dart';
+import 'guru_list_weekly.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class GuruWeeklyReportPage extends StatefulWidget {
   final String classId;
@@ -13,13 +14,35 @@ class GuruWeeklyReportPage extends StatefulWidget {
 
 class _GuruWeeklyReportPageState extends State<GuruWeeklyReportPage> {
   DateTime selectedDate = DateTime.now();
+  List<String> temaList = [];
 
-  final List<String> temaList = [
-    'Tema 1: Air,Udara, dan Api',
-    'Tema 2: Alat Transportasi',
-    'Tema 3: Diri Sendiri',
-    'Tema 4: Alam Semesta',
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _fetchThemes(); // Fetch themes when the widget is initialized
+  }
+
+  Future<void> _fetchThemes() async {
+    try {
+      // Fetch themes from Firestore
+      final snapshot =
+          await FirebaseFirestore.instance
+              .collection('laporan_mingguan') // Koleksi laporan mingguan
+              .where(
+                'kelasId',
+                isEqualTo: widget.classId,
+              ) // Filter berdasarkan classId
+              .get();
+
+      // Map the documents to a list of theme names
+      setState(() {
+        temaList = snapshot.docs.map((doc) => doc['tema'] as String).toList();
+      });
+    } catch (e) {
+      print('Error fetching themes: $e');
+      // Handle error (e.g., show a message to the user)
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +94,11 @@ class _GuruWeeklyReportPageState extends State<GuruWeeklyReportPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const DetailWeeklyReportPage(),
+                    builder:
+                        (context) => GuruListWeekly(
+                          classId: widget.classId,
+                          tema: temaList[index],
+                        ),
                   ),
                 );
               },
@@ -86,7 +113,7 @@ class _GuruWeeklyReportPageState extends State<GuruWeeklyReportPage> {
                   children: [
                     Expanded(
                       child: Text(
-                        temaList[index],
+                        'Tema ${index + 1}:  ' + temaList[index],
                         style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,

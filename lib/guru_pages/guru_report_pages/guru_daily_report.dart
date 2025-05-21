@@ -320,36 +320,35 @@ class _GuruDailyReportPageState extends State<GuruDailyReportPage> {
                         },
                       ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 12),
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: FloatingActionButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder:
-                            (context) => GuruCreateActivityPage(
-                              classId: widget.classId,
-                              initialLaporan: 'Harian',
-                              isLocked: true,
-                            ),
-                      ),
-                    );
-                  },
-                  child: const Icon(Icons.add, color: Colors.white),
-                  backgroundColor: const Color(0xFF1D99D3),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                ),
-              ),
-            ),
+
             const SizedBox(height: 20),
           ],
         ),
       ),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        child: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder:
+                    (context) => GuruCreateActivityPage(
+                      classId: widget.classId,
+                      initialLaporan: 'Harian',
+                      isLocked: true,
+                    ),
+              ),
+            );
+          },
+          child: const Icon(Icons.add, color: Colors.white),
+          backgroundColor: const Color(0xFF1D99D3),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }

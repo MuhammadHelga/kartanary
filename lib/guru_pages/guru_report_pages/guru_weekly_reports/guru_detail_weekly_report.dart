@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import '../../../theme/AppColors.dart';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
-class FirstWeekReport extends StatefulWidget {
-  const FirstWeekReport({super.key});
+import 'package:cloud_firestore/cloud_firestore.dart';
+class GuruDetailWeeklyReport extends StatefulWidget {
+  const GuruDetailWeeklyReport({super.key});
 
   @override
-  State<FirstWeekReport> createState() => _FirstWeekReportState();
+  State<GuruDetailWeeklyReport> createState() => _GuruDetailWeeklyReportState();
 }
 
-class _FirstWeekReportState extends State<FirstWeekReport> {
+class _GuruDetailWeeklyReportState extends State<GuruDetailWeeklyReport> {
   String? _name;
 
   @override
@@ -36,7 +34,6 @@ class _FirstWeekReportState extends State<FirstWeekReport> {
       }
     }
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
