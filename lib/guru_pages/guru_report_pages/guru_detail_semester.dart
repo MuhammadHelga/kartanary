@@ -30,7 +30,6 @@ class _DetailSemesterReportPageState extends State<DetailSemesterReportPage> {
 
   Future<void> fetchLaporanSemester() async {
     try {
-      // 1. Ambil semua anak dari kelas
       final anakSnapshot =
           await FirebaseFirestore.instance
               .collection('kelas')
@@ -40,12 +39,10 @@ class _DetailSemesterReportPageState extends State<DetailSemesterReportPage> {
 
       List<Map<String, dynamic>> laporan = [];
 
-      // 2. Untuk setiap anak, ambil laporan semester mereka
       for (var anakDoc in anakSnapshot.docs) {
         final anakId = anakDoc.id;
         final anakName = anakDoc['name'];
 
-        // 3. Akses koleksi laporanSemester dari dokumen anak di root collection
         final laporanDoc =
             await FirebaseFirestore.instance
                 .collection('anak')
@@ -76,6 +73,57 @@ class _DetailSemesterReportPageState extends State<DetailSemesterReportPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Gagal mengambil data laporan: $e')),
       );
+    }
+  }
+
+  Future<void> _deleteLaporan(String anakId, int index) async {
+    try {
+      // Tampilkan dialog konfirmasi
+      bool confirmDelete = await showDialog(
+        context: context,
+        builder:
+            (context) => AlertDialog(
+              title: Text('Konfirmasi Hapus'),
+              content: Text('Apakah Anda yakin ingin menghapus laporan ini?'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: Text('Batal'),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(true),
+                  child: Text('Hapus', style: TextStyle(color: Colors.red)),
+                ),
+              ],
+            ),
+      );
+
+      if (confirmDelete == true) {
+        setState(() => isLoading = true);
+
+        // Hapus dokumen dari Firestore
+        await FirebaseFirestore.instance
+            .collection('anak')
+            .doc(anakId)
+            .collection('laporanSemester')
+            .doc(widget.selectedSemester)
+            .delete();
+
+        // Hapus dari list lokal
+        setState(() {
+          laporanList.removeAt(index);
+          isLoading = false;
+        });
+
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Laporan berhasil dihapus')));
+      }
+    } catch (e) {
+      setState(() => isLoading = false);
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Gagal menghapus laporan: $e')));
     }
   }
 
@@ -175,16 +223,16 @@ class _DetailSemesterReportPageState extends State<DetailSemesterReportPage> {
                                   ),
                                 ),
                                 IconButton(
-                                  icon: const Icon(Icons.download),
-                                  onPressed: () async {
-                                    final url = laporan['fileUrl'];
-                                    if (await canLaunchUrl(Uri.parse(url))) {
-                                      launchUrl(
-                                        Uri.parse(url),
-                                        mode: LaunchMode.externalApplication,
-                                      );
-                                    }
-                                  },
+                                  icon: const Icon(
+                                    Icons.delete_outline,
+                                    size: 28,
+                                    color: AppColors.primary40,
+                                  ),
+                                  onPressed:
+                                      () => _deleteLaporan(
+                                        laporan['anakId'],
+                                        index,
+                                      ),
                                 ),
                               ],
                             ),

@@ -63,11 +63,23 @@ class _ClassOptionsState extends State<ClassOptions> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xFFF1F9FD),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(30.0),
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topRight,
+          end: Alignment.bottomLeft,
+          colors: [Color.fromARGB(255, 176, 230, 255), Color(0xFFFFFFFF)],
+        ),
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Padding(
+          padding: const EdgeInsets.only(
+            left: 30,
+            top: 30,
+            right: 30,
+            bottom: 60,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -143,23 +155,21 @@ class _ClassOptionsState extends State<ClassOptions> {
                 ),
               ),
               SizedBox(height: 10),
-              Padding(
-                padding: const EdgeInsets.only(top: 110),
-                child: SizedBox(
-                  height: 60,
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: _bergabung,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xff1D99D3),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
+              Spacer(),
+              SizedBox(
+                height: 60,
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _bergabung,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xff1D99D3),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
                     ),
-                    child: Text(
-                      'Bergabung',
-                      style: TextStyle(fontSize: 20, color: Colors.white),
-                    ),
+                  ),
+                  child: Text(
+                    'Bergabung',
+                    style: TextStyle(fontSize: 20, color: Colors.white),
                   ),
                 ),
               ),

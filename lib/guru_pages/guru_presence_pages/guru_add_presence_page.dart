@@ -36,6 +36,11 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
     _fetchChildrenData();
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   void _fetchChildrenData() async {
     print("📌 Mengambil anak dari classId: ${widget.classId}");
     final snapshot =
@@ -44,6 +49,8 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
             .doc(widget.classId)
             .collection('anak')
             .get();
+
+    if (!mounted) return; // Add this check
 
     setState(() {
       childrenNames =
@@ -78,6 +85,7 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
       }
     }
 
+    if (!mounted) return; // Add this check
     setState(() {
       _updateStatusCounts();
     });
