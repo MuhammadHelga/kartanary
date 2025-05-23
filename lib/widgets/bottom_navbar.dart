@@ -29,7 +29,7 @@ class _BottomNavbarState extends State<BottomNavbar> {
   @override
   Widget build(BuildContext context) {
     List<Widget> ortu_pages = [
-      HomePage(),
+      HomePage(classId: widget.classId),
       PresencePage(role: widget.role, classId: widget.classId),
       ReportingPage(role: widget.role, classId: widget.classId),
       ProfilePage(role: widget.role, classId: widget.classId),

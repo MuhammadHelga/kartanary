@@ -215,7 +215,10 @@ class _GuruListWeeklyState extends State<GuruListWeekly> {
                             ],
                           ),
                           IconButton(
-                            icon: const Icon(Icons.delete, color: Colors.blue),
+                            icon: const Icon(
+                              Icons.delete_outline,
+                              color: Colors.blue,
+                            ),
                             onPressed: () {
                               showDialog(
                                 context: context,

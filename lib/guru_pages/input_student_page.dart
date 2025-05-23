@@ -365,10 +365,6 @@ class _InputStudentPageState extends State<InputStudentPage> {
                                 ),
                           ),
                         );
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Tambah anak dulu ya!')),
-                        );
                       }
                     },
                     style: ElevatedButton.styleFrom(

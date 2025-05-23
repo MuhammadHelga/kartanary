@@ -103,6 +103,7 @@ class _GuruWeeklyReportPageState extends State<GuruWeeklyReportPage> {
             final isEven = index % 2 == 0;
             final bgColor =
                 isEven ? AppColors.primary10 : AppColors.secondary50;
+            final tema = temaList[index];
 
             return GestureDetector(
               onTap: () {
@@ -111,7 +112,7 @@ class _GuruWeeklyReportPageState extends State<GuruWeeklyReportPage> {
                   MaterialPageRoute(
                     builder:
                         (context) => GuruListWeekly(
-                          temaId: temaList[index]['id'], // Kirim ID tema
+                          temaId: tema['id'], // Kirim ID tema
                           classId: widget.classId,
                         ),
                   ),
@@ -128,7 +129,7 @@ class _GuruWeeklyReportPageState extends State<GuruWeeklyReportPage> {
                   children: [
                     Expanded(
                       child: Text(
-                        'Tema: ${temaList[index]['tema'] ?? 'Tema tanpa judul'}',
+                        'Tema: ${tema['tema'] ?? 'Tema tanpa judul'}',
                         style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -137,8 +138,52 @@ class _GuruWeeklyReportPageState extends State<GuruWeeklyReportPage> {
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    // const Spacer(),
+
                     const Icon(Icons.chevron_right, size: 38),
+                    IconButton(
+                      icon: const Icon(
+                        Icons.delete_outline,
+                        size: 28,
+                        color: AppColors.primary50,
+                      ),
+                      onPressed: () async {
+                        final confirm = await showDialog<bool>(
+                          context: context,
+                          builder:
+                              (context) => AlertDialog(
+                                title: const Text("Hapus Tema"),
+                                content: Text(
+                                  "Yakin ingin menghapus tema '${tema['tema']}'?",
+                                ),
+                                actions: [
+                                  TextButton(
+                                    child: const Text("Batal"),
+                                    onPressed:
+                                        () => Navigator.pop(context, false),
+                                  ),
+                                  TextButton(
+                                    child: const Text("Hapus"),
+                                    onPressed:
+                                        () => Navigator.pop(context, true),
+                                  ),
+                                ],
+                              ),
+                        );
+
+                        if (confirm == true) {
+                          await FirebaseFirestore.instance
+                              .collection('kelas')
+                              .doc(widget.classId)
+                              .collection('tema')
+                              .doc(tema['id'])
+                              .delete();
+
+                          setState(() {
+                            temaList.removeAt(index); // langsung update list
+                          });
+                        }
+                      },
+                    ),
                   ],
                 ),
               ),

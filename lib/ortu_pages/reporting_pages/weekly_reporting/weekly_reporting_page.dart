@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../../theme/AppColors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../weekly_reporting/detail_weekly_report.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../weekly_reporting/detail_weekly_report.dart'; // pastikan path ini benar
 
 class WeeksReportingPage extends StatefulWidget {
   final String classId;
@@ -12,9 +13,23 @@ class WeeksReportingPage extends StatefulWidget {
 }
 
 class _WeeksReportingPageState extends State<WeeksReportingPage> {
-  DateTime selectedDate = DateTime.now();
-
   List<Map<String, dynamic>> temaList = [];
+  String? selectedChildId;
+
+  Future<void> _loadSelectedChild() async {
+    final prefs = await SharedPreferences.getInstance();
+    final childId = prefs.getString('selectedChildId');
+
+    if (childId != null) {
+      setState(() {
+        selectedChildId = childId;
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Tidak ada anak yang dipilih')),
+      );
+    }
+  }
 
   Future<void> _fetchTemas() async {
     try {
@@ -55,7 +70,7 @@ class _WeeksReportingPageState extends State<WeeksReportingPage> {
   @override
   void initState() {
     super.initState();
-    _fetchTemas();
+    _loadSelectedChild().then((_) => _fetchTemas());
   }
 
   @override
@@ -97,7 +112,7 @@ class _WeeksReportingPageState extends State<WeeksReportingPage> {
         padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
         child: ListView.separated(
           itemCount: temaList.length,
-          separatorBuilder: (context, index) => SizedBox(height: 10),
+          separatorBuilder: (context, index) => const SizedBox(height: 10),
           itemBuilder: (context, index) {
             final isEven = index % 2 == 0;
             final bgColor =
@@ -105,13 +120,21 @@ class _WeeksReportingPageState extends State<WeeksReportingPage> {
 
             return GestureDetector(
               onTap: () {
+                if (selectedChildId == null) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Anak belum dipilih')),
+                  );
+                  return;
+                }
+
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder:
                         (context) => DetailWeeklyReport(
-                          temaId: temaList[index]['id'], // Kirim ID tema
                           classId: widget.classId,
+                          temaId: temaList[index]['id'],
+                          anakId: selectedChildId,
                         ),
                   ),
                 );
@@ -136,7 +159,6 @@ class _WeeksReportingPageState extends State<WeeksReportingPage> {
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    // const Spacer(),
                     const Icon(Icons.chevron_right, size: 38),
                   ],
                 ),

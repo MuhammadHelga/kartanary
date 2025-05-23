@@ -53,15 +53,19 @@ class _PresencePageState extends State<PresencePage> {
               .doc(dateKey)
               .get();
 
+      if (!mounted) return;
+
       if (doc.exists) {
         presenceStatus[i] = doc['status'] ?? 'Hadir';
       } else {
-        presenceStatus[i] = 'Hadir'; // Default jika tidak ada data
+        presenceStatus[i] = 'Hadir';
       }
     }
 
+    if (!mounted) return;
+
     setState(() {
-      _updateStatusCounts(); // Update status counts jika diperlukan
+      _updateStatusCounts();
     });
   }
 
@@ -80,6 +84,8 @@ class _PresencePageState extends State<PresencePage> {
             .doc(widget.classId)
             .collection('anak')
             .get();
+
+    if (!mounted) return;
 
     setState(() {
       childrenNames =
