@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lifesync_capstone_project/guru_pages/input_student_page.dart';
 import '../../widgets/bottom_navbar.dart';
 import '../../pages/login_page.dart';
 import 'edit_profile.dart';
@@ -324,6 +325,18 @@ class _ProfilePageState extends State<ProfilePage> {
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 2),
                         child: InkWell(
+                          onTap: () async {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (context) => InputStudentPage(
+                                      role: widget.role,
+                                      classId: widget.classId,
+                                    ),
+                              ),
+                            );
+                          },
                           child: Row(
                             children: [
                               Icon(
@@ -332,6 +345,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 size: 30,
                               ),
                               Text('Tentang', style: TextStyle(fontSize: 20)),
+
                               Spacer(),
                               Icon(
                                 Icons.chevron_right,

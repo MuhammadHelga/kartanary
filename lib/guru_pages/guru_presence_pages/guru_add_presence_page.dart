@@ -53,10 +53,10 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
   void _fetchChildrenData() async {
     print("📌 Mengambil anak dari classId: ${widget.classId}");
 
-    // Maximum number of retry attempts
     int maxRetries = 3;
     int retryCount = 0;
-    int retryDelayMs = 1000; // Start with 1 second delay
+    int retryDelayMs = 1000;
+
     while (retryCount < maxRetries) {
       try {
         final snapshot =
@@ -66,24 +66,30 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
                 .collection('anak')
                 .get();
 
-        // Use safe setState
-        if (!_isDisposed && mounted) {
+        // Urutkan berdasarkan nama (ascending)
+        final sortedDocs =
+            snapshot.docs.toList()..sort(
+              (a, b) => (a['name'] as String).compareTo(b['name'] as String),
+            );
+
+        // Jika widget masih aktif, setState
+        if (mounted) {
           setState(() {
             childrenNames =
-                snapshot.docs.map((doc) => doc['name'] as String).toList();
+                sortedDocs.map((doc) => doc['name'] as String).toList();
+            childrenIds = sortedDocs.map((doc) => doc.id).toList();
             presenceStatus = List.filled(childrenNames.length, 'Hadir');
             _updateStatusCounts();
-            childrenIds = snapshot.docs.map((doc) => doc.id).toList();
           });
 
           _loadPresensi();
         }
-        return; // Success! Exit the function
+
+        return; // selesai
       } catch (e) {
         retryCount++;
         if (retryCount >= maxRetries) {
-          // If we've reached max retries, show an error and stop trying
-          if (!_isDisposed && mounted) {
+          if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(
@@ -92,17 +98,14 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
               ),
             );
           }
-          throw e; // Rethrow the error after max retries
+          throw e;
         }
 
         print(
           "⚠️ Firestore error, retrying ($retryCount/$maxRetries) after ${retryDelayMs}ms: $e",
         );
-
-        // Wait before retrying with exponential backoff
         await Future.delayed(Duration(milliseconds: retryDelayMs));
-        retryDelayMs *=
-            2; // Double the delay for next retry (exponential backoff)
+        retryDelayMs *= 2; // backoff
       }
     }
   }

@@ -75,6 +75,8 @@ class _GuruHomePageState extends State<GuruHomePage> {
         final dateB = (b['tanggal'] as Timestamp).toDate();
         return dateA.compareTo(dateB);
       });
+
+      if (!mounted) return;
       setState(() {
         _announcements = loadedAnnouncements;
       });
@@ -104,6 +106,7 @@ class _GuruHomePageState extends State<GuruHomePage> {
               .doc(user.uid)
               .get();
       if (doc.exists) {
+        if (!mounted) return;
         setState(() {
           _name = doc['name'];
         });

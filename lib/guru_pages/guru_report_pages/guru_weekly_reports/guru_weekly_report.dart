@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
-import '../../../theme/AppColors.dart';
-import '../../guru_create_activity_pages/guru_create_activity.dart';
-import 'guru_list_weekly.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:lifesync_capstone_project/guru_pages/guru_create_activity_pages/guru_create_activity.dart';
+import 'package:lifesync_capstone_project/guru_pages/guru_report_pages/guru_weekly_reports/guru_list_weekly.dart';
+import 'package:lifesync_capstone_project/theme/AppColors.dart';
 
 class GuruWeeklyReportPage extends StatefulWidget {
   final String classId;
@@ -14,34 +14,49 @@ class GuruWeeklyReportPage extends StatefulWidget {
 
 class _GuruWeeklyReportPageState extends State<GuruWeeklyReportPage> {
   DateTime selectedDate = DateTime.now();
-  List<String> temaList = [];
+
+  List<Map<String, dynamic>> temaList = [];
+
+  Future<void> _fetchTemas() async {
+    try {
+      final snapshot =
+          await FirebaseFirestore.instance
+              .collection('kelas')
+              .doc(widget.classId)
+              .collection('tema')
+              .get();
+
+      if (snapshot.docs.isNotEmpty) {
+        List<Map<String, dynamic>> fetchedTemas = [];
+
+        for (var doc in snapshot.docs) {
+          final data = doc.data();
+          fetchedTemas.add({
+            'id': doc.id,
+            'tema': data['Tema'] ?? 'Tema tanpa judul',
+            'minggu': data['minggu'] ?? [],
+          });
+        }
+
+        fetchedTemas.sort(
+          (a, b) => (a['tema'] ?? '').toString().toLowerCase().compareTo(
+            (b['tema'] ?? '').toString().toLowerCase(),
+          ),
+        );
+
+        setState(() {
+          temaList = fetchedTemas;
+        });
+      }
+    } catch (e) {
+      print('Gagal mengambil daftar tema: $e');
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    _fetchThemes(); // Fetch themes when the widget is initialized
-  }
-
-  Future<void> _fetchThemes() async {
-    try {
-      // Fetch themes from Firestore
-      final snapshot =
-          await FirebaseFirestore.instance
-              .collection('laporan_mingguan') // Koleksi laporan mingguan
-              .where(
-                'kelasId',
-                isEqualTo: widget.classId,
-              ) // Filter berdasarkan classId
-              .get();
-
-      // Map the documents to a list of theme names
-      setState(() {
-        temaList = snapshot.docs.map((doc) => doc['tema'] as String).toList();
-      });
-    } catch (e) {
-      print('Error fetching themes: $e');
-      // Handle error (e.g., show a message to the user)
-    }
+    _fetchTemas();
   }
 
   @override
@@ -96,8 +111,8 @@ class _GuruWeeklyReportPageState extends State<GuruWeeklyReportPage> {
                   MaterialPageRoute(
                     builder:
                         (context) => GuruListWeekly(
+                          temaId: temaList[index]['id'], // Kirim ID tema
                           classId: widget.classId,
-                          tema: temaList[index],
                         ),
                   ),
                 );
@@ -113,7 +128,7 @@ class _GuruWeeklyReportPageState extends State<GuruWeeklyReportPage> {
                   children: [
                     Expanded(
                       child: Text(
-                        'Tema ${index + 1}:  ' + temaList[index],
+                        'Tema: ${temaList[index]['tema'] ?? 'Tema tanpa judul'}',
                         style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,

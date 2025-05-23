@@ -5,8 +5,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class DetailWeeklyReport extends StatefulWidget {
-  final String docId;
-  const DetailWeeklyReport({super.key, required this.docId});
+  final String classId;
+  final String temaId;
+  const DetailWeeklyReport({
+    super.key,
+    required this.classId,
+    required this.temaId,
+  });
 
   @override
   State<DetailWeeklyReport> createState() => _DetailWeeklyReportState();
@@ -21,7 +26,6 @@ class _DetailWeeklyReportState extends State<DetailWeeklyReport> {
   void initState() {
     super.initState();
     _loadUserName();
-    _fetchLaporanMingguan();
   }
 
   Future<void> _loadUserName() async {
@@ -37,34 +41,6 @@ class _DetailWeeklyReportState extends State<DetailWeeklyReport> {
           _name = doc['name'];
         });
       }
-    }
-  }
-
-  Future<void> _fetchLaporanMingguan() async {
-    try {
-      final docRef = FirebaseFirestore.instance
-          .collection('laporan_mingguan')
-          .doc(widget.docId);
-
-      final doc = await docRef.get();
-
-      if (doc.exists) {
-        final data = doc.data()!;
-
-        final mingguSnapshot = await docRef.collection('minggu').get();
-
-        final List<Map<String, dynamic>> minggu =
-            mingguSnapshot.docs.map((d) => d.data()).toList();
-
-        setState(() {
-          laporan = data;
-          mingguList = minggu;
-        });
-      } else {
-        print("Dokumen tidak ditemukan.");
-      }
-    } catch (e) {
-      print('Gagal mengambil laporan mingguan: $e');
     }
   }
 

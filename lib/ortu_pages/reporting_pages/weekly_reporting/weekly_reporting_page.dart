@@ -12,41 +12,50 @@ class WeeksReportingPage extends StatefulWidget {
 }
 
 class _WeeksReportingPageState extends State<WeeksReportingPage> {
-  // List<String> temaList = [];
+  DateTime selectedDate = DateTime.now();
+
   List<Map<String, dynamic>> temaList = [];
+
+  Future<void> _fetchTemas() async {
+    try {
+      final snapshot =
+          await FirebaseFirestore.instance
+              .collection('kelas')
+              .doc(widget.classId)
+              .collection('tema')
+              .get();
+
+      if (snapshot.docs.isNotEmpty) {
+        List<Map<String, dynamic>> fetchedTemas = [];
+
+        for (var doc in snapshot.docs) {
+          final data = doc.data();
+          fetchedTemas.add({
+            'id': doc.id,
+            'tema': data['Tema'] ?? 'Tema tanpa judul',
+            'minggu': data['minggu'] ?? [],
+          });
+        }
+
+        fetchedTemas.sort(
+          (a, b) => (a['tema'] ?? '').toString().toLowerCase().compareTo(
+            (b['tema'] ?? '').toString().toLowerCase(),
+          ),
+        );
+
+        setState(() {
+          temaList = fetchedTemas;
+        });
+      }
+    } catch (e) {
+      print('Gagal mengambil daftar tema: $e');
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    _fetchThemes(); // Fetch themes when the widget is initialized
-  }
-
-  Future<void> _fetchThemes() async {
-    try {
-      // Fetch themes from Firestore
-      final snapshot =
-          await FirebaseFirestore.instance
-              .collection('laporan_mingguan') // Koleksi laporan mingguan
-              .where(
-                'kelasId',
-                isEqualTo: widget.classId,
-              ) // Filter berdasarkan classId
-              .get();
-
-      // Map the documents to a list of theme names and their docId
-      setState(() {
-        temaList =
-            snapshot.docs.map((doc) {
-              return {
-                'tema': doc['tema'] as String,
-                'docId': doc.id, // Ambil docId
-              };
-            }).toList();
-      });
-    } catch (e) {
-      print('Error fetching themes: $e');
-      // Handle error (e.g., show a message to the user)
-    }
+    _fetchTemas();
   }
 
   @override
@@ -90,9 +99,6 @@ class _WeeksReportingPageState extends State<WeeksReportingPage> {
           itemCount: temaList.length,
           separatorBuilder: (context, index) => SizedBox(height: 10),
           itemBuilder: (context, index) {
-            final data = temaList[index];
-            final tema = data['tema'];
-            final docId = data['docId'];
             final isEven = index % 2 == 0;
             final bgColor =
                 isEven ? AppColors.primary10 : AppColors.secondary50;
@@ -102,7 +108,11 @@ class _WeeksReportingPageState extends State<WeeksReportingPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => DetailWeeklyReport(docId: docId),
+                    builder:
+                        (context) => DetailWeeklyReport(
+                          temaId: temaList[index]['id'], // Kirim ID tema
+                          classId: widget.classId,
+                        ),
                   ),
                 );
               },
@@ -117,7 +127,7 @@ class _WeeksReportingPageState extends State<WeeksReportingPage> {
                   children: [
                     Expanded(
                       child: Text(
-                        'Tema ${index + 1}:  $tema',
+                        'Tema: ${temaList[index]['tema'] ?? 'Tema tanpa judul'}',
                         style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
