@@ -1,9 +1,11 @@
+// import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:dio/dio.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../../theme/AppColors.dart';
 import 'dart:io';
 
@@ -19,76 +21,99 @@ class _SemesterReportPageState extends State<SemesterReportPage> {
   List<Map<String, dynamic>> semester1Reports = [];
   List<Map<String, dynamic>> semester2Reports = [];
   bool isLoading = true;
+  String? selectedChildId;
+  String? selectedChildName;
 
   @override
   void initState() {
     super.initState();
-    fetchLaporanSemester();
+    _loadSelectedChild();
+  }
+
+  Future<void> _loadSelectedChild() async {
+    final prefs = await SharedPreferences.getInstance();
+    final childId = prefs.getString('selectedChildId');
+
+    if (childId != null) {
+      setState(() {
+        selectedChildId = childId;
+      });
+      await fetchLaporanSemester();
+    } else {
+      setState(() => isLoading = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Tidak ada anak yang dipilih')),
+      );
+    }
   }
 
   Future<void> fetchLaporanSemester() async {
     try {
-      // Ambil semua anak dari kelas
-      final anakSnapshot =
+      if (selectedChildId == null) return;
+
+      // Ambil data anak
+      final anakDoc =
           await FirebaseFirestore.instance
               .collection('kelas')
               .doc(widget.classId)
               .collection('anak')
+              .doc(selectedChildId)
               .get();
 
-      List<Map<String, dynamic>> s1 = [];
-      List<Map<String, dynamic>> s2 = [];
-
-      for (var anakDoc in anakSnapshot.docs) {
-        final anakId = anakDoc.id;
-        final anakName = anakDoc['name'];
-
-        // Ambil laporan Semester 1
-        final laporan1 =
-            await FirebaseFirestore.instance
-                .collection('anak')
-                .doc(anakId)
-                .collection('laporanSemester')
-                .doc('Semester 1')
-                .get();
-
-        if (laporan1.exists && laporan1.data()?['pdfUrl'] != null) {
-          s1.add({
-            'anakName': anakName,
-            'fileUrl': laporan1['pdfUrl'],
-            'uploadedAt':
-                laporan1['uploadedAt'] != null
-                    ? (laporan1['uploadedAt'] as Timestamp).toDate().toString()
-                    : 'Tanggal tidak tersedia',
-          });
-        }
-
-        // Ambil laporan Semester 2
-        final laporan2 =
-            await FirebaseFirestore.instance
-                .collection('anak')
-                .doc(anakId)
-                .collection('laporanSemester')
-                .doc('Semester 2')
-                .get();
-
-        if (laporan2.exists && laporan2.data()?['pdfUrl'] != null) {
-          s2.add({
-            'anakName': anakName,
-            'fileUrl': laporan2['pdfUrl'],
-            'uploadedAt':
-                laporan2['uploadedAt'] != null
-                    ? (laporan2['uploadedAt'] as Timestamp).toDate().toString()
-                    : 'Tanggal tidak tersedia',
-          });
-        }
+      if (!anakDoc.exists) {
+        setState(() => isLoading = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Data anak tidak ditemukan')),
+        );
+        return;
       }
 
+      final anakName = anakDoc['name'];
       setState(() {
-        semester1Reports = s1;
-        semester2Reports = s2;
-        isLoading = false;
+        selectedChildName = anakName;
       });
+
+      // Ambil laporan Semester 1
+      final laporan1 =
+          await FirebaseFirestore.instance
+              .collection('anak')
+              .doc(selectedChildId)
+              .collection('laporanSemester')
+              .doc('Semester 1')
+              .get();
+
+      if (laporan1.exists && laporan1.data()?['pdfUrl'] != null) {
+        semester1Reports.add({
+          'anakName': anakName,
+          'fileUrl': laporan1['pdfUrl'],
+          'uploadedAt':
+              laporan1['uploadedAt'] != null
+                  ? (laporan1['uploadedAt'] as Timestamp).toDate().toString()
+                  : 'Tanggal tidak tersedia',
+        });
+      }
+
+      // Ambil laporan Semester 2
+      final laporan2 =
+          await FirebaseFirestore.instance
+              .collection('anak')
+              .doc(selectedChildId)
+              .collection('laporanSemester')
+              .doc('Semester 2')
+              .get();
+
+      if (laporan2.exists && laporan2.data()?['pdfUrl'] != null) {
+        semester2Reports.add({
+          'anakName': anakName,
+          'fileUrl': laporan2['pdfUrl'],
+          'uploadedAt':
+              laporan2['uploadedAt'] != null
+                  ? (laporan2['uploadedAt'] as Timestamp).toDate().toString()
+                  : 'Tanggal tidak tersedia',
+        });
+      }
+
+      setState(() => isLoading = false);
     } catch (e) {
       print('Error fetching laporan: $e');
       setState(() => isLoading = false);
@@ -135,16 +160,16 @@ class _SemesterReportPageState extends State<SemesterReportPage> {
     }
   }
 
-  Future<void> _launchUrl(String url) async {
-    final uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('URL tidak valid atau tidak bisa dibuka')),
-      );
-    }
-  }
+  // Future<void> _launchUrl(String url) async {
+  //   final uri = Uri.parse(url);
+  //   if (await canLaunchUrl(uri)) {
+  //     await launchUrl(uri, mode: LaunchMode.externalApplication);
+  //   } else {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       const SnackBar(content: Text('URL tidak valid atau tidak bisa dibuka')),
+  //     );
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {

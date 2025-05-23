@@ -52,7 +52,11 @@ class _AddSemesterPageState extends State<AddSemesterPage> {
             snapshot.docs
                 .map((doc) => {'id': doc.id, 'name': doc['name']})
                 .toList();
-        _isLoadingChildren = false;
+        if (mounted) {
+          setState(() {
+            _isLoadingChildren = false;
+          });
+        }
       });
     } catch (e) {
       print('Gagal mengambil data anak: $e');
@@ -65,12 +69,12 @@ class _AddSemesterPageState extends State<AddSemesterPage> {
     String semester,
     File file,
   ) async {
-    final fileName = '${anakId}_$semester.pdf';
+    final fileName = '${widget.classId}_${anakId}_$semester.pdf';
     final supabase = Supabase.instance.client;
 
     try {
+      // 1. Upload ke Supabase Storage
       final filePath = 'laporan/$fileName';
-
       await supabase.storage
           .from('semester-report')
           .upload(filePath, file, fileOptions: const FileOptions(upsert: true));
@@ -79,17 +83,39 @@ class _AddSemesterPageState extends State<AddSemesterPage> {
           .from('semester-report')
           .getPublicUrl(filePath);
 
-      await FirebaseFirestore.instance
+      // 2. Simpan ke Firestore dengan struktur baru
+      final batch = FirebaseFirestore.instance.batch();
+
+      // Simpan di koleksi anak utama (untuk akses global)
+      final anakRef = FirebaseFirestore.instance
           .collection('anak')
           .doc(anakId)
           .collection('laporanSemester')
-          .doc(semester)
-          .set({
-            'pdfUrl': publicUrl,
-            'uploadedAt': Timestamp.now(),
-            'semester': semester,
-          });
+          .doc(semester);
 
+      batch.set(anakRef, {
+        'pdfUrl': publicUrl,
+        'uploadedAt': Timestamp.now(),
+        'semester': semester,
+        'classId': widget.classId, // Tambahkan classId untuk referensi
+      });
+
+      // Simpan di koleksi kelas -> classId -> anak (untuk akses per kelas)
+      final kelasAnakRef = FirebaseFirestore.instance
+          .collection('kelas')
+          .doc(widget.classId)
+          .collection('anak')
+          .doc(anakId)
+          .collection('laporanSemester')
+          .doc(semester);
+
+      batch.set(kelasAnakRef, {
+        'pdfUrl': publicUrl,
+        'uploadedAt': Timestamp.now(),
+        'semester': semester,
+      });
+
+      await batch.commit();
       _showSuccessDialog(publicUrl);
     } catch (e) {
       print('Error saat upload: $e');
@@ -135,6 +161,7 @@ class _AddSemesterPageState extends State<AddSemesterPage> {
   }
 
   void _showErrorSnackBar(String message) {
+    if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(message), backgroundColor: Colors.red),
     );
