@@ -9,7 +9,7 @@ import '../../theme/AppColors.dart';
 class EditProfile extends StatefulWidget {
   final String role;
   final String classId;
-  const EditProfile({super.key, required this.role, required this.classId,});
+  const EditProfile({super.key, required this.role, required this.classId});
 
   @override
   State<EditProfile> createState() => _EditProfileState();
@@ -104,7 +104,10 @@ class _EditProfileState extends State<EditProfile> {
 
           Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => LoginPage(role: role, classId: widget.classId,)),
+            MaterialPageRoute(
+              builder:
+                  (context) => LoginPage(role: role, classId: widget.classId),
+            ),
             (route) => false,
           );
           return;
@@ -121,7 +124,9 @@ class _EditProfileState extends State<EditProfile> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => ProfilePage(role: widget.role, classId: widget.classId,),
+            builder:
+                (context) =>
+                    ProfilePage(role: widget.role, classId: widget.classId),
           ),
         );
       }
@@ -301,8 +306,9 @@ class _EditProfileState extends State<EditProfile> {
                                 decoration: InputDecoration(
                                   hintText: 'Orang Tua',
                                   hintStyle: TextStyle(
-                                    fontSize: 20,
+                                    fontSize: 16,
                                     color: Colors.black,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                   filled: true,
                                   fillColor: Color(0xffF8FAFC),
@@ -382,26 +388,6 @@ class _EditProfileState extends State<EditProfile> {
                         fit: BoxFit.cover,
                       ),
                     ),
-                  ),
-                ),
-              ),
-              Positioned(
-                top: 120,
-                right: screenWidth * 0.35,
-                child: Container(
-                  height: 40,
-                  width: 40,
-                  decoration: BoxDecoration(
-                    color: Color(0xff1D99D3),
-                    shape: BoxShape.circle,
-                  ),
-                  child: IconButton(
-                    icon: Icon(
-                      Icons.edit_outlined,
-                      size: 24,
-                      color: Colors.white,
-                    ),
-                    onPressed: () {},
                   ),
                 ),
               ),
