@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../../theme/AppColors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../weekly_reporting/detail_weekly_report.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../weekly_reporting/detail_weekly_report.dart'; // pastikan path ini benar
 
 class WeeksReportingPage extends StatefulWidget {
   final String classId;
@@ -12,41 +13,64 @@ class WeeksReportingPage extends StatefulWidget {
 }
 
 class _WeeksReportingPageState extends State<WeeksReportingPage> {
-  // List<String> temaList = [];
   List<Map<String, dynamic>> temaList = [];
+  String? selectedChildId;
+
+  Future<void> _loadSelectedChild() async {
+    final prefs = await SharedPreferences.getInstance();
+    final childId = prefs.getString('selectedChildId');
+
+    if (childId != null) {
+      setState(() {
+        selectedChildId = childId;
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Tidak ada anak yang dipilih')),
+      );
+    }
+  }
+
+  Future<void> _fetchTemas() async {
+    try {
+      final snapshot =
+          await FirebaseFirestore.instance
+              .collection('kelas')
+              .doc(widget.classId)
+              .collection('tema')
+              .get();
+
+      if (snapshot.docs.isNotEmpty) {
+        List<Map<String, dynamic>> fetchedTemas = [];
+
+        for (var doc in snapshot.docs) {
+          final data = doc.data();
+          fetchedTemas.add({
+            'id': doc.id,
+            'tema': data['Tema'] ?? 'Tema tanpa judul',
+            'minggu': data['minggu'] ?? [],
+          });
+        }
+
+        fetchedTemas.sort(
+          (a, b) => (a['tema'] ?? '').toString().toLowerCase().compareTo(
+            (b['tema'] ?? '').toString().toLowerCase(),
+          ),
+        );
+
+        setState(() {
+          temaList = fetchedTemas;
+        });
+      }
+    } catch (e) {
+      print('Gagal mengambil daftar tema: $e');
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    _fetchThemes(); // Fetch themes when the widget is initialized
-  }
-
-  Future<void> _fetchThemes() async {
-    try {
-      // Fetch themes from Firestore
-      final snapshot =
-          await FirebaseFirestore.instance
-              .collection('laporan_mingguan') // Koleksi laporan mingguan
-              .where(
-                'kelasId',
-                isEqualTo: widget.classId,
-              ) // Filter berdasarkan classId
-              .get();
-
-      // Map the documents to a list of theme names and their docId
-      setState(() {
-        temaList =
-            snapshot.docs.map((doc) {
-              return {
-                'tema': doc['tema'] as String,
-                'docId': doc.id, // Ambil docId
-              };
-            }).toList();
-      });
-    } catch (e) {
-      print('Error fetching themes: $e');
-      // Handle error (e.g., show a message to the user)
-    }
+    _loadSelectedChild().then((_) => _fetchTemas());
   }
 
   @override
@@ -88,21 +112,30 @@ class _WeeksReportingPageState extends State<WeeksReportingPage> {
         padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
         child: ListView.separated(
           itemCount: temaList.length,
-          separatorBuilder: (context, index) => SizedBox(height: 10),
+          separatorBuilder: (context, index) => const SizedBox(height: 10),
           itemBuilder: (context, index) {
-            final data = temaList[index];
-            final tema = data['tema'];
-            final docId = data['docId'];
             final isEven = index % 2 == 0;
             final bgColor =
                 isEven ? AppColors.primary10 : AppColors.secondary50;
 
             return GestureDetector(
               onTap: () {
+                if (selectedChildId == null) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Anak belum dipilih')),
+                  );
+                  return;
+                }
+
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => DetailWeeklyReport(docId: docId),
+                    builder:
+                        (context) => DetailWeeklyReport(
+                          classId: widget.classId,
+                          temaId: temaList[index]['id'],
+                          anakId: selectedChildId,
+                        ),
                   ),
                 );
               },
@@ -117,7 +150,7 @@ class _WeeksReportingPageState extends State<WeeksReportingPage> {
                   children: [
                     Expanded(
                       child: Text(
-                        'Tema ${index + 1}:  $tema',
+                        'Tema: ${temaList[index]['tema'] ?? 'Tema tanpa judul'}',
                         style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -126,7 +159,6 @@ class _WeeksReportingPageState extends State<WeeksReportingPage> {
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    // const Spacer(),
                     const Icon(Icons.chevron_right, size: 38),
                   ],
                 ),

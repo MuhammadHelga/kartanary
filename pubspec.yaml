@@ -25,6 +25,7 @@ dependencies:
   supabase_flutter: ^2.0.0
   dio: ^5.4.0
   path_provider: ^2.1.1
+  timeago: ^3.7.1
 
 dev_dependencies:
   flutter_test:
@@ -47,7 +48,7 @@ flutter:
     - assets/images/photo1.png
     - assets/images/photo2.png
     - assets/images/placeholder_slider.jpg
-    - assets/images/placeholder_updates.jpg
+    - assets/images/placeholder_updates.png
     - assets/images/lh_cover.png
     - assets/images/lm_cover.png
     - assets/images/ls_cover.png

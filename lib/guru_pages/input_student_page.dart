@@ -233,6 +233,7 @@ class _InputStudentPageState extends State<InputStudentPage> {
                           await AuthService().tambahAnak(
                             name: _nameController.text,
                             gender: _selectedGender!,
+                            age: _ageController.text,
                             classId: widget.classId,
                           );
                           _nameController.clear();
@@ -363,10 +364,6 @@ class _InputStudentPageState extends State<InputStudentPage> {
                                   classId: widget.classId,
                                 ),
                           ),
-                        );
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Tambah anak dulu ya!')),
                         );
                       }
                     },

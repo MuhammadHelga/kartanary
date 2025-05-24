@@ -46,7 +46,6 @@ class _JoinClassPageState extends State<JoinClassPage> {
 
       print('✅ Bergabung ke classId: $classId');
 
-      // Arahkan ke halaman yang memerlukan classId
       Navigator.push(
         context,
         MaterialPageRoute(

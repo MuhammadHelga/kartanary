@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lifesync_capstone_project/guru_pages/guru_create_activity_pages/guru_add_daily.dart';
 import 'package:lifesync_capstone_project/guru_pages/guru_create_activity_pages/guru_add_semester.dart';
-import 'package:lifesync_capstone_project/guru_pages/guru_create_activity_pages/guru_add_weekly.dart';
+import 'package:lifesync_capstone_project/guru_pages/guru_create_activity_pages/weekly/guru_add_weekly.dart';
 import '../../theme/AppColors.dart';
 import '../../widgets/bottom_navbar.dart';
 import 'guru_add_announcement.dart';
@@ -59,7 +59,7 @@ class _GuruCreateActivityPageState extends State<GuruCreateActivityPage> {
       case 'Semester':
         return AddSemesterPage(classId: widget.classId);
       case 'Pengumuman':
-        return const AddAnnouncementPage();
+        return AddAnnouncementPage(classId: widget.classId);
       default:
         return const SizedBox(); // Default page empty or placeholder
     }

@@ -1,13 +1,23 @@
 import 'dart:async';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:intl/intl.dart';
+import 'package:lifesync_capstone_project/firebase_options.dart';
+import './guru_detail_page.dart';
+import 'package:lifesync_capstone_project/theme/AppColors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'guru_notif_page.dart';
 import 'package:lifesync_capstone_project/theme/AppColors.dart';
 import './guru_detail_page.dart';
 
 class GuruHomePage extends StatefulWidget {
+  final String classId;
+  const GuruHomePage({super.key, required this.classId});
+
   @override
   State<GuruHomePage> createState() => _GuruHomePageState();
 }
@@ -19,6 +29,70 @@ class _GuruHomePageState extends State<GuruHomePage> {
   int _currentIndex = 0;
   final PageController _pageController = PageController(viewportFraction: 0.8);
   Timer? _autoSlideTimer;
+  List<Map<String, dynamic>> _announcements = [];
+
+  Future<void> _fetchAnnouncements() async {
+    try {
+      final snapshot =
+          await FirebaseFirestore.instance
+              .collection('kelas')
+              .doc(widget.classId)
+              .collection('pengumuman')
+              .orderBy('tanggal', descending: false)
+              .get();
+
+      final now = DateTime.now();
+      final today = DateTime(now.year, now.month, now.day);
+
+      final List<Map<String, dynamic>> loadedAnnouncements =
+          snapshot.docs
+              .map((doc) {
+                final data = doc.data();
+                final Timestamp tanggal =
+                    data['tanggal'] is Timestamp
+                        ? data['tanggal']
+                        : Timestamp.fromDate(DateTime.parse(data['tanggal']));
+                return {
+                  'title': data['title'],
+                  'tanggal':
+                      data['tanggal'] is Timestamp
+                          ? data['tanggal'] as Timestamp
+                          : Timestamp.fromDate(DateTime.parse(data['tanggal'])),
+                  'lokasi': data['lokasi'],
+                  'description': data['deskripsi'],
+                  'imageUrl':
+                      (data['imageUrls'] as List<dynamic>).isNotEmpty
+                          ? (data['imageUrls'] as List<dynamic>)[0] as String
+                          : 'assets/images/placeholder_updates.png',
+                };
+              })
+              .where((announcement) {
+                final tgl = (announcement['tanggal'] as Timestamp).toDate();
+                final tanggalTanpaWaktu = DateTime(
+                  tgl.year,
+                  tgl.month,
+                  tgl.day,
+                );
+                return !tanggalTanpaWaktu.isBefore(
+                  today,
+                ); // hari ini atau masa depan
+              })
+              .toList();
+      // Sort by date ascending (paling dekat ke atas)
+      loadedAnnouncements.sort((a, b) {
+        final dateA = (a['tanggal'] as Timestamp).toDate();
+        final dateB = (b['tanggal'] as Timestamp).toDate();
+        return dateA.compareTo(dateB);
+      });
+
+      if (!mounted) return;
+      setState(() {
+        _announcements = loadedAnnouncements;
+      });
+    } catch (error) {
+      print('Error fetching announcements: $error');
+    }
+  }
 
   @override
   void initState() {
@@ -52,6 +126,7 @@ class _GuruHomePageState extends State<GuruHomePage> {
         );
       }
     });
+    _fetchAnnouncements();
   }
 
   Future<void> _loadUserName() async {
@@ -63,7 +138,10 @@ class _GuruHomePageState extends State<GuruHomePage> {
               .doc(user.uid)
               .get();
       if (doc.exists) {
-        setState(() => _name = doc['name']);
+        if (!mounted) return;
+        setState(() {
+          _name = doc['name'];
+        });
       }
     }
   }
@@ -122,7 +200,16 @@ class _GuruHomePageState extends State<GuruHomePage> {
         actions: [
           IconButton(
             icon: Icon(Icons.notifications, color: Colors.white, size: 38),
-            onPressed: () => print("Notifikasi diklik"),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder:
+                      (context) =>
+                          GuruNotificationPage(classId: widget.classId),
+                ),
+              );
+            },
           ),
         ],
         shape: RoundedRectangleBorder(
@@ -131,6 +218,7 @@ class _GuruHomePageState extends State<GuruHomePage> {
             bottomRight: Radius.circular(30),
           ),
         ),
+        clipBehavior: Clip.hardEdge,
         toolbarHeight: 70,
       ),
       body: SafeArea(
@@ -145,46 +233,46 @@ class _GuruHomePageState extends State<GuruHomePage> {
                     Text(
                       'Hai,',
                       style: TextStyle(
+                        fontFamily: 'Poppins',
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    _name != null
-                        ? Text(
-                          'Miss $_name !',
-                          style: TextStyle(
-                            fontFamily: 'Poppins',
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        )
-                        : Text(
-                          'Loading...',
-                          style: TextStyle(
-                            fontFamily: 'Poppins',
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+                    Text(
+                      _name != null ? 'Miss $_name' : 'Loading...',
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+
                     SizedBox(height: 16),
+
+                    // Slider
                     _buildLatestReportsSlider(),
-                    SizedBox(height: 24),
+
+                    // School Updates
                     Text(
                       'Update Kegiatan Sekolah',
                       style: TextStyle(
+                        fontFamily: 'Poppins',
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                     SizedBox(height: 10),
+
                     UpdateCard(
                       title: 'Kado Cinta Ramadhan',
-                      description: 'Lorem ipsum dolor sit amet consectetur.',
+                      description:
+                          'Lorem ipsum dolor sit amet consectetur. Dolor interdum odio quam sed aliquam.',
                       imageUrl: 'assets/images/placeholder_updates.jpg',
                     ),
                     UpdateCard(
                       title: 'Cooking Class',
-                      description: 'Lorem ipsum dolor sit amet consectetur.',
+                      description:
+                          'Lorem ipsum dolor sit amet consectetur. Dolor interdum odio quam sed aliquam.',
                       imageUrl: 'assets/images/placeholder_updates.jpg',
                     ),
                   ],
@@ -308,10 +396,14 @@ class _GuruHomePageState extends State<GuruHomePage> {
 class UpdateCard extends StatelessWidget {
   final String title;
   final String description;
+  final Timestamp tanggal;
+  final String lokasi;
   final String imageUrl;
 
   const UpdateCard({
     required this.title,
+    required this.lokasi,
+    required this.tanggal,
     required this.description,
     required this.imageUrl,
   });
@@ -322,27 +414,44 @@ class UpdateCard extends StatelessWidget {
       color: Color(0xFFC5E7F7),
       margin: EdgeInsets.symmetric(vertical: 8),
       child: InkWell(
-        onTap:
-            () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder:
-                    (context) => GuruDetailPage(
-                      title: title,
-                      description: description,
-                      imageUrl: imageUrl,
-                    ),
-              ),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder:
+                  (context) => GuruDetailPage(
+                    title: title,
+                    description: description,
+                    lokasi: lokasi,
+                    tanggal: tanggal,
+                    imageUrl: imageUrl,
+                  ),
             ),
+          );
+        },
         child: ListTile(
-          leading: Image.asset(
-            imageUrl,
-            fit: BoxFit.cover,
-            width: 60,
-            height: 60,
-          ),
+          leading:
+              imageUrl.startsWith('http')
+                  ? Image.network(
+                    imageUrl,
+                    fit: BoxFit.cover,
+                    width: 60,
+                    height: 60,
+                  )
+                  : Image.asset(
+                    imageUrl,
+                    fit: BoxFit.cover,
+                    width: 60,
+                    height: 60,
+                  ),
           title: Text(title, style: TextStyle(fontWeight: FontWeight.bold)),
-          subtitle: Text(description),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(DateFormat('dd MMMM yyyy').format(tanggal.toDate())),
+              Text(description, maxLines: 1, overflow: TextOverflow.ellipsis),
+            ],
+          ),
         ),
       ),
     );

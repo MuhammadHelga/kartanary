@@ -1,50 +1,89 @@
-import 'package:flutter/material.dart';
-import '../guru_weekly_reports/guru_detail_weekly_report.dart';
-import '../../../theme/AppColors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:lifesync_capstone_project/guru_pages/guru_report_pages/guru_weekly_reports/guru_detail_weekly_report.dart';
+import 'package:lifesync_capstone_project/theme/AppColors.dart';
 
 class GuruListWeekly extends StatefulWidget {
-  final String tema;
-  final String classId;
+  final String? classId;
+  final String? temaId;
 
-  const GuruListWeekly({super.key, required this.tema, required this.classId});
+  GuruListWeekly({super.key, required this.classId, required this.temaId});
 
   @override
   State<GuruListWeekly> createState() => _GuruListWeeklyState();
 }
 
 class _GuruListWeeklyState extends State<GuruListWeekly> {
-  List<String> childrenNames = [];
-
-  String getInitial(String name) {
-    if (name.isEmpty) return '';
-    return name.trim()[0].toUpperCase();
-  }
+  List<Map<String, String>> children = [];
+  String? temaTitle;
 
   @override
   void initState() {
     super.initState();
-    _fetchChildrenWithReports();
+    _fetchChildren();
+    _fetchTemaTitle(); // ambil judul tema saat init
   }
 
-  Future<void> _fetchChildrenWithReports() async {
+  Future<void> _fetchChildren() async {
     try {
       final snapshot =
           await FirebaseFirestore.instance
-              .collection('laporan_mingguan')
-              .where('kelasId', isEqualTo: widget.classId)
-              .where('tema', isEqualTo: widget.tema)
+              .collection('kelas')
+              .doc(widget.classId)
+              .collection('anak')
               .get();
 
-      final names =
-          snapshot.docs.map((doc) => doc['nama'] as String).toSet().toList();
+      List<Map<String, String>> fetchedChildren =
+          snapshot.docs.map((doc) {
+            return {
+              'name': (doc['name'] ?? '').toString(),
+              'id': doc.id.toString(),
+            };
+          }).toList();
+
+      // Urutkan berdasarkan nama (A-Z)
+      fetchedChildren.sort((a, b) => a['name']!.compareTo(b['name']!));
 
       setState(() {
-        childrenNames = names;
+        children = fetchedChildren;
       });
     } catch (e) {
-      print('Gagal mengambil anak dengan laporan mingguan: $e');
+      print('Gagal mengambil daftar anak: $e');
     }
+  }
+
+  Future<void> _fetchTemaTitle() async {
+    if (widget.classId == null || widget.temaId == null) return;
+
+    try {
+      final doc =
+          await FirebaseFirestore.instance
+              .collection('kelas')
+              .doc(widget.classId)
+              .collection('tema')
+              .doc(widget.temaId)
+              .get();
+
+      if (doc.exists) {
+        setState(() {
+          temaTitle = doc['Tema'] ?? 'Tema tanpa judul';
+        });
+      } else {
+        setState(() {
+          temaTitle = 'Tema tidak ditemukan';
+        });
+      }
+    } catch (e) {
+      print('Gagal mengambil tema: $e');
+      setState(() {
+        temaTitle = 'Gagal mengambil tema';
+      });
+    }
+  }
+
+  String getInitial(String name) {
+    if (name.isEmpty) return '';
+    return name.trim()[0].toUpperCase();
   }
 
   @override
@@ -94,7 +133,16 @@ class _GuruListWeeklyState extends State<GuruListWeekly> {
                     'Tema',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
-                  Text(widget.tema, style: TextStyle(fontSize: 20)),
+                  temaTitle != null
+                      ? Text(
+                        temaTitle!,
+                        style: const TextStyle(
+                          fontSize: 20,
+                          color: Colors.black,
+                        ),
+                      )
+                      : CircularProgressIndicator(),
+
                   const SizedBox(height: 10),
                   Container(
                     width: double.infinity,
@@ -107,17 +155,25 @@ class _GuruListWeeklyState extends State<GuruListWeekly> {
             const SizedBox(height: 20),
             Expanded(
               child: ListView.separated(
-                itemCount: childrenNames.length,
+                itemCount: children.length,
                 separatorBuilder: (_, __) => const SizedBox(height: 12),
                 itemBuilder: (context, index) {
-                  final name = childrenNames[index];
+                  final child = children[index];
+                  final name = child['name'] ?? '';
+                  final anakId = child['id'] ?? '';
                   final initial = getInitial(name);
+
                   return GestureDetector(
                     onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const GuruDetailWeeklyReport(),
+                          builder:
+                              (context) => GuruDetailWeeklyReport(
+                                classId: widget.classId,
+                                temaId: widget.temaId,
+                                anakId: anakId,
+                              ),
                         ),
                       );
                     },
@@ -159,7 +215,10 @@ class _GuruListWeeklyState extends State<GuruListWeekly> {
                             ],
                           ),
                           IconButton(
-                            icon: const Icon(Icons.delete, color: Colors.blue),
+                            icon: const Icon(
+                              Icons.delete_outline,
+                              color: Colors.blue,
+                            ),
                             onPressed: () {
                               showDialog(
                                 context: context,
@@ -167,28 +226,57 @@ class _GuruListWeeklyState extends State<GuruListWeekly> {
                                     (context) => AlertDialog(
                                       title: Text('Konfirmasi'),
                                       content: Text(
-                                        'Yakin ingin menghapus Laporan Mingguan ${childrenNames[index]}" dari daftar?',
+                                        'Yakin ingin menghapus Laporan Mingguan $name dari daftar?',
                                       ),
                                       actions: [
                                         TextButton(
                                           onPressed:
-                                              () =>
-                                                  Navigator.of(
-                                                    context,
-                                                  ).pop(), // Tutup dialog
+                                              () => Navigator.of(context).pop(),
                                           child: Text('Batal'),
                                         ),
                                         TextButton(
-                                          onPressed: () {
-                                            setState(() {
-                                              childrenNames.removeAt(
-                                                index,
-                                              ); // Hapus anak
-                                            });
-                                            Navigator.of(
-                                              context,
-                                            ).pop(); // Tutup dialog
+                                          onPressed: () async {
+                                            try {
+                                              // Hapus dari Firestore
+                                              await FirebaseFirestore.instance
+                                                  .collection('kelas')
+                                                  .doc(widget.classId)
+                                                  .collection('anak')
+                                                  .doc(anakId)
+                                                  .collection('laporanMingguan')
+                                                  .doc(widget.temaId)
+                                                  .delete();
+
+                                              // Hapus dari UI
+                                              setState(() {
+                                                children.removeAt(index);
+                                              });
+
+                                              Navigator.of(context).pop();
+
+                                              ScaffoldMessenger.of(
+                                                context,
+                                              ).showSnackBar(
+                                                SnackBar(
+                                                  content: Text(
+                                                    'Laporan $name berhasil dihapus',
+                                                  ),
+                                                ),
+                                              );
+                                            } catch (e) {
+                                              Navigator.of(context).pop();
+                                              ScaffoldMessenger.of(
+                                                context,
+                                              ).showSnackBar(
+                                                SnackBar(
+                                                  content: Text(
+                                                    'Gagal menghapus laporan: $e',
+                                                  ),
+                                                ),
+                                              );
+                                            }
                                           },
+
                                           child: Text(
                                             'Hapus',
                                             style: TextStyle(color: Colors.red),

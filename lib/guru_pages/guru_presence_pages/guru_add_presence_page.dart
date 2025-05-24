@@ -22,6 +22,7 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
   List<String> childrenNames = [];
   List<String> presenceStatus = [];
   List<String> childrenIds = [];
+  bool _isDisposed = false;
 
   Map<String, int> statusCounts = {
     'Hadir': 0,
@@ -38,88 +39,204 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
 
   @override
   void dispose() {
+    _isDisposed = true; // Set the flag to true when widget is disposed
     super.dispose();
+  }
+
+  // Safe setState that checks if widget is still mounted
+  void _safeSetState(Function(VoidCallback) fn) {
+    if (!_isDisposed && mounted) {
+      fn(() {});
+    }
   }
 
   void _fetchChildrenData() async {
     print("📌 Mengambil anak dari classId: ${widget.classId}");
-    final snapshot =
-        await FirebaseFirestore.instance
-            .collection('kelas')
-            .doc(widget.classId)
-            .collection('anak')
-            .get();
 
-    if (!mounted) return; // Add this check
+    int maxRetries = 3;
+    int retryCount = 0;
+    int retryDelayMs = 1000;
 
-    setState(() {
-      childrenNames =
-          snapshot.docs.map((doc) => doc['name'] as String).toList();
-      presenceStatus = List.filled(childrenNames.length, 'Hadir');
-      _updateStatusCounts();
-      childrenIds = snapshot.docs.map((doc) => doc.id).toList();
-    });
+    while (retryCount < maxRetries) {
+      try {
+        final snapshot =
+            await FirebaseFirestore.instance
+                .collection('kelas')
+                .doc(widget.classId)
+                .collection('anak')
+                .get();
 
-    _loadPresensi();
+        // Urutkan berdasarkan nama (ascending)
+        final sortedDocs =
+            snapshot.docs.toList()..sort(
+              (a, b) => (a['name'] as String).compareTo(b['name'] as String),
+            );
+
+        // Jika widget masih aktif, setState
+        if (mounted) {
+          setState(() {
+            childrenNames =
+                sortedDocs.map((doc) => doc['name'] as String).toList();
+            childrenIds = sortedDocs.map((doc) => doc.id).toList();
+            presenceStatus = List.filled(childrenNames.length, 'Hadir');
+            _updateStatusCounts();
+          });
+
+          _loadPresensi();
+        }
+
+        return; // selesai
+      } catch (e) {
+        retryCount++;
+        if (retryCount >= maxRetries) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  'Failed to fetch data after $maxRetries attempts. Please check your connection.',
+                ),
+              ),
+            );
+          }
+          throw e;
+        }
+
+        print(
+          "⚠️ Firestore error, retrying ($retryCount/$maxRetries) after ${retryDelayMs}ms: $e",
+        );
+        await Future.delayed(Duration(milliseconds: retryDelayMs));
+        retryDelayMs *= 2; // backoff
+      }
+    }
   }
 
   Future<void> _loadPresensi() async {
+    if (_isDisposed || !mounted) return;
+
     final String dateKey = DateFormat('yyyy-MM-dd').format(selectedDate);
+    int maxRetries = 3;
+    List<String> updatedPresenceStatus = List.from(presenceStatus);
 
     for (int i = 0; i < childrenIds.length; i++) {
       final anakId = childrenIds[i];
-      final doc =
-          await FirebaseFirestore.instance
-              .collection('kelas')
-              .doc(widget.classId)
-              .collection('anak')
-              .doc(anakId)
-              .collection('presensi')
-              .doc(dateKey)
-              .get();
+      int retryCount = 0;
+      int retryDelayMs = 1000;
 
-      if (doc.exists) {
-        presenceStatus[i] = doc['status'] ?? 'Hadir';
-      } else {
-        presenceStatus[i] = 'Hadir';
+      while (retryCount < maxRetries) {
+        try {
+          final doc =
+              await FirebaseFirestore.instance
+                  .collection('kelas')
+                  .doc(widget.classId)
+                  .collection('anak')
+                  .doc(anakId)
+                  .collection('presensi')
+                  .doc(dateKey)
+                  .get();
+
+          if (doc.exists) {
+            updatedPresenceStatus[i] = doc['status'] ?? 'Hadir';
+          } else {
+            updatedPresenceStatus[i] = 'Hadir';
+          }
+          break; // Success, exit the retry loop
+        } catch (e) {
+          retryCount++;
+          if (retryCount >= maxRetries) {
+            print(
+              "Failed to load presensi for child $i after $maxRetries attempts",
+            );
+            // Just continue with default status
+            updatedPresenceStatus[i] = 'Hadir';
+            break;
+          }
+
+          await Future.delayed(Duration(milliseconds: retryDelayMs));
+          retryDelayMs *= 2;
+        }
       }
     }
 
-    if (!mounted) return; // Add this check
-    setState(() {
-      _updateStatusCounts();
-    });
+    // Update state only if widget is still mounted
+    if (!_isDisposed && mounted) {
+      setState(() {
+        presenceStatus = updatedPresenceStatus;
+        _updateStatusCounts();
+      });
+    }
   }
 
   Future<void> _simpanPresensi() async {
+    if (_isDisposed || !mounted) return;
+
     try {
+      int successCount = 0;
+      int failCount = 0;
+
       for (int i = 0; i < childrenIds.length; i++) {
         final anakId = childrenIds[i];
         final status = presenceStatus[i];
+        int maxRetries = 3;
+        int retryCount = 0;
+        int retryDelayMs = 1000;
 
-        await FirebaseFirestore.instance
-            .collection('kelas')
-            .doc(widget.classId)
-            .collection('anak')
-            .doc(anakId)
-            .collection('presensi')
-            .doc(
-              '${selectedDate.toIso8601String().substring(0, 10)}',
-            ) // YYYY-MM-DD
-            .set({
-              'tanggal': selectedDate,
-              'status': status,
-              'createdAt': FieldValue.serverTimestamp(),
-            });
+        while (retryCount < maxRetries) {
+          try {
+            await FirebaseFirestore.instance
+                .collection('kelas')
+                .doc(widget.classId)
+                .collection('anak')
+                .doc(anakId)
+                .collection('presensi')
+                .doc('${selectedDate.toIso8601String().substring(0, 10)}')
+                .set({
+                  'tanggal': selectedDate,
+                  'status': status,
+                  'createdAt': FieldValue.serverTimestamp(),
+                });
+
+            successCount++;
+            break; // Success, exit retry loop
+          } catch (e) {
+            retryCount++;
+            if (retryCount >= maxRetries) {
+              failCount++;
+              print(
+                "Failed to save presensi for child $i after $maxRetries attempts",
+              );
+              break;
+            }
+
+            await Future.delayed(Duration(milliseconds: retryDelayMs));
+            retryDelayMs *= 2;
+          }
+        }
       }
 
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Presensi berhasil disimpan')));
+      // Only show messages if the widget is still mounted
+      if (!_isDisposed && mounted) {
+        if (failCount == 0) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Presensi berhasil disimpan untuk semua anak'),
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'Presensi berhasil disimpan untuk $successCount anak, gagal untuk $failCount anak',
+              ),
+            ),
+          );
+        }
+      }
     } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Gagal menyimpan presensi: $e')));
+      if (!_isDisposed && mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Gagal menyimpan presensi: $e')));
+      }
     }
   }
 
@@ -135,6 +252,8 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
       presence.isNotEmpty ? presence[0].toUpperCase() : '';
 
   void _selectDate() async {
+    if (_isDisposed || !mounted) return;
+
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: selectedDate,
@@ -154,7 +273,8 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
       },
     );
 
-    if (picked != null && picked != selectedDate) {
+    // Check if mounted before updating state
+    if (picked != null && picked != selectedDate && !_isDisposed && mounted) {
       setState(() {
         selectedDate = picked;
       });
@@ -621,11 +741,14 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
   Widget _buildPresenceButton(String label, Color color, int index) {
     return GestureDetector(
       onTap: () {
-        setState(() {
-          presenceStatus[index] = label;
-          _updateStatusCounts(); // Update counts when status changes
-        });
-        Navigator.of(context).pop();
+        // Check if mounted before updating state
+        if (!_isDisposed && mounted) {
+          setState(() {
+            presenceStatus[index] = label;
+            _updateStatusCounts(); // Update counts when status changes
+          });
+          Navigator.of(context).pop();
+        }
       },
       child: Container(
         width: 100,
