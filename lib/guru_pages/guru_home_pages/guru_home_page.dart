@@ -152,16 +152,10 @@ class _GuruHomePageState extends State<GuruHomePage> {
       final querySnapshot =
           await FirebaseFirestore.instance
               .collectionGroup('laporan')
-              .orderBy('createdAt', descending: true)
+              .where('classId', isEqualTo: widget.classId)
+              .orderBy('tanggal', descending: true)
               .limit(3)
               .get();
-
-      print("Jumlah laporan ditemukan: ${querySnapshot.docs.length}");
-      for (var doc in querySnapshot.docs) {
-        print(
-          "Judul: ${doc['title']}, Tanggal: ${doc['tanggal']}, Deskripsi: ${doc['deskripsi']}",
-        );
-      }
 
       final reports =
           querySnapshot.docs.map((doc) {
@@ -184,8 +178,10 @@ class _GuruHomePageState extends State<GuruHomePage> {
         _latestReports = reports;
         _isLoading = false;
       });
+
+      print("Jumlah semua laporan ditemukan: ${reports.length}");
     } catch (e) {
-      print('Error fetching reports: $e');
+      print('Error fetching all reports: $e');
       setState(() => _isLoading = false);
     }
   }
@@ -240,7 +236,7 @@ class _GuruHomePageState extends State<GuruHomePage> {
                       ),
                     ),
                     Text(
-                      _name != null ? 'Miss $_name' : 'Loading...',
+                      _name != null ? 'Miss $_name !' : 'Loading...',
                       style: TextStyle(
                         fontFamily: 'Poppins',
                         fontSize: 24,

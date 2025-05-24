@@ -9,8 +9,6 @@ import 'package:lifesync_capstone_project/ortu_pages/home_pages/detail_page.dart
 import 'package:lifesync_capstone_project/theme/AppColors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:lifesync_capstone_project/theme/AppColors.dart';
-import './detail_page.dart';
 
 class HomePage extends StatefulWidget {
   final String classId;
@@ -155,7 +153,8 @@ class _HomePageState extends State<HomePage> {
       final querySnapshot =
           await FirebaseFirestore.instance
               .collectionGroup('laporan')
-              .orderBy('createdAt', descending: true)
+              .where('classId', isEqualTo: widget.classId)
+              .orderBy('tanggal', descending: true)
               .limit(3)
               .get();
 
@@ -240,7 +239,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               Text(
-                _name != null ? 'Miss $_name' : 'Loading...',
+                _name != null ? 'Miss $_name !' : 'Loading...',
                 style: TextStyle(
                   fontFamily: 'Poppins',
                   fontSize: 24,
