@@ -98,6 +98,7 @@ class _GuruHomePageState extends State<GuruHomePage> {
   void initState() {
     super.initState();
     _loadUserName();
+    _fetchAnnouncements();
     _fetchLatestReports();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _startAutoSlide();
@@ -262,19 +263,15 @@ class _GuruHomePageState extends State<GuruHomePage> {
                       ),
                     ),
                     SizedBox(height: 10),
-
-                    UpdateCard(
-                      title: 'Kado Cinta Ramadhan',
-                      description:
-                          'Lorem ipsum dolor sit amet consectetur. Dolor interdum odio quam sed aliquam.',
-                      imageUrl: 'assets/images/placeholder_updates.jpg',
-                    ),
-                    UpdateCard(
-                      title: 'Cooking Class',
-                      description:
-                          'Lorem ipsum dolor sit amet consectetur. Dolor interdum odio quam sed aliquam.',
-                      imageUrl: 'assets/images/placeholder_updates.jpg',
-                    ),
+                    ..._announcements.map((announcement) {
+                      return UpdateCard(
+                        tanggal: announcement['tanggal'],
+                        lokasi: announcement['lokasi'],
+                        title: announcement['title'],
+                        description: announcement['description'],
+                        imageUrl: announcement['imageUrl'],
+                      );
+                    }).toList(),
                   ],
                 ),
               ),
