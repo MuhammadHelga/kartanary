@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:carousel_slider/carousel_slider.dart';
-import './detail_page.dart';
+import 'package:intl/intl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:lifesync_capstone_project/theme/AppColors.dart';
+import './detail_page.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -11,11 +14,44 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String? _name;
+  List<Map<String, dynamic>> _latestReports = [];
+  bool _isLoading = true;
+  int _currentIndex = 0;
+  final PageController _pageController = PageController(viewportFraction: 0.8);
+  Timer? _autoSlideTimer;
 
   @override
   void initState() {
     super.initState();
     _loadUserName();
+    _fetchLatestReports();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _startAutoSlide();
+    });
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    _autoSlideTimer?.cancel();
+    super.dispose();
+  }
+
+  void _startAutoSlide() {
+    _autoSlideTimer = Timer.periodic(Duration(seconds: 3), (timer) {
+      if (_currentIndex < _latestReports.length - 1) {
+        _currentIndex++;
+      } else {
+        _currentIndex = 0;
+      }
+      if (_pageController.hasClients) {
+        _pageController.animateToPage(
+          _currentIndex,
+          duration: Duration(milliseconds: 500),
+          curve: Curves.easeInOut,
+        );
+      }
+    });
   }
 
   Future<void> _loadUserName() async {
@@ -34,47 +70,70 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  int _currentIndex = 0;
-  final CarouselController _controller = CarouselController();
+  Future<void> _fetchLatestReports() async {
+    try {
+      final querySnapshot =
+          await FirebaseFirestore.instance
+              .collectionGroup('laporan')
+              .orderBy('createdAt', descending: true)
+              .limit(3)
+              .get();
 
-  final List<Map<String, String>> outingClasses = [
-    {
-      'image': 'assets/images/placeholder_slider.jpg',
-      'title': 'Outing Class "Balai Pengkajian Teknologi Pertanian (BPTP)"',
-    },
-    {
-      'image': 'assets/images/placeholder_slider.jpg',
-      'title': 'Outing Class "Balai Pengkajian Teknologi Pertanian (BPTP)"',
-    },
-    {
-      'image': 'assets/images/placeholder_slider.jpg',
-      'title': 'Outing Class "Balai Pengkajian Teknologi Pertanian (BPTP)"',
-    },
-  ];
+      print("Jumlah laporan ditemukan: ${querySnapshot.docs.length}");
+      for (var doc in querySnapshot.docs) {
+        print(
+          "Judul: ${doc['title']}, Tanggal: ${doc['tanggal']}, Deskripsi: ${doc['deskripsi']}",
+        );
+      }
+
+      final reports =
+          querySnapshot.docs.map((doc) {
+            final data = doc.data();
+            return {
+              'title': data['title'] ?? 'Tanpa Judul',
+              'description': data['deskripsi'] ?? '',
+              'imageUrl':
+                  (data['imageUrls'] is List && data['imageUrls'].isNotEmpty)
+                      ? data['imageUrls'][0]
+                      : null,
+              'date':
+                  (data['tanggal'] != null && data['tanggal'] is Timestamp)
+                      ? data['tanggal'].toDate()
+                      : null,
+            };
+          }).toList();
+
+      setState(() {
+        _latestReports = reports;
+        _isLoading = false;
+      });
+    } catch (e) {
+      print('Error fetching reports: $e');
+      setState(() => _isLoading = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xffFFFFFF),
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(70),
-        child: ClipRRect(
+      appBar: AppBar(
+        backgroundColor: AppColors.primary50,
+        elevation: 0,
+        automaticallyImplyLeading: false,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.notifications, color: Colors.white, size: 38),
+            onPressed: () => print("Notifikasi diklik"),
+          ),
+        ],
+        shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
             bottomLeft: Radius.circular(30),
             bottomRight: Radius.circular(30),
           ),
-          child: AppBar(
-            backgroundColor: Color(0xff1D99D3),
-            elevation: 0,
-            automaticallyImplyLeading: false,
-            actions: [
-              Padding(
-                padding: const EdgeInsets.only(right: 16.0),
-                child: Icon(Icons.notifications, color: Colors.white, size: 38),
-              ),
-            ],
-          ),
         ),
+        toolbarHeight: 70,
       ),
       body: SafeArea(
         child: Column(
@@ -120,7 +179,7 @@ class _HomePageState extends State<HomePage> {
                     SizedBox(height: 16),
 
                     // Slider
-                    _buildOutingClassSlider(),
+                    _buildLatestReportsSlider(),
 
                     // School Updates
                     Text(
@@ -155,14 +214,25 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildOutingClassSlider() {
+  Widget _buildLatestReportsSlider() {
+    if (_isLoading) return Center(child: CircularProgressIndicator());
+    if (_latestReports.isEmpty) return Text('Tidak ada laporan terbaru');
+
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        CarouselSlider(
-          items:
-              outingClasses.map((outingClass) {
-                return Card(
+        SizedBox(
+          height: 220,
+          child: PageView.builder(
+            controller: _pageController,
+            onPageChanged: (index) {
+              setState(() => _currentIndex = index);
+            },
+            itemCount: _latestReports.length,
+            itemBuilder: (context, index) {
+              final report = _latestReports[index];
+              return Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8),
+                child: Card(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
                   ),
@@ -171,69 +241,82 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       ClipRRect(
                         borderRadius: BorderRadius.circular(16),
-                        child: Image.asset(
-                          outingClass['image']!,
-                          fit: BoxFit.cover,
-                          width: double.infinity,
-                          height: 212,
-                        ),
+                        child:
+                            report['imageUrl'] != null
+                                ? Image.network(
+                                  report['imageUrl'],
+                                  fit: BoxFit.cover,
+                                  width: double.infinity,
+                                  height: 212,
+                                )
+                                : Container(
+                                  height: 212,
+                                  color: Colors.grey,
+                                  child: Icon(Icons.image, size: 50),
+                                ),
                       ),
                       Positioned(
                         bottom: 8,
                         left: 16,
                         right: 16,
-                        child: Text(
-                          outingClass['title']!,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
-                          ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              report['title'],
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                              ),
+                            ),
+                            if (report['date'] != null)
+                              Text(
+                                DateFormat(
+                                  'dd MMM yyyy',
+                                ).format(report['date']),
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.white,
+                                ),
+                              ),
+                          ],
                         ),
                       ),
                     ],
                   ),
-                );
-              }).toList(),
-          options: CarouselOptions(
-            height: 220,
-            viewportFraction: 0.8,
-            enableInfiniteScroll: true,
-            autoPlay: true,
-            onPageChanged: (index, reason) {
-              setState(() {
-                _currentIndex = index;
-              });
+                ),
+              );
             },
           ),
         ),
+        SizedBox(height: 8),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children:
-              outingClasses.asMap().entries.map((entry) {
-                return GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _currentIndex = entry.key;
-                    });
-                  },
-                  child: Container(
-                    width: 10.0,
-                    height: 30.0,
-                    margin: const EdgeInsets.symmetric(horizontal: 4.0),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color:
-                          _currentIndex == entry.key
-                              ? Colors.blueAccent
-                              : Colors.grey.shade300,
-                    ),
-                  ),
+          children: List.generate(_latestReports.length, (index) {
+            return GestureDetector(
+              onTap: () {
+                _pageController.animateToPage(
+                  index,
+                  duration: Duration(milliseconds: 500),
+                  curve: Curves.easeInOut,
                 );
-              }).toList(),
+              },
+              child: Container(
+                width: 10,
+                height: 10,
+                margin: EdgeInsets.symmetric(horizontal: 4),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color:
+                      _currentIndex == index
+                          ? Colors.blueAccent
+                          : Colors.grey.shade300,
+                ),
+              ),
+            );
+          }),
         ),
-        SizedBox(height: 16),
       ],
     );
   }
@@ -244,7 +327,7 @@ class UpdateCard extends StatelessWidget {
   final String description;
   final String imageUrl;
 
-  UpdateCard({
+  const UpdateCard({
     required this.title,
     required this.description,
     required this.imageUrl,
@@ -256,19 +339,18 @@ class UpdateCard extends StatelessWidget {
       color: Color(0xFFC5E7F7),
       margin: EdgeInsets.symmetric(vertical: 8),
       child: InkWell(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder:
-                  (context) => DetailPage(
-                    title: title,
-                    description: description,
-                    imageUrl: imageUrl,
-                  ),
+        onTap:
+            () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder:
+                    (context) => DetailPage(
+                      title: title,
+                      description: description,
+                      imageUrl: imageUrl,
+                    ),
+              ),
             ),
-          );
-        },
         child: ListTile(
           leading: Image.asset(
             imageUrl,

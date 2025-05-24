@@ -1,9 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:carousel_slider/carousel_slider.dart';
-import './guru_detail_page.dart';
-import 'package:lifesync_capstone_project/theme/AppColors.dart';
+import 'package:intl/intl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:lifesync_capstone_project/theme/AppColors.dart';
+import './guru_detail_page.dart';
 
 class GuruHomePage extends StatefulWidget {
   @override
@@ -12,11 +14,44 @@ class GuruHomePage extends StatefulWidget {
 
 class _GuruHomePageState extends State<GuruHomePage> {
   String? _name;
+  List<Map<String, dynamic>> _latestReports = [];
+  bool _isLoading = true;
+  int _currentIndex = 0;
+  final PageController _pageController = PageController(viewportFraction: 0.8);
+  Timer? _autoSlideTimer;
 
   @override
   void initState() {
     super.initState();
     _loadUserName();
+    _fetchLatestReports();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _startAutoSlide();
+    });
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    _autoSlideTimer?.cancel();
+    super.dispose();
+  }
+
+  void _startAutoSlide() {
+    _autoSlideTimer = Timer.periodic(Duration(seconds: 3), (timer) {
+      if (_currentIndex < _latestReports.length - 1) {
+        _currentIndex++;
+      } else {
+        _currentIndex = 0;
+      }
+      if (_pageController.hasClients) {
+        _pageController.animateToPage(
+          _currentIndex,
+          duration: Duration(milliseconds: 500),
+          curve: Curves.easeInOut,
+        );
+      }
+    });
   }
 
   Future<void> _loadUserName() async {
@@ -28,46 +63,66 @@ class _GuruHomePageState extends State<GuruHomePage> {
               .doc(user.uid)
               .get();
       if (doc.exists) {
-        setState(() {
-          _name = doc['name'];
-        });
+        setState(() => _name = doc['name']);
       }
     }
   }
 
-  int _currentIndex = 0;
-  final CarouselController _controller = CarouselController();
+  Future<void> _fetchLatestReports() async {
+    try {
+      final querySnapshot =
+          await FirebaseFirestore.instance
+              .collectionGroup('laporan')
+              .orderBy('createdAt', descending: true)
+              .limit(3)
+              .get();
 
-  final List<Map<String, String>> outingClasses = [
-    {
-      'image': 'assets/images/placeholder_slider.jpg',
-      'title': 'Outing Class "Balai Pengkajian Teknologi Pertanian (BPTP)"',
-    },
-    {
-      'image': 'assets/images/placeholder_slider.jpg',
-      'title': 'Outing Class "Balai Pengkajian Teknologi Pertanian (BPTP)"',
-    },
-    {
-      'image': 'assets/images/placeholder_slider.jpg',
-      'title': 'Outing Class "Balai Pengkajian Teknologi Pertanian (BPTP)"',
-    },
-  ];
+      print("Jumlah laporan ditemukan: ${querySnapshot.docs.length}");
+      for (var doc in querySnapshot.docs) {
+        print(
+          "Judul: ${doc['title']}, Tanggal: ${doc['tanggal']}, Deskripsi: ${doc['deskripsi']}",
+        );
+      }
+
+      final reports =
+          querySnapshot.docs.map((doc) {
+            final data = doc.data();
+            return {
+              'title': data['title'] ?? 'Tanpa Judul',
+              'description': data['deskripsi'] ?? '',
+              'imageUrl':
+                  (data['imageUrls'] is List && data['imageUrls'].isNotEmpty)
+                      ? data['imageUrls'][0]
+                      : null,
+              'date':
+                  (data['tanggal'] != null && data['tanggal'] is Timestamp)
+                      ? data['tanggal'].toDate()
+                      : null,
+            };
+          }).toList();
+
+      setState(() {
+        _latestReports = reports;
+        _isLoading = false;
+      });
+    } catch (e) {
+      print('Error fetching reports: $e');
+      setState(() => _isLoading = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xffFFFFFF),
       appBar: AppBar(
-        backgroundColor: AppColors.primary50, // Ganti warna sesuai kebutuhan
+        backgroundColor: AppColors.primary50,
         elevation: 0,
         automaticallyImplyLeading: false,
         actions: [
           IconButton(
             icon: Icon(Icons.notifications, color: Colors.white, size: 38),
-            onPressed: () {
-              // Tindakan ketika notifikasi diklik
-              print("Notifikasi diklik");
-            },
+            onPressed: () => print("Notifikasi diklik"),
           ),
         ],
         shape: RoundedRectangleBorder(
@@ -75,8 +130,7 @@ class _GuruHomePageState extends State<GuruHomePage> {
             bottomLeft: Radius.circular(30),
             bottomRight: Radius.circular(30),
           ),
-        ), // Menambahkan radius di bagian bawah
-        clipBehavior: Clip.hardEdge,
+        ),
         toolbarHeight: 70,
       ),
       body: SafeArea(
@@ -91,46 +145,46 @@ class _GuruHomePageState extends State<GuruHomePage> {
                     Text(
                       'Hai,',
                       style: TextStyle(
-                        fontFamily: 'Poppins',
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    Text(
-                      _name != null ? 'Miss $_name' : 'Loading...',
-                      style: TextStyle(
-                        fontFamily: 'Poppins',
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-
+                    _name != null
+                        ? Text(
+                          'Miss $_name !',
+                          style: TextStyle(
+                            fontFamily: 'Poppins',
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )
+                        : Text(
+                          'Loading...',
+                          style: TextStyle(
+                            fontFamily: 'Poppins',
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                     SizedBox(height: 16),
-
-                    // Slider
-                    _buildOutingClassSlider(),
-
-                    // School Updates
+                    _buildLatestReportsSlider(),
+                    SizedBox(height: 24),
                     Text(
                       'Update Kegiatan Sekolah',
                       style: TextStyle(
-                        fontFamily: 'Poppins',
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                     SizedBox(height: 10),
-
                     UpdateCard(
                       title: 'Kado Cinta Ramadhan',
-                      description:
-                          'Lorem ipsum dolor sit amet consectetur. Dolor interdum odio quam sed aliquam.',
+                      description: 'Lorem ipsum dolor sit amet consectetur.',
                       imageUrl: 'assets/images/placeholder_updates.jpg',
                     ),
                     UpdateCard(
                       title: 'Cooking Class',
-                      description:
-                          'Lorem ipsum dolor sit amet consectetur. Dolor interdum odio quam sed aliquam.',
+                      description: 'Lorem ipsum dolor sit amet consectetur.',
                       imageUrl: 'assets/images/placeholder_updates.jpg',
                     ),
                   ],
@@ -143,14 +197,25 @@ class _GuruHomePageState extends State<GuruHomePage> {
     );
   }
 
-  Widget _buildOutingClassSlider() {
+  Widget _buildLatestReportsSlider() {
+    if (_isLoading) return Center(child: CircularProgressIndicator());
+    if (_latestReports.isEmpty) return Text('Tidak ada laporan terbaru');
+
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        CarouselSlider(
-          items:
-              outingClasses.map((outingClass) {
-                return Card(
+        SizedBox(
+          height: 220,
+          child: PageView.builder(
+            controller: _pageController,
+            onPageChanged: (index) {
+              setState(() => _currentIndex = index);
+            },
+            itemCount: _latestReports.length,
+            itemBuilder: (context, index) {
+              final report = _latestReports[index];
+              return Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8),
+                child: Card(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
                   ),
@@ -159,69 +224,82 @@ class _GuruHomePageState extends State<GuruHomePage> {
                     children: [
                       ClipRRect(
                         borderRadius: BorderRadius.circular(16),
-                        child: Image.asset(
-                          outingClass['image']!,
-                          fit: BoxFit.cover,
-                          width: double.infinity,
-                          height: 212,
-                        ),
+                        child:
+                            report['imageUrl'] != null
+                                ? Image.network(
+                                  report['imageUrl'],
+                                  fit: BoxFit.cover,
+                                  width: double.infinity,
+                                  height: 212,
+                                )
+                                : Container(
+                                  height: 212,
+                                  color: Colors.grey,
+                                  child: Icon(Icons.image, size: 50),
+                                ),
                       ),
                       Positioned(
                         bottom: 8,
                         left: 16,
                         right: 16,
-                        child: Text(
-                          outingClass['title']!,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
-                          ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              report['title'],
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                              ),
+                            ),
+                            if (report['date'] != null)
+                              Text(
+                                DateFormat(
+                                  'dd MMM yyyy',
+                                ).format(report['date']),
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.white,
+                                ),
+                              ),
+                          ],
                         ),
                       ),
                     ],
                   ),
-                );
-              }).toList(),
-          options: CarouselOptions(
-            height: 220,
-            viewportFraction: 0.8,
-            enableInfiniteScroll: true,
-            autoPlay: true,
-            onPageChanged: (index, reason) {
-              setState(() {
-                _currentIndex = index;
-              });
+                ),
+              );
             },
           ),
         ),
+        SizedBox(height: 8),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children:
-              outingClasses.asMap().entries.map((entry) {
-                return GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _currentIndex = entry.key;
-                    });
-                  },
-                  child: Container(
-                    width: 10.0,
-                    height: 30.0,
-                    margin: const EdgeInsets.symmetric(horizontal: 4.0),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color:
-                          _currentIndex == entry.key
-                              ? Colors.blueAccent
-                              : Colors.grey.shade300,
-                    ),
-                  ),
+          children: List.generate(_latestReports.length, (index) {
+            return GestureDetector(
+              onTap: () {
+                _pageController.animateToPage(
+                  index,
+                  duration: Duration(milliseconds: 500),
+                  curve: Curves.easeInOut,
                 );
-              }).toList(),
+              },
+              child: Container(
+                width: 10,
+                height: 10,
+                margin: EdgeInsets.symmetric(horizontal: 4),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color:
+                      _currentIndex == index
+                          ? Colors.blueAccent
+                          : Colors.grey.shade300,
+                ),
+              ),
+            );
+          }),
         ),
-        SizedBox(height: 16),
       ],
     );
   }
@@ -232,7 +310,7 @@ class UpdateCard extends StatelessWidget {
   final String description;
   final String imageUrl;
 
-  UpdateCard({
+  const UpdateCard({
     required this.title,
     required this.description,
     required this.imageUrl,
@@ -244,19 +322,18 @@ class UpdateCard extends StatelessWidget {
       color: Color(0xFFC5E7F7),
       margin: EdgeInsets.symmetric(vertical: 8),
       child: InkWell(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder:
-                  (context) => GuruDetailPage(
-                    title: title,
-                    description: description,
-                    imageUrl: imageUrl,
-                  ),
+        onTap:
+            () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder:
+                    (context) => GuruDetailPage(
+                      title: title,
+                      description: description,
+                      imageUrl: imageUrl,
+                    ),
+              ),
             ),
-          );
-        },
         child: ListTile(
           leading: Image.asset(
             imageUrl,
@@ -268,144 +345,6 @@ class UpdateCard extends StatelessWidget {
           subtitle: Text(description),
         ),
       ),
-    );
-  }
-}
-
-class OutingClassSlider extends StatefulWidget {
-  @override
-  State<OutingClassSlider> createState() => _OutingClassSliderState();
-}
-
-class _OutingClassSliderState extends State<OutingClassSlider> {
-  int _currentIndex = 0;
-  final CarouselController _controller = CarouselController();
-
-  final List<Map<String, String>> outingClasses = [
-    {
-      'image': 'assets/images/placeholder_slider.jpg',
-      'title': 'Outing Class "Balai Pengkajian Teknologi Pertanian (BPTP)"',
-    },
-    {
-      'image': 'assets/images/placeholder_slider.jpg',
-      'title': 'Outing Class "Balai Pengkajian Teknologi Pertanian (BPTP)"',
-    },
-    {
-      'image': 'assets/images/placeholder_slider.jpg',
-      'title': 'Outing Class "Balai Pengkajian Teknologi Pertanian (BPTP)"',
-    },
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        CarouselSlider(
-          items:
-              outingClasses.map((outingClass) {
-                return Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16), // Radius pada card
-                  ),
-                  elevation: 4, // Menambahkan bayangan pada card
-                  child: Column(
-                    children: [
-                      // Stack untuk menempatkan gambar di bawah dan teks di atas
-                      Stack(
-                        children: [
-                          // Gambar
-                          ClipRRect(
-                            borderRadius: BorderRadius.vertical(
-                              top: Radius.circular(16),
-                              bottom: Radius.circular(16),
-                            ), // Radius pada gambar
-                            child: Container(
-                              height:
-                                  212, // Menyesuaikan tinggi card dengan gambar
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(16),
-                                  bottom: Radius.circular(16),
-                                ),
-                                boxShadow: [
-                                  BoxShadow(color: Colors.black),
-                                  BoxShadow(
-                                    color: Colors.white70,
-                                    blurRadius: 20.0,
-                                    spreadRadius: -7.0,
-                                  ),
-                                ],
-                              ),
-                              child: Image.asset(
-                                outingClass['image']!,
-                                fit: BoxFit.cover,
-                                height: 212,
-                                width: double.infinity,
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            bottom: 8, // Jarak teks dari bawah
-                            left: 16,
-                            right: 16,
-                            child: Text(
-                              outingClass['title']!,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                );
-              }).toList(),
-          options: CarouselOptions(
-            height: 220,
-            viewportFraction: 0.8,
-            enableInfiniteScroll: true,
-            autoPlay: true,
-            onPageChanged: (index, reason) {
-              setState(() {
-                _currentIndex = index; // Update index saat halaman berubah
-              });
-            },
-          ),
-        ),
-        // Indikator titik untuk carousel
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children:
-              outingClasses.asMap().entries.map((entry) {
-                return GestureDetector(
-                  onTap: () {
-                    // Menggunakan setState untuk perubahan halaman
-                    setState(() {
-                      _currentIndex = entry.key;
-                    });
-                  },
-                  child: Container(
-                    width: 10.0,
-                    height: 30.0,
-                    margin: const EdgeInsets.symmetric(horizontal: 4.0),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color:
-                          _currentIndex == entry.key
-                              ? Colors.blueAccent
-                              : Colors.grey.shade300,
-                    ),
-                  ),
-                );
-              }).toList(),
-        ),
-        SizedBox(height: 16),
-      ],
     );
   }
 }
