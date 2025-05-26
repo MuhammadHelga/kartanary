@@ -127,7 +127,7 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
                   Expanded(
                     child: TextButton(
                       onPressed: () {
-                        Navigator.pop(context); // Tutup dialog
+                        Navigator.pop(context);
                       },
                       child: Container(
                         padding: EdgeInsets.symmetric(vertical: 12),
@@ -146,7 +146,7 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
                   Expanded(
                     child: TextButton(
                       onPressed: () {
-                        Navigator.pop(context); // Tutup dialog
+                        Navigator.pop(context);
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
