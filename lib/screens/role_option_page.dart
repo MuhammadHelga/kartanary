@@ -3,8 +3,12 @@ import '../pages/login_page.dart';
 
 class RoleOptionPage extends StatelessWidget {
   final String classId;
+<<<<<<< HEAD
   const RoleOptionPage({super.key,
     required this.classId,});
+=======
+  const RoleOptionPage({Key? key, required this.classId}) : super(key: key);
+>>>>>>> 1e55ebc3f7267aa20b647e996afaeef7fd34e67c
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +68,9 @@ class RoleOptionPage extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => LoginPage(role: name, classId: classId,)),
+                MaterialPageRoute(
+                  builder: (context) => LoginPage(role: name, classId: classId),
+                ),
               );
             },
             style: ElevatedButton.styleFrom(

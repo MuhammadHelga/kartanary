@@ -613,7 +613,7 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600,
-                                      color: Colors.black54,
+                                      color: Colors.black,
                                     ),
                                   ),
                                   const SizedBox(height: 20),

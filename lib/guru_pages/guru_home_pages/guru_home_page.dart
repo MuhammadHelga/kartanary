@@ -306,7 +306,7 @@ class _GuruHomePageState extends State<GuruHomePage> {
             itemBuilder: (context, index) {
               final report = _latestReports[index];
               return Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8),
+                padding: EdgeInsets.symmetric(horizontal: 0),
                 child: Card(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
