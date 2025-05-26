@@ -235,7 +235,7 @@ class _GuruHomePageState extends State<GuruHomePage> {
                       ),
                     ),
                     Text(
-                      _name != null ? 'Miss $_name !' : 'Loading...',
+                      _name != null ? 'Miss $_name!' : 'Loading...',
                       style: TextStyle(
                         fontFamily: 'Poppins',
                         fontSize: 24,

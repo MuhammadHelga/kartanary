@@ -112,7 +112,13 @@ class _GuruNotificationPageState extends State<GuruNotificationPage> {
       ),
       body:
           _notification.isEmpty
-              ? const Center(child: CircularProgressIndicator())
+              // ? const Center(child: CircularProgressIndicator())
+              ? Center(
+                child: Text(
+                  'Belum ada notifikasi',
+                  style: TextStyle(color: AppColors.neutral400),
+                ),
+              )
               : ListView.builder(
                 itemCount: _notification.length,
                 itemBuilder: (context, index) {
