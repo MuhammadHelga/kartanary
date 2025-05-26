@@ -109,11 +109,7 @@ class _ProfilePageState extends State<ProfilePage> {
               shape: BoxShape.circle,
               color: AppColors.white,
             ),
-            child: Icon(
-              Icons.chevron_left,
-              color: AppColors.primary50,
-              size: 26,
-            ),
+            child: Icon(Icons.chevron_left, color: AppColors.primary50),
           ),
           onPressed: () {
             Navigator.push(
@@ -146,14 +142,14 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   ),
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
+                    horizontal: 10,
                     vertical: 5,
                   ),
                   child: Column(
                     children: [
                       Padding(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 30,
+                          horizontal: 20,
                           vertical: 20,
                         ),
                         child: Row(
@@ -216,7 +212,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 SizedBox(height: 30),
                 Container(
-                  margin: EdgeInsets.symmetric(horizontal: 50),
+                  margin: EdgeInsets.symmetric(horizontal: 30),
                   decoration: BoxDecoration(
                     color: Color(0xffFDF2CE),
                     borderRadius: BorderRadius.all(Radius.circular(20)),
@@ -266,7 +262,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 20, left: 50),
+                  padding: const EdgeInsets.only(top: 20, left: 30),
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
@@ -279,7 +275,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.symmetric(horizontal: 50),
+                  margin: EdgeInsets.symmetric(horizontal: 30),
                   decoration: BoxDecoration(
                     color: Color.fromARGB(255, 238, 242, 245),
                     borderRadius: BorderRadius.all(Radius.circular(20)),

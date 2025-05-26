@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
+=======
+import 'package:flutter/rendering.dart';
+>>>>>>> adbee8c5220ec484bbf8f52b8a616c94303cdbf8
 import '../pages/login_page.dart';
 import '../theme/AppColors.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../services/auth_service.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -71,6 +76,32 @@ class _RegisterPageState extends State<RegisterPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(50),
+                            ),
+                            child: IconButton(
+                              icon: Icon(
+                                Icons.chevron_left,
+                                color: Color(0xff1D99D3),
+                                size: 30,
+                              ),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder:
+                                        (context) => LoginPage(
+                                          role: widget.role,
+                                          classId: widget.classId,
+                                        ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                          const SizedBox(height: 10),
                           Center(
                             child: Image.asset(
                               'assets/images/logo_paud.png',
@@ -233,6 +264,14 @@ class _RegisterPageState extends State<RegisterPage> {
               return;
             }
 
+            if (password.length < 6) {
+              if (!mounted) return;
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Password harus minimal 6 karakter')),
+              );
+              return;
+            }
+
             try {
               final user = await AuthService().registerWithEmail(
                 email,
@@ -262,12 +301,32 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                 );
               }
+            } on FirebaseAuthException catch (e) {
+              if (!mounted) return;
+
+              String errorMessage;
+
+              switch (e.code) {
+                case 'email-already-in-use':
+                  errorMessage = 'Email sudah terdaftar';
+                  break;
+                case 'weak-password':
+                  errorMessage = 'Password harus minimal 6 karakter';
+                  break;
+                case 'invalid-email':
+                  errorMessage = 'Format email tidak valid';
+                  break;
+                default:
+                  errorMessage = 'Registrasi gagal: ${e.message}';
+              }
+
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text(errorMessage)));
             } catch (e) {
               if (!mounted) return;
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(e.toString().replaceAll('Exception: ', '')),
-                ),
+                SnackBar(content: Text('Terjadi kesalahan: ${e.toString()}')),
               );
             }
           },
