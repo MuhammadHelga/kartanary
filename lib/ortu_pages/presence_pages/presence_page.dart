@@ -167,11 +167,7 @@ class _PresencePageState extends State<PresencePage> {
               shape: BoxShape.circle,
               color: AppColors.white,
             ),
-            child: Icon(
-              Icons.chevron_left,
-              color: AppColors.primary50,
-              size: 26,
-            ),
+            child: Icon(Icons.chevron_left, color: AppColors.primary50),
           ),
           onPressed: () {
             Navigator.push(

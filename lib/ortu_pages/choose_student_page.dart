@@ -38,8 +38,8 @@ class _ChooseStudentPageState extends State<ChooseStudentPage> {
   Future<String> _getClassNameById(String classId) async {
     final doc =
         await FirebaseFirestore.instance.collection('kelas').doc(classId).get();
-    if (doc.exists && doc.data()!.containsKey('nama')) {
-      return doc['nama'];
+    if (doc.exists && doc.data()!.containsKey('nama_kelas')) {
+      return doc['nama_kelas'] as String;
     } else {
       return 'Tanpa Nama Kelas';
     }

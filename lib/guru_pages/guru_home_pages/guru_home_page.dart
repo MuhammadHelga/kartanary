@@ -1,18 +1,11 @@
 import 'dart:async';
-
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:intl/intl.dart';
-import 'package:lifesync_capstone_project/firebase_options.dart';
 import './guru_detail_page.dart';
 import 'package:lifesync_capstone_project/theme/AppColors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'guru_notif_page.dart';
-import 'package:lifesync_capstone_project/theme/AppColors.dart';
-import './guru_detail_page.dart';
 
 class GuruHomePage extends StatefulWidget {
   final String classId;

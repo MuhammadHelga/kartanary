@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:lifesync_capstone_project/ortu_pages/home_pages/detail_notif.dart';
 import 'package:lifesync_capstone_project/theme/AppColors.dart';
-import 'package:timeago/timeago.dart' as timeago; // pastikan path ini sesuai
+import 'package:timeago/timeago.dart' as timeago;
+
+import 'detail_notif.dart'; // pastikan path ini sesuai
 
 class NotificationPage extends StatefulWidget {
   final String classId;
@@ -98,11 +99,7 @@ class _NotificationPageState extends State<NotificationPage> {
               shape: BoxShape.circle,
               color: AppColors.white,
             ),
-            child: Icon(
-              Icons.chevron_left,
-              color: AppColors.primary50,
-              size: 26,
-            ),
+            child: Icon(Icons.chevron_left, color: AppColors.primary50),
           ),
           onPressed: () {
             Navigator.of(context).pop();
