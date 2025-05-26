@@ -21,7 +21,8 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
   String? _name;
   String? kodeKelas;
   String? ruangan;
-  List<Kelas> semuaKelas = [];
+  List<Kelas> kelasAktif = [];
+  List<Kelas> kelasLain = [];
 
   @override
   void initState() {
@@ -81,18 +82,28 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
               .where('dibuat_oleh', isEqualTo: user.uid)
               .get();
 
-      List<Kelas> kelasList =
-          snapshot.docs.map((doc) {
-            return Kelas(
-              nama: doc['nama_kelas'],
-              kode: doc['kode_kelas'],
-              tahunAjaran: doc['tahun_ajaran'] ?? '',
-              ruangan: doc['ruangan'] ?? '',
-            );
-          }).toList();
+      List<Kelas> aktifList = [];
+      List<Kelas> lainList = [];
+
+      for (var doc in snapshot.docs) {
+        final kelas = Kelas(
+          nama: doc['nama_kelas'],
+          kode: doc['kode_kelas'],
+          tahunAjaran: doc['tahun_ajaran'] ?? '',
+          ruangan: doc['ruangan'] ?? '',
+          aktif: doc.id == widget.classId,
+        );
+
+        if (doc.id == widget.classId) {
+          aktifList.add(kelas);
+        } else {
+          lainList.add(kelas);
+        }
+      }
 
       setState(() {
-        semuaKelas = kelasList; // atau pisahkan jadi aktif dan tidak aktif
+        kelasAktif = aktifList;
+        kelasLain = lainList;
       });
     } catch (e) {
       debugPrint('Gagal memuat kelas: $e');
@@ -352,14 +363,8 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
                         ],
                       ),
                     ),
-
-                    // Kelas Aktif
                     Padding(
-                      padding: const EdgeInsets.only(
-                        top: 20,
-                        bottom: 8,
-                        left: 40,
-                      ),
+                      padding: const EdgeInsets.only(top: 20, left: 40),
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
@@ -371,22 +376,13 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
                         ),
                       ),
                     ),
-                    ...semuaKelas
-                        // .where((kelas) => kelas.aktif)
-                        .map((kelas) => buildKelasCard(kelas))
-                        .toList(),
-
-                    // Riwayat Kelas
+                    ...kelasAktif.map((kelas) => buildKelasCard(kelas)),
                     Padding(
-                      padding: const EdgeInsets.only(
-                        top: 20,
-                        bottom: 8,
-                        left: 40,
-                      ),
+                      padding: const EdgeInsets.only(top: 20, left: 40),
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          'Riwayat Kelas',
+                          'Kelas Lain',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -394,7 +390,7 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
                         ),
                       ),
                     ),
-                    ...semuaKelas.map((kelas) => buildKelasCard(kelas)),
+                    ...kelasLain.map((kelas) => buildKelasCard(kelas)),
                   ],
                 ),
               ),
@@ -406,7 +402,7 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
   }
 
   Widget buildKelasCard(Kelas kelas) {
-    Color bgColor = kelas.aktif ? Color(0xffD3EFFD) : Color(0xffFFF3C2);
+    Color bgColor = kelas.aktif ? Color(0xffFFF3C2) : Color(0xffD3EFFD);
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 30, vertical: 8),
       padding: EdgeInsets.all(12),
@@ -421,9 +417,18 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Kelas: ${kelas.nama}',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                Row(
+                  children: [
+                    Text(
+                      'Kelas: ${kelas.nama}',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                    Spacer(),
+                    Icon(Icons.chevron_right, color: Colors.black54),
+                  ],
                 ),
                 SizedBox(height: 2),
                 Text('Kode Kelas: ${kelas.kode}'),
@@ -433,7 +438,6 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
               ],
             ),
           ),
-          if (!kelas.aktif) Icon(Icons.chevron_right, color: Colors.black54),
         ],
       ),
     );

@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:lifesync_capstone_project/ortu_pages/home_pages/detail_notif.dart';
 import 'package:lifesync_capstone_project/ortu_pages/home_pages/detail_page.dart';
 import 'package:lifesync_capstone_project/theme/AppColors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
