@@ -5,6 +5,7 @@ import 'package:lifesync_capstone_project/ortu_pages/home_pages/detail_page.dart
 import 'package:lifesync_capstone_project/theme/AppColors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:lifesync_capstone_project/ortu_pages/home_pages/notif_page.dart';
 
 class HomePage extends StatefulWidget {
   final String classId;
@@ -35,10 +36,6 @@ class _HomePageState extends State<HomePage> {
           snapshot.docs
               .map((doc) {
                 final data = doc.data();
-                final Timestamp tanggal =
-                    data['tanggal'] is Timestamp
-                        ? data['tanggal']
-                        : Timestamp.fromDate(DateTime.parse(data['tanggal']));
                 return {
                   'title': data['title'],
                   'tanggal':
@@ -118,6 +115,7 @@ class _HomePageState extends State<HomePage> {
         );
       }
     });
+    _fetchAnnouncements();
   }
 
   Future<void> _loadUserName() async {
@@ -195,16 +193,15 @@ class _HomePageState extends State<HomePage> {
         automaticallyImplyLeading: false,
         actions: [
           IconButton(
-            icon: Icon(Icons.notifications, color: Colors.white, size: 38),
+            icon: Icon(Icons.notifications, color: Colors.white, size: 30),
             onPressed: () {
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder:
-              //         (context) =>
-              //              NotificationPage(classId: widget.classId),
-              //   ),
-              // );
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder:
+                      (context) => NotificationPage(classId: widget.classId),
+                ),
+              );
             },
           ),
         ],
@@ -241,6 +238,7 @@ class _HomePageState extends State<HomePage> {
               ),
               SizedBox(height: 16),
               _buildLatestReportsSlider(),
+              SizedBox(height: 16),
               Text(
                 'Update Kegiatan Sekolah',
                 style: TextStyle(

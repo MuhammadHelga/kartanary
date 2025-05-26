@@ -134,7 +134,7 @@ class _GuruDetailWeeklyReportState extends State<GuruDetailWeeklyReport> {
             itemCount: reports.length,
             itemBuilder: (context, index) {
               final report = reports[index];
-              final nama = report['nama'];
+              // final nama = report['nama'];
               final tema = report['tema'];
               final pesanGuru = report['pesanGuru'];
               final weeks = report['weeks'] as List;

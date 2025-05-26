@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../ortu_pages/choose_student_page.dart';
 import '../theme/AppColors.dart';
@@ -164,7 +163,7 @@ class _ClassOptionsState extends State<ClassOptions> {
                             decoration: InputDecoration(
                               hintText: 'Masukkan Kode Kelas',
                               hintStyle: TextStyle(
-                                fontSize: 20,
+                                fontSize: 16,
                                 color: Colors.grey,
                               ),
                               filled: true,
@@ -174,14 +173,14 @@ class _ClassOptionsState extends State<ClassOptions> {
                                 horizontal: 20,
                               ),
                               enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(24),
+                                borderRadius: BorderRadius.circular(20),
                                 borderSide: BorderSide(
                                   color: Color(0xff1D99D3),
                                   width: 3,
                                 ),
                               ),
                               focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(24),
+                                borderRadius: BorderRadius.circular(20),
                                 borderSide: BorderSide(
                                   color: Color(0xff1D99D3),
                                   width: 3,

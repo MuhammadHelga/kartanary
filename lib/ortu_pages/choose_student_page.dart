@@ -80,7 +80,7 @@ class _ChooseStudentPageState extends State<ChooseStudentPage> {
                 .toList(); // Ambil hanya nama
       });
     } catch (e) {
-      print('Gagal mengambil data anak: $e');
+      debugPrint('Gagal mengambil data anak: $e');
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Gagal memuat data anak')));
@@ -173,7 +173,7 @@ class _ChooseStudentPageState extends State<ChooseStudentPage> {
                               await prefs.setString(
                                 'selectedChildClassName',
                                 className,
-                              ); // ← nama ruangan kelas
+                              );
                               await prefs.setString('selectedChildId', childId);
 
                               showDialog(
@@ -189,60 +189,75 @@ class _ChooseStudentPageState extends State<ChooseStudentPage> {
                                         'Anda memilih $name dari kelas $className',
                                       ),
                                       actions: [
-                                        TextButton(
-                                          child: Container(
-                                            padding: EdgeInsets.symmetric(
-                                              vertical: 5,
-                                              horizontal: 10,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              color: AppColors.success500,
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(10),
-                                              ),
-                                            ),
-                                            child: Text(
-                                              'Iya',
-                                              style: TextStyle(
-                                                fontSize: 18,
-                                                color: Color(0xffF7FAFC),
-                                              ),
-                                            ),
-                                          ),
-                                          onPressed:
-                                              () => Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder:
-                                                      (context) => BottomNavbar(
-                                                        role: widget.role,
-                                                        classId: widget.classId,
-                                                      ),
+                                        Row(
+                                          children: [
+                                            Expanded(
+                                              child: TextButton(
+                                                onPressed: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder:
+                                                          (
+                                                            context,
+                                                          ) => BottomNavbar(
+                                                            role: widget.role,
+                                                            classId:
+                                                                widget.classId,
+                                                          ),
+                                                    ),
+                                                  );
+                                                },
+                                                child: Container(
+                                                  padding: EdgeInsets.symmetric(
+                                                    vertical: 12,
+                                                  ),
+                                                  alignment: Alignment.center,
+                                                  decoration: BoxDecoration(
+                                                    color: AppColors.success500,
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                          Radius.circular(10),
+                                                        ),
+                                                  ),
+                                                  child: Text(
+                                                    'Iya',
+                                                    style: TextStyle(
+                                                      fontSize: 18,
+                                                      color: Color(0xffF7FAFC),
+                                                    ),
+                                                  ),
                                                 ),
                                               ),
-                                        ),
-                                        TextButton(
-                                          child: Container(
-                                            padding: EdgeInsets.symmetric(
-                                              vertical: 5,
-                                              horizontal: 10,
                                             ),
-                                            decoration: BoxDecoration(
-                                              color: AppColors.error500,
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(10),
+                                            Expanded(
+                                              child: TextButton(
+                                                onPressed:
+                                                    () =>
+                                                        Navigator.pop(context),
+                                                child: Container(
+                                                  padding: EdgeInsets.symmetric(
+                                                    vertical: 12,
+                                                  ),
+                                                  alignment: Alignment.center,
+                                                  decoration: BoxDecoration(
+                                                    color: AppColors.error500,
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                          Radius.circular(10),
+                                                        ),
+                                                  ),
+                                                  child: Text(
+                                                    'Tidak',
+                                                    style: TextStyle(
+                                                      fontSize: 18,
+                                                      color: Color(0xffF7FAFC),
+                                                    ),
+                                                  ),
+                                                ),
                                               ),
                                             ),
-                                            child: Text(
-                                              'Tidak',
-                                              style: TextStyle(
-                                                fontSize: 18,
-                                                color: Color(0xffF7FAFC),
-                                              ),
-                                            ),
-                                          ),
-                                          onPressed:
-                                              () => Navigator.pop(context),
+                                          ],
                                         ),
                                       ],
                                     ),

@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import '../pages/login_page.dart';
-import '../widgets/bottom_navbar.dart';
 
 class RoleOptionPage extends StatelessWidget {
   final String classId;
-  const RoleOptionPage({Key? key,
-    required this.classId,}) : super(key: key);
+  const RoleOptionPage({super.key,
+    required this.classId,});
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +53,7 @@ class RoleOptionPage extends StatelessWidget {
     );
   }
 
-  Widget roleBtn(String name, String ImgPath) {
+  Widget roleBtn(String name, String imgPath) {
     return Builder(
       builder: (context) {
         return Container(
@@ -78,10 +77,10 @@ class RoleOptionPage extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset(ImgPath, height: 50, width: 50),
+                Image.asset(imgPath, height: 50, width: 50),
                 SizedBox(width: 20),
                 Text(
-                  'Saya ' + name,
+                  'Saya $name',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,

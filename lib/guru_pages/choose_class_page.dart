@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import '../theme/AppColors.dart';
 import 'create_class_page.dart';
-import '../widgets/bottom_navbar.dart';
 import '../pages/login_page.dart';
 import 'join_class_page.dart';
 
 class ChooseClassPage extends StatefulWidget {
   final String role;
   final String classId;
-  const ChooseClassPage({Key? key, required this.role, required this.classId})
-    : super(key: key);
+  const ChooseClassPage({super.key, required this.role, required this.classId});
 
   @override
   State<ChooseClassPage> createState() => _ChooseClassPageState();

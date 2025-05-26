@@ -61,7 +61,7 @@ class _DetailWeeklyReportState extends State<DetailWeeklyReport> {
     final anakName = anakDoc.data()?['name'] ?? 'Anak';
     setState(() => _anakName = anakName);
 
-    print(
+    debugPrint(
       "Fetching report for anakId: ${widget.anakId}, temaId: ${widget.temaId}",
     );
 

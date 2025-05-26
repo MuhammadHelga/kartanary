@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../reporting_page.dart';
 import '../../../theme/AppColors.dart';
 import '../daily_report/detail_daily_report.dart';
 import 'package:intl/intl.dart';
@@ -237,7 +236,7 @@ class _DaysReportingPageState extends State<DaysReportingPage> {
                               description: activity['description'] ?? '',
                               imagePath: activity['image']!,
                               onDelete: () async {
-                                bool? confirmDelete = await showDialog<bool>(
+                                await showDialog<bool>(
                                   context: context,
                                   builder: (BuildContext context) {
                                     return AlertDialog(

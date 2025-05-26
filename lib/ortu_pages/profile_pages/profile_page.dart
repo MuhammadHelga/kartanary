@@ -21,10 +21,8 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   String? _name;
-  String? _childName;
-  String? _childClass;
-  String childName = '';
-  String ruangKelas = '';
+  String? childName;
+  String? ruangKelas;
 
   @override
   void initState() {
@@ -194,7 +192,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               icon: Icon(
                                 Icons.edit_square,
                                 color: Color(0xffF2F9FD),
-                                size: 30,
+                                size: 24,
                               ),
                               onPressed: () async {
                                 await Navigator.push(
@@ -252,11 +250,11 @@ class _ProfilePageState extends State<ProfilePage> {
                                   ),
                                 ),
                                 Text(
-                                  '$childName',
+                                  childName ?? 'Loading...',
                                   style: TextStyle(fontSize: 18),
                                 ),
                                 Text(
-                                  '$ruangKelas',
+                                  ruangKelas ?? 'Loading...',
                                   style: TextStyle(fontSize: 18),
                                 ),
                               ],

@@ -43,13 +43,6 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
     super.dispose();
   }
 
-  // Safe setState that checks if widget is still mounted
-  void _safeSetState(Function(VoidCallback) fn) {
-    if (!_isDisposed && mounted) {
-      fn(() {});
-    }
-  }
-
   void _fetchChildrenData() async {
     print("📌 Mengambil anak dari classId: ${widget.classId}");
 

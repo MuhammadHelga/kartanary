@@ -1,9 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../screens/role_option_page.dart';
 import '../pages/register_page.dart';
 import '../pages/forgot_password.dart';
-import '../widgets/bottom_navbar.dart';
 import '../guru_pages/choose_class_page.dart';
 import '../services/auth_service.dart';
 import '../ortu_pages/class_options.dart';

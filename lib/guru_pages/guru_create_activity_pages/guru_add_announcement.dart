@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../theme/AppColors.dart';
 import 'package:image_picker/image_picker.dart';
@@ -90,7 +89,7 @@ class _AddAnnouncementPageState extends State<AddAnnouncementPage> {
     required String classId,
     required List<File> images,
   }) async {
-    final String dateKey = DateFormat('yyyy-MM-dd').format(tanggal);
+    // final String dateKey = DateFormat('yyyy-MM-dd').format(tanggal);
 
     List<String> imageUrls = [];
 
@@ -150,7 +149,6 @@ class _AddAnnouncementPageState extends State<AddAnnouncementPage> {
       final List<XFile>? pickedFiles = await _picker.pickMultiImage();
       if (pickedFiles != null && pickedFiles.isNotEmpty) {
         setState(() {
-          // Tambahkan gambar baru ke daftar yang sudah ada
           _selectedImages.addAll(
             pickedFiles.map((xfile) => File(xfile.path)).toList(),
           );
@@ -511,7 +509,7 @@ class _AddAnnouncementPageState extends State<AddAnnouncementPage> {
                     images: _selectedImages,
                   );
 
-                  if(!context.mounted) return;
+                  if (!context.mounted) return;
                   showDialog(
                     context: context,
                     builder:

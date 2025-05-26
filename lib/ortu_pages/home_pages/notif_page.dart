@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:lifesync_capstone_project/ortu_pages/home_pages/detail_notif.dart';
 import 'package:lifesync_capstone_project/theme/AppColors.dart';
 import 'package:timeago/timeago.dart' as timeago; // pastikan path ini sesuai
@@ -112,7 +111,12 @@ class _NotificationPageState extends State<NotificationPage> {
       ),
       body:
           _notification.isEmpty
-              ? const Center(child: CircularProgressIndicator())
+              ? Center(
+                child: Text(
+                  'Belum ada notifikasi',
+                  style: TextStyle(color: AppColors.neutral400),
+                ),
+              )
               : ListView.builder(
                 itemCount: _notification.length,
                 itemBuilder: (context, index) {

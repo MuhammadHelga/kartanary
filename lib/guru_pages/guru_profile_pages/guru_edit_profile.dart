@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lifesync_capstone_project/guru_pages/guru_profile_pages/guru_profile_page.dart';
 import '../../pages/login_page.dart';
-import './guru_profile_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../services/auth_service.dart';
@@ -140,8 +139,6 @@ class _GuruEditProfileState extends State<GuruEditProfile> {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-
     return Scaffold(
       backgroundColor: Color(0xffFFFFFF),
       appBar: AppBar(

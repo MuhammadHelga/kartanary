@@ -139,8 +139,6 @@ class _EditProfileState extends State<EditProfile> {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-
     return Scaffold(
       backgroundColor: Color(0xffFFFFFF),
       appBar: AppBar(
@@ -221,7 +219,7 @@ class _EditProfileState extends State<EditProfile> {
                               Text(
                                 'Nama',
                                 style: TextStyle(
-                                  fontSize: 20,
+                                  fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -236,18 +234,18 @@ class _EditProfileState extends State<EditProfile> {
                                   filled: true,
                                   fillColor: Color(0xffF8FAFC),
                                   contentPadding: EdgeInsets.symmetric(
-                                    vertical: 20,
+                                    vertical: 18,
                                     horizontal: 20,
                                   ),
                                   enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(24),
+                                    borderRadius: BorderRadius.circular(20),
                                     borderSide: BorderSide(
                                       color: Color(0xff1D99D3),
                                       width: 3,
                                     ),
                                   ),
                                   focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(24),
+                                    borderRadius: BorderRadius.circular(20),
                                     borderSide: BorderSide(
                                       color: Color(0xff1D99D3),
                                       width: 3,
@@ -259,7 +257,7 @@ class _EditProfileState extends State<EditProfile> {
                               Text(
                                 'Email',
                                 style: TextStyle(
-                                  fontSize: 20,
+                                  fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -274,18 +272,18 @@ class _EditProfileState extends State<EditProfile> {
                                   filled: true,
                                   fillColor: Color(0xffF8FAFC),
                                   contentPadding: EdgeInsets.symmetric(
-                                    vertical: 20,
+                                    vertical: 18,
                                     horizontal: 20,
                                   ),
                                   enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(24),
+                                    borderRadius: BorderRadius.circular(20),
                                     borderSide: BorderSide(
                                       color: Color(0xff1D99D3),
                                       width: 3,
                                     ),
                                   ),
                                   focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(24),
+                                    borderRadius: BorderRadius.circular(20),
                                     borderSide: BorderSide(
                                       color: Color(0xff1D99D3),
                                       width: 3,
@@ -297,7 +295,7 @@ class _EditProfileState extends State<EditProfile> {
                               Text(
                                 'Role',
                                 style: TextStyle(
-                                  fontSize: 20,
+                                  fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -313,18 +311,18 @@ class _EditProfileState extends State<EditProfile> {
                                   filled: true,
                                   fillColor: Color(0xffF8FAFC),
                                   contentPadding: EdgeInsets.symmetric(
-                                    vertical: 20,
+                                    vertical: 18,
                                     horizontal: 20,
                                   ),
                                   enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(24),
+                                    borderRadius: BorderRadius.circular(20),
                                     borderSide: BorderSide(
                                       color: Color(0xff1D99D3),
                                       width: 3,
                                     ),
                                   ),
                                   focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(24),
+                                    borderRadius: BorderRadius.circular(20),
                                     borderSide: BorderSide(
                                       color: Color(0xff1D99D3),
                                       width: 3,

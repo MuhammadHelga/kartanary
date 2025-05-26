@@ -4,7 +4,6 @@ import '../../theme/AppColors.dart';
 import '../../widgets/bottom_navbar.dart';
 import '../../pages/login_page.dart';
 import './guru_edit_profile.dart';
-
 import '../../services/auth_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -22,31 +21,18 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
   String? _name;
   String? kodeKelas;
   String? ruangan;
-
-  final List<Kelas> semuaKelas = [
-    Kelas(
-      nama: 'Kelas KB–A1',
-      kode: 'Kode Kelas',
-      tahunAjaran: 'Tahun ajaran 2024/2025 (Ruangan Kelas)',
-      aktif: true,
-    ),
-    Kelas(
-      nama: 'Kelas KB–A2',
-      kode: 'Kode Kelas',
-      tahunAjaran: 'Tahun ajaran 2023/2024 (Ruangan Kelas)',
-    ),
-    Kelas(
-      nama: 'Kelas KB–B1',
-      kode: 'Kode Kelas',
-      tahunAjaran: 'Tahun ajaran 2022/2023 (Ruangan Kelas)',
-    ),
-  ];
+  List<Kelas> semuaKelas = [];
 
   @override
   void initState() {
     super.initState();
-    _loadUserName();
-    _loadClassInfo();
+    loadData();
+  }
+
+  Future<void> loadData() async {
+    await _loadUserName();
+    await _loadClassInfo();
+    await loadKelasGuru();
   }
 
   Future<void> _loadUserName() async {
@@ -84,36 +70,33 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
     }
   }
 
-  Widget buildKelasCard(Kelas kelas) {
-    Color bgColor = kelas.aktif ? Color(0xffD3EFFD) : Color(0xffFFF3C2);
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 30, vertical: 8),
-      padding: EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  kelas.nama,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                ),
-                SizedBox(height: 2),
-                Text(kelas.kode),
-                Text(kelas.tahunAjaran),
-              ],
-            ),
-          ),
-          if (!kelas.aktif) Icon(Icons.chevron_right, color: Colors.black54),
-        ],
-      ),
-    );
+  Future<void> loadKelasGuru() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    try {
+      final snapshot =
+          await FirebaseFirestore.instance
+              .collection('kelas')
+              .where('dibuat_oleh', isEqualTo: user.uid)
+              .get();
+
+      List<Kelas> kelasList =
+          snapshot.docs.map((doc) {
+            return Kelas(
+              nama: doc['nama_kelas'],
+              kode: doc['kode_kelas'],
+              tahunAjaran: doc['tahun_ajaran'] ?? '',
+              ruangan: doc['ruangan'] ?? '',
+            );
+          }).toList();
+
+      setState(() {
+        semuaKelas = kelasList; // atau pisahkan jadi aktif dan tidak aktif
+      });
+    } catch (e) {
+      debugPrint('Gagal memuat kelas: $e');
+    }
   }
 
   @override
@@ -389,7 +372,7 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
                       ),
                     ),
                     ...semuaKelas
-                        .where((kelas) => kelas.aktif)
+                        // .where((kelas) => kelas.aktif)
                         .map((kelas) => buildKelasCard(kelas))
                         .toList(),
 
@@ -411,16 +394,47 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
                         ),
                       ),
                     ),
-                    ...semuaKelas
-                        .where((kelas) => !kelas.aktif)
-                        .map((kelas) => buildKelasCard(kelas))
-                        .toList(),
+                    ...semuaKelas.map((kelas) => buildKelasCard(kelas)),
                   ],
                 ),
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget buildKelasCard(Kelas kelas) {
+    Color bgColor = kelas.aktif ? Color(0xffD3EFFD) : Color(0xffFFF3C2);
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 30, vertical: 8),
+      padding: EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Kelas: ${kelas.nama}',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+                SizedBox(height: 2),
+                Text('Kode Kelas: ${kelas.kode}'),
+                Text(
+                  'Tahun Ajaran ${kelas.tahunAjaran} (Ruang: ${kelas.ruangan})',
+                ),
+              ],
+            ),
+          ),
+          if (!kelas.aktif) Icon(Icons.chevron_right, color: Colors.black54),
+        ],
       ),
     );
   }
@@ -457,12 +471,14 @@ class Kelas {
   final String nama;
   final String kode;
   final String tahunAjaran;
+  final String ruangan;
   final bool aktif;
 
   Kelas({
     required this.nama,
     required this.kode,
     required this.tahunAjaran,
+    required this.ruangan,
     this.aktif = false,
   });
 }

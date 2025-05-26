@@ -22,7 +22,6 @@ class GuruDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final formattedDate = DateFormat('dd MMMM yyyy').format(tanggal.toDate());
-    final screenWidth = MediaQuery.of(context).size.width * (300 / 399);
 
     return Scaffold(
       backgroundColor: AppColors.white,

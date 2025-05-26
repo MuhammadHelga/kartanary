@@ -11,18 +11,17 @@ class DetailPage extends StatelessWidget {
   final String imageUrl;
 
   const DetailPage({
-    Key? key,
+    super.key,
     required this.title,
     required this.tanggal,
     required this.lokasi,
     required this.description,
     required this.imageUrl,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     final formattedDate = DateFormat('dd MMMM yyyy').format(tanggal.toDate());
-    final screenWidth = MediaQuery.of(context).size.width * (300 / 399);
 
     return Scaffold(
       backgroundColor: AppColors.white,

@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import '/guru_pages/guru_home_pages/guru_home_page.dart';
-import '../services/auth_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../widgets/bottom_navbar.dart';
 import '/theme/AppColors.dart';
@@ -44,7 +42,7 @@ class _JoinClassPageState extends State<JoinClassPage> {
       final classDoc = snapshot.docs.first;
       final classId = classDoc.id;
 
-      print('✅ Bergabung ke classId: $classId');
+      debugPrint('✅ Bergabung ke classId: $classId');
 
       Navigator.push(
         context,
@@ -151,14 +149,14 @@ class _JoinClassPageState extends State<JoinClassPage> {
                                 horizontal: 20,
                               ),
                               enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(24),
+                                borderRadius: BorderRadius.circular(20),
                                 borderSide: BorderSide(
                                   color: Color(0xff1D99D3),
                                   width: 3,
                                 ),
                               ),
                               focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(24),
+                                borderRadius: BorderRadius.circular(20),
                                 borderSide: BorderSide(
                                   color: Color(0xff1D99D3),
                                   width: 3,
