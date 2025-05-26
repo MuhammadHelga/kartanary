@@ -80,142 +80,147 @@ class _JoinClassPageState extends State<JoinClassPage> {
               padding: EdgeInsets.all(6.5), // Padding di sekitar ikon
               decoration: BoxDecoration(
                 shape: BoxShape.circle, // Membuat bentuk bulat
-                color: AppColors.primary20, // Warna latar belakang bulatan
+                color: AppColors.neutral100, // Warna latar belakang bulatan
               ),
-              child: Icon(
-                Icons.chevron_left,
-                color: AppColors.primary50, // Warna ikon
-              ),
+              child: Icon(Icons.chevron_left, color: AppColors.primary50),
             ),
             onPressed: () {
               Navigator.of(context).pop();
             },
           ),
         ),
-        body: LayoutBuilder(
-          builder: (context, constraints) {
-            return ConstrainedBox(
-              constraints: BoxConstraints(minHeight: constraints.maxHeight),
-              child: IntrinsicHeight(
-                child: Padding(
-                  padding: const EdgeInsets.all(30.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Center(
-                        child: Column(
-                          children: [
-                            // SizedBox(height: 50),
-                            Image.asset(
-                              'assets/images/logo_paud.png',
-                              height: 150,
+        body: SafeArea(
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return SingleChildScrollView(
+                physics:
+                    constraints.maxHeight < 600
+                        ? const BouncingScrollPhysics()
+                        : const NeverScrollableScrollPhysics(),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                  child: IntrinsicHeight(
+                    child: Padding(
+                      padding: const EdgeInsets.all(30.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Center(
+                            child: Column(
+                              children: [
+                                // SizedBox(height: 50),
+                                Image.asset(
+                                  'assets/images/logo_paud.png',
+                                  height: 150,
+                                ),
+                                SizedBox(height: 20),
+                                Text(
+                                  'Bergabung ke Kelas',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ],
                             ),
-                            SizedBox(height: 20),
-                            Text(
-                              'Bergabung ke Kelas',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black,
+                          ),
+                          SizedBox(height: 25),
+                          Text(
+                            'Kode Kelas',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          TextField(
+                            controller: _kodeKelasController,
+                            decoration: InputDecoration(
+                              hintText: 'Masukkan Kode Kelas',
+                              hintStyle: TextStyle(
+                                fontSize: 16,
+                                color: Colors.grey,
+                              ),
+                              filled: true,
+                              fillColor: Color(0xffF8FAFC),
+                              contentPadding: EdgeInsets.symmetric(
+                                vertical: 15,
+                                horizontal: 20,
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(24),
+                                borderSide: BorderSide(
+                                  color: Color(0xff1D99D3),
+                                  width: 3,
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(24),
+                                borderSide: BorderSide(
+                                  color: Color(0xff1D99D3),
+                                  width: 3,
+                                ),
                               ),
                             ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 25),
-                      Text(
-                        'Kode Kelas',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      TextField(
-                        controller: _kodeKelasController,
-                        decoration: InputDecoration(
-                          hintText: 'Masukkan Kode Kelas',
-                          hintStyle: TextStyle(
-                            fontSize: 20,
-                            color: Colors.grey,
                           ),
-                          filled: true,
-                          fillColor: Color(0xffF8FAFC),
-                          contentPadding: EdgeInsets.symmetric(
-                            vertical: 15,
-                            horizontal: 20,
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(24),
-                            borderSide: BorderSide(
-                              color: Color(0xff1D99D3),
-                              width: 3,
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(24),
-                            borderSide: BorderSide(
-                              color: Color(0xff1D99D3),
-                              width: 3,
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 20),
-                      Text(
-                        'Untuk masuk dengan kode kelas',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      Text(
-                        '• Gunakan akun yang telah terdaftar',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      Text(
-                        '• Gunakan kode kelas dengan 6-8 huruf atau angka, tanpa spasi atau simbol',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      Spacer(),
-                      // SizedBox(height: 20),
-                      SizedBox(
-                        height: 60,
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: _bergabung,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.primary50,
-                            elevation: 5,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18),
-                            ),
-                          ),
-                          child: Text(
-                            'Bergabung',
+                          SizedBox(height: 20),
+                          Text(
+                            'Untuk masuk dengan kode kelas',
                             style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 20,
+                              fontSize: 14,
                               fontWeight: FontWeight.w500,
-                              color: Colors.white,
                             ),
                           ),
-                        ),
+                          Text(
+                            '• Gunakan akun yang telah terdaftar',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          Text(
+                            '• Gunakan kode kelas dengan 6-8 huruf atau angka, tanpa spasi atau simbol',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          Spacer(),
+                          // SizedBox(height: 20),
+                          SizedBox(
+                            height: 60,
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: _bergabung,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.primary50,
+                                elevation: 5,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(18),
+                                ),
+                              ),
+                              child: Text(
+                                'Bergabung',
+                                style: TextStyle(
+                                  fontFamily: 'Poppins',
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
       ),
     );

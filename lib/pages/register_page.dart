@@ -3,14 +3,13 @@ import 'package:flutter/rendering.dart';
 import '../ortu_pages/class_options.dart';
 import '../pages/login_page.dart';
 import '../widgets/bottom_navbar.dart';
-
+import '../theme/AppColors.dart';
 import '../services/auth_service.dart';
 
 class RegisterPage extends StatefulWidget {
   final String role;
   final String classId;
-  const RegisterPage({super.key, required this.role,
-    required this.classId,});
+  const RegisterPage({super.key, required this.role, required this.classId});
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();
@@ -35,6 +34,30 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          leading: IconButton(
+            padding: const EdgeInsets.only(left: 20),
+            icon: Container(
+              padding: EdgeInsets.all(6.5), // Padding di sekitar ikon
+              decoration: BoxDecoration(
+                shape: BoxShape.circle, // Membuat bentuk bulat
+                color: AppColors.neutral100, // Warna latar belakang bulatan
+              ),
+              child: Icon(Icons.chevron_left, color: AppColors.primary50),
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder:
+                      (context) =>
+                          LoginPage(role: widget.role, classId: widget.classId),
+                ),
+              );
+            },
+          ),
+        ),
         body: SafeArea(
           child: LayoutBuilder(
             builder: (context, constraints) {
@@ -51,30 +74,6 @@ class _RegisterPageState extends State<RegisterPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(50),
-                            ),
-                            child: IconButton(
-                              icon: Icon(
-                                Icons.chevron_left,
-                                color: Color(0xff1D99D3),
-                                size: 30,
-                              ),
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder:
-                                        (context) =>
-                                            LoginPage(role: widget.role, classId: widget.classId,),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                          const SizedBox(height: 10),
                           Center(
                             child: Image.asset(
                               'assets/images/logo_paud.png',
@@ -258,7 +257,11 @@ class _RegisterPageState extends State<RegisterPage> {
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => LoginPage(role: widget.role, classId: widget.classId,),
+                    builder:
+                        (context) => LoginPage(
+                          role: widget.role,
+                          classId: widget.classId,
+                        ),
                   ),
                 );
               }
@@ -290,7 +293,9 @@ class _RegisterPageState extends State<RegisterPage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => LoginPage(role: widget.role, classId: widget.classId,),
+                builder:
+                    (context) =>
+                        LoginPage(role: widget.role, classId: widget.classId),
               ),
             );
           },

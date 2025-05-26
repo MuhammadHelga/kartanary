@@ -42,7 +42,7 @@ class _ProfilePageState extends State<ProfilePage> {
               .collection('users')
               .doc(user.uid)
               .get();
-      if (doc.exists) {
+      if (doc.exists && mounted) {
         setState(() {
           _name = doc['name'];
         });
@@ -74,11 +74,12 @@ class _ProfilePageState extends State<ProfilePage> {
       if (anakSnapshot.exists && kelasSnapshot.exists) {
         final anakData = anakSnapshot.data();
         final kelasData = kelasSnapshot.data();
-
-        setState(() {
-          childName = anakData?['name'] ?? 'Nama tidak ditemukan';
-          ruangKelas = kelasData?['ruangan'] ?? 'Ruangan tidak ditemukan';
-        });
+        if (mounted) {
+          setState(() {
+            childName = anakData?['name'] ?? 'Nama tidak ditemukan';
+            ruangKelas = kelasData?['ruangan'] ?? 'Ruangan tidak ditemukan';
+          });
+        }
       } else {
         print('Dokumen anak atau kelas tidak ditemukan.');
       }

@@ -25,16 +25,23 @@ class _ListStudentPageState extends State<ListStudentPage> {
       context: context,
       builder:
           (_) => AlertDialog(
+            backgroundColor: AppColors.neutral100,
             title: const Text('Hapus Anak'),
             content: Text('Apakah Anda yakin ingin menghapus "$name"?'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(false),
-                child: const Text('Batal'),
+                child: const Text(
+                  'Batal',
+                  style: TextStyle(color: AppColors.black),
+                ),
               ),
               ElevatedButton(
                 onPressed: () => Navigator.of(context).pop(true),
-                child: const Text('Hapus'),
+                child: Text(
+                  'Hapus',
+                  style: TextStyle(color: AppColors.neutral100),
+                ),
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
               ),
             ],
@@ -43,9 +50,48 @@ class _ListStudentPageState extends State<ListStudentPage> {
 
     if (confirm == true) {
       try {
-        await FirebaseFirestore.instance.collection('anak').doc(id).delete();
+        await FirebaseFirestore.instance
+            .collection('kelas')
+            .doc(widget.classId)
+            .collection('anak')
+            .doc(id)
+            .delete();
+
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Anak "$name" berhasil dihapus')),
+          SnackBar(
+            content: Row(
+              children: [
+                Container(
+                  padding: EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.check,
+                    color: AppColors.success500,
+                    size: 26,
+                  ),
+                ),
+                SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    'Anak "$name" berhasil dihapus',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            backgroundColor: AppColors.success500,
+            duration: Duration(seconds: 3),
+            elevation: 6,
+            // Penting: biarkan behavior default (fixed), jangan ubah
+            // Jangan pakai margin atau container pembungkus custom
+          ),
         );
       } catch (e) {
         ScaffoldMessenger.of(
@@ -99,7 +145,7 @@ class _ListStudentPageState extends State<ListStudentPage> {
       body: Padding(
         padding: const EdgeInsets.only(
           top: 30,
-          bottom: 50,
+          bottom: 30,
           left: 30,
           right: 30,
         ),
@@ -196,7 +242,11 @@ class _ListStudentPageState extends State<ListStudentPage> {
                 onPressed: () {
                   Navigator.of(context).pushReplacement(
                     MaterialPageRoute(
-                      builder: (context) => BottomNavbar(role: widget.role, classId: widget.classId,),
+                      builder:
+                          (context) => BottomNavbar(
+                            role: widget.role,
+                            classId: widget.classId,
+                          ),
                     ),
                   );
                 },
@@ -223,7 +273,7 @@ class _ListStudentPageState extends State<ListStudentPage> {
         ),
       ),
       floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 80.0),
+        padding: const EdgeInsets.only(bottom: 80),
         child: FloatingActionButton(
           onPressed: () {
             Navigator.of(context).push(

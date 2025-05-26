@@ -41,6 +41,8 @@ class _GuruHomePageState extends State<GuruHomePage> {
               .orderBy('tanggal', descending: false)
               .get();
 
+      if (!mounted) return;
+
       final now = DateTime.now();
       final today = DateTime(now.year, now.month, now.day);
 
@@ -127,7 +129,7 @@ class _GuruHomePageState extends State<GuruHomePage> {
         );
       }
     });
-    _fetchAnnouncements();
+    // _fetchAnnouncements();
   }
 
   Future<void> _loadUserName() async {
@@ -138,7 +140,7 @@ class _GuruHomePageState extends State<GuruHomePage> {
               .collection('users')
               .doc(user.uid)
               .get();
-      if (doc.exists) {
+      if (doc.exists && mounted) {
         if (!mounted) return;
         setState(() {
           _name = doc['name'];
@@ -174,15 +176,19 @@ class _GuruHomePageState extends State<GuruHomePage> {
             };
           }).toList();
 
-      setState(() {
-        _latestReports = reports;
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _latestReports = reports;
+          _isLoading = false;
+        });
+      }
 
       print("Jumlah semua laporan ditemukan: ${reports.length}");
     } catch (e) {
       print('Error fetching all reports: $e');
-      setState(() => _isLoading = false);
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 
@@ -259,15 +265,27 @@ class _GuruHomePageState extends State<GuruHomePage> {
                       ),
                     ),
                     SizedBox(height: 10),
-                    ..._announcements.map((announcement) {
-                      return UpdateCard(
-                        tanggal: announcement['tanggal'],
-                        lokasi: announcement['lokasi'],
-                        title: announcement['title'],
-                        description: announcement['description'],
-                        imageUrl: announcement['imageUrl'],
-                      );
-                    }).toList(),
+                    _announcements.isEmpty
+                        ? Text(
+                          'Belum ada update kegiatan sekolah.',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontFamily: 'Poppins',
+                            color: Colors.grey,
+                          ),
+                        )
+                        : Column(
+                          children:
+                              _announcements.map((announcement) {
+                                return UpdateCard(
+                                  tanggal: announcement['tanggal'],
+                                  lokasi: announcement['lokasi'],
+                                  title: announcement['title'],
+                                  description: announcement['description'],
+                                  imageUrl: announcement['imageUrl'],
+                                );
+                              }).toList(),
+                        ),
                   ],
                 ),
               ),

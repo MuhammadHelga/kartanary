@@ -7,6 +7,7 @@ import '../widgets/bottom_navbar.dart';
 import '../guru_pages/choose_class_page.dart';
 import '../services/auth_service.dart';
 import '../ortu_pages/class_options.dart';
+import '../theme/AppColors.dart';
 
 class LoginPage extends StatefulWidget {
   final String role;
@@ -35,6 +36,28 @@ class _LoginPageState extends State<LoginPage> {
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          leading: IconButton(
+            padding: const EdgeInsets.only(left: 20),
+            icon: Container(
+              padding: EdgeInsets.all(6.5), // Padding di sekitar ikon
+              decoration: BoxDecoration(
+                shape: BoxShape.circle, // Membuat bentuk bulat
+                color: AppColors.neutral100, // Warna latar belakang bulatan
+              ),
+              child: Icon(Icons.chevron_left, color: AppColors.primary50),
+            ),
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => RoleOptionPage(classId: widget.classId),
+                ),
+              );
+            },
+          ),
+        ),
         body: SafeArea(
           child: LayoutBuilder(
             builder: (context, constraints) {
@@ -51,30 +74,30 @@ class _LoginPageState extends State<LoginPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(50),
-                            ),
-                            child: IconButton(
-                              icon: const Icon(
-                                Icons.chevron_left,
-                                color: Color(0xff1D99D3),
-                                size: 30,
-                              ),
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder:
-                                        (context) => RoleOptionPage(
-                                          classId: widget.classId,
-                                        ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
+                          // Container(
+                          //   decoration: BoxDecoration(
+                          //     color: Colors.white,
+                          //     borderRadius: BorderRadius.circular(50),
+                          //   ),
+                          //   child: IconButton(
+                          //     icon: const Icon(
+                          //       Icons.chevron_left,
+                          //       color: Color(0xff1D99D3),
+                          //       size: 30,
+                          //     ),
+                          //     onPressed: () {
+                          //       Navigator.push(
+                          //         context,
+                          //         MaterialPageRoute(
+                          //           builder:
+                          //               (context) => RoleOptionPage(
+                          //                 classId: widget.classId,
+                          //               ),
+                          //         ),
+                          //       );
+                          //     },
+                          //   ),
+                          // ),
                           const SizedBox(height: 10),
                           Center(
                             child: Image.asset(

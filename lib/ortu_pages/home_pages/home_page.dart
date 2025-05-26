@@ -1,10 +1,6 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:intl/intl.dart';
-import 'package:lifesync_capstone_project/firebase_options.dart';
 import 'package:lifesync_capstone_project/ortu_pages/home_pages/detail_page.dart';
 import 'package:lifesync_capstone_project/theme/AppColors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -64,12 +60,10 @@ class _HomePageState extends State<HomePage> {
                   tgl.month,
                   tgl.day,
                 );
-                return !tanggalTanpaWaktu.isBefore(
-                  today,
-                ); // hari ini atau masa depan
+                return !tanggalTanpaWaktu.isBefore(today);
               })
               .toList();
-      // Sort by date ascending (paling dekat ke atas)
+
       loadedAnnouncements.sort((a, b) {
         final dateA = (a['tanggal'] as Timestamp).toDate();
         final dateB = (b['tanggal'] as Timestamp).toDate();
@@ -96,11 +90,6 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     _loadUserName();
     _fetchAnnouncements();
-    // notificationService.requestNotificationPermission();
-    // notificationService.getDeviceToken();
-    // notificationService.firebaseInit(context);
-    // notificationService.setupInteractMessage(context);
-    // FcmService.firebaseInit();
     _fetchLatestReports();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _startAutoSlide();
@@ -182,13 +171,17 @@ class _HomePageState extends State<HomePage> {
             };
           }).toList();
 
-      setState(() {
-        _latestReports = reports;
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _latestReports = reports;
+          _isLoading = false;
+        });
+      }
     } catch (e) {
       print('Error fetching reports: $e');
-      setState(() => _isLoading = false);
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 
@@ -239,7 +232,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               Text(
-                _name != null ? 'Miss $_name !' : 'Loading...',
+                _name != null ? 'Mom $_name !' : 'Loading...',
                 style: TextStyle(
                   fontFamily: 'Poppins',
                   fontSize: 24,
@@ -247,11 +240,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               SizedBox(height: 16),
-
-              // Slider
               _buildLatestReportsSlider(),
-
-              // School Updates
               Text(
                 'Update Kegiatan Sekolah',
                 style: TextStyle(
@@ -261,15 +250,27 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               SizedBox(height: 10),
-              ..._announcements.map((announcement) {
-                return UpdateCard(
-                  tanggal: announcement['tanggal'],
-                  lokasi: announcement['lokasi'],
-                  title: announcement['title'],
-                  description: announcement['description'],
-                  imageUrl: announcement['imageUrl'],
-                );
-              }).toList(),
+              _announcements.isEmpty
+                  ? Text(
+                    'Belum ada update kegiatan sekolah.',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontFamily: 'Poppins',
+                      color: Colors.grey,
+                    ),
+                  )
+                  : Column(
+                    children:
+                        _announcements.map((announcement) {
+                          return UpdateCard(
+                            tanggal: announcement['tanggal'],
+                            lokasi: announcement['lokasi'],
+                            title: announcement['title'],
+                            description: announcement['description'],
+                            imageUrl: announcement['imageUrl'],
+                          );
+                        }).toList(),
+                  ),
             ],
           ),
         ),

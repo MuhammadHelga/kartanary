@@ -13,10 +13,6 @@ class InputStudentPage extends StatefulWidget {
     required this.classId,
   });
 
-  // final Function(String) onAddChild; // Callback untuk mengirim data ke halaman sebelumnya
-
-  // InputStudentPage({required this.onAddChild});
-
   @override
   _InputStudentPageState createState() => _InputStudentPageState();
 }
@@ -28,6 +24,16 @@ class _InputStudentPageState extends State<InputStudentPage> {
 
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _ageController = TextEditingController();
+
+  Future<String> _getClassNameById(String classId) async {
+    final doc =
+        await FirebaseFirestore.instance.collection('kelas').doc(classId).get();
+    if (doc.exists && doc.data()!.containsKey('nama_kelas')) {
+      return doc['nama_kelas'];
+    } else {
+      return 'Tanpa Nama Kelas';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -227,6 +233,8 @@ class _InputStudentPageState extends State<InputStudentPage> {
                   height: 50,
                   child: ElevatedButton(
                     onPressed: () async {
+                      final className = await _getClassNameById(widget.classId);
+
                       if (_nameController.text.isNotEmpty &&
                           _selectedGender != null) {
                         try {
@@ -270,11 +278,15 @@ class _InputStudentPageState extends State<InputStudentPage> {
                                       ),
                                     ),
                                     SizedBox(width: 10),
-                                    Text(
-                                      'Anak berhasil ditambahkan ke ${widget.classId}!',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
+                                    Expanded(
+                                      child: Text(
+                                        'Anak berhasil ditambahkan ke $className!',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        maxLines: 2,
+                                        overflow: TextOverflow.clip,
                                       ),
                                     ),
                                   ],
@@ -295,7 +307,6 @@ class _InputStudentPageState extends State<InputStudentPage> {
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            // content: Text('Isi semua data terlebih dahulu'),
                             content: Container(
                               padding: EdgeInsets.all(10),
                               height: 70,

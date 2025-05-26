@@ -24,7 +24,7 @@ class _AddAnnouncementPageState extends State<AddAnnouncementPage> {
   final TextEditingController deskripsiController = TextEditingController();
 
   final ImagePicker _picker = ImagePicker();
-  List<File> _selectedImages = [];
+  final List<File> _selectedImages = [];
 
   bool kirimSekarang = true;
   bool satuHariSebelum = true;
@@ -83,7 +83,7 @@ class _AddAnnouncementPageState extends State<AddAnnouncementPage> {
   }
 
   Future<void> simpanPengumuman({
-    required String nama_kegiatan,
+    required String namaKegiatan,
     required String lokasi,
     required DateTime tanggal,
     required String deskripsi,
@@ -108,7 +108,7 @@ class _AddAnnouncementPageState extends State<AddAnnouncementPage> {
         .doc(classId)
         .collection('pengumuman')
         .add({
-          'title': nama_kegiatan,
+          'title': namaKegiatan,
           'lokasi': lokasi,
           'deskripsi': deskripsi,
           'tanggal': tanggal,
@@ -503,7 +503,7 @@ class _AddAnnouncementPageState extends State<AddAnnouncementPage> {
 
                 try {
                   await simpanPengumuman(
-                    nama_kegiatan: nama,
+                    namaKegiatan: nama,
                     lokasi: lokasi,
                     tanggal: selectedDate,
                     deskripsi: deskripsi,
@@ -511,6 +511,7 @@ class _AddAnnouncementPageState extends State<AddAnnouncementPage> {
                     images: _selectedImages,
                   );
 
+                  if(!context.mounted) return;
                   showDialog(
                     context: context,
                     builder:

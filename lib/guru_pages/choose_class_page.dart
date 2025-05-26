@@ -33,7 +33,8 @@ class _ChooseClassPageState extends State<ChooseClassPage> {
           leading: IconButton(
             padding: const EdgeInsets.only(left: 20),
             icon: Container(
-              padding: EdgeInsets.all(6.5),
+              height: 60,
+              width: 60,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: AppColors.neutral100,
@@ -41,7 +42,7 @@ class _ChooseClassPageState extends State<ChooseClassPage> {
               child: Icon(
                 Icons.chevron_left,
                 color: AppColors.primary50,
-                size: 26,
+                size: 30,
               ),
             ),
             onPressed: () {

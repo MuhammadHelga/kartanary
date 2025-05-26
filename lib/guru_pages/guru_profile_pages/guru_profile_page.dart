@@ -57,7 +57,7 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
               .collection('users')
               .doc(user.uid)
               .get();
-      if (doc.exists) {
+      if (doc.exists && mounted) {
         setState(() {
           _name = doc['name'];
         });
@@ -73,7 +73,7 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
               .doc(widget.classId)
               .get();
 
-      if (doc.exists) {
+      if (doc.exists && mounted) {
         setState(() {
           kodeKelas = doc['kode_kelas'];
           ruangan = doc['ruangan'];
