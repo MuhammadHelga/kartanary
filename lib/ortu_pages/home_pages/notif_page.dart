@@ -1,14 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
 import 'package:lifesync_capstone_project/ortu_pages/home_pages/detail_notif.dart';
-=======
-import 'package:intl/intl.dart';
->>>>>>> adbee8c5220ec484bbf8f52b8a616c94303cdbf8
 import 'package:lifesync_capstone_project/theme/AppColors.dart';
 import 'package:timeago/timeago.dart' as timeago;
-
-import 'detail_notif.dart'; // pastikan path ini sesuai
 
 class NotificationPage extends StatefulWidget {
   final String classId;

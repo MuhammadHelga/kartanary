@@ -1,12 +1,5 @@
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
-=======
-import 'package:flutter/rendering.dart';
-<<<<<<< HEAD
->>>>>>> adbee8c5220ec484bbf8f52b8a616c94303cdbf8
-=======
 import 'package:lifesync_capstone_project/widgets/custom_snackbar.dart';
->>>>>>> 1e55ebc3f7267aa20b647e996afaeef7fd34e67c
 import '../pages/login_page.dart';
 import '../theme/AppColors.dart' as theme;
 import 'package:firebase_auth/firebase_auth.dart';
