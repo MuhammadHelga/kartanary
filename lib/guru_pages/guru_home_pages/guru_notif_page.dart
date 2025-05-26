@@ -112,7 +112,6 @@ class _GuruNotificationPageState extends State<GuruNotificationPage> {
       ),
       body:
           _notification.isEmpty
-              // ? const Center(child: CircularProgressIndicator())
               ? Center(
                 child: Text(
                   'Belum ada notifikasi',

@@ -26,7 +26,7 @@ class _ChooseStudentPageState extends State<ChooseStudentPage> {
   @override
   void initState() {
     super.initState();
-    print('Class ID: ${widget.classId}');
+    debugPrint('Class ID: ${widget.classId}');
     _fetchChildren();
   }
 
@@ -47,7 +47,7 @@ class _ChooseStudentPageState extends State<ChooseStudentPage> {
 
   Future<void> _fetchChildren() async {
     try {
-      print("Mengambil data anak dari Firestore...");
+      debugPrint("Mengambil data anak dari Firestore...");
       final snapshot =
           await FirebaseFirestore.instance
               .collection('kelas')
@@ -56,14 +56,14 @@ class _ChooseStudentPageState extends State<ChooseStudentPage> {
               .get();
 
       if (snapshot.docs.isEmpty) {
-        print("Tidak ada data anak di kelas ini.");
+        debugPrint("Tidak ada data anak di kelas ini.");
       }
 
       // Mengisi childrenData dengan nama dan ID dokumen
       childrenData =
           snapshot.docs.map((doc) {
             final data = doc.data();
-            print("Dokumen anak: ${doc.id} => $data");
+            debugPrint("Dokumen anak: ${doc.id} => $data");
             return {
               'id': doc.id,
               'name':

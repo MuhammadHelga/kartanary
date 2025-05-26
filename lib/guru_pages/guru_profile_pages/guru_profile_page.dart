@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lifesync_capstone_project/guru_pages/input_student_page.dart';
 import '../../theme/AppColors.dart';
 import '../../widgets/bottom_navbar.dart';
 import '../../pages/login_page.dart';
@@ -7,6 +6,7 @@ import './guru_edit_profile.dart';
 import '../../services/auth_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../list_student_page.dart';
 
 class GuruProfilePage extends StatefulWidget {
   final String role;
@@ -87,6 +87,7 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
 
       for (var doc in snapshot.docs) {
         final kelas = Kelas(
+          id: doc.id,
           nama: doc['nama_kelas'],
           kode: doc['kode_kelas'],
           tahunAjaran: doc['tahun_ajaran'] ?? '',
@@ -108,6 +109,74 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
     } catch (e) {
       debugPrint('Gagal memuat kelas: $e');
     }
+  }
+
+  void _konfirmasiPindahKelas(Kelas kelas) {
+    showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            backgroundColor: AppColors.neutral100,
+            title: Text('Pindah Kelas'),
+            content: Text(
+              'Apakah Anda yakin ingin berpindah ke kelas "${kelas.nama}"?',
+            ),
+            actions: [
+              Row(
+                children: [
+                  Expanded(
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.pop(context); // Tutup dialog
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(vertical: 12),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: AppColors.error500,
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                        ),
+                        child: Text(
+                          'Batal',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.pop(context); // Tutup dialog
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (context) => BottomNavbar(
+                                  role: widget.role,
+                                  classId: kelas.id,
+                                ),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(vertical: 12),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: AppColors.success500,
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                        ),
+                        child: Text(
+                          'Ya',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+    );
   }
 
   @override
@@ -175,7 +244,7 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
                   children: [
                     ClipOval(
                       child: Image.asset(
-                        'assets/images/photo1.png',
+                        'assets/images/photo3.png',
                         width: 100,
                         height: 100,
                         fit: BoxFit.cover,
@@ -188,7 +257,7 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
                         Text(
                           _name ?? 'Loading...',
                           style: TextStyle(
-                            fontSize: 28,
+                            fontSize: 24,
                             fontWeight: FontWeight.w600,
                             color: Color(0xffF2F9FD),
                           ),
@@ -258,7 +327,7 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
                         child: Text(
                           'PENGATURAN',
                           style: TextStyle(
-                            fontSize: 20,
+                            fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -267,7 +336,7 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
                     Container(
                       margin: EdgeInsets.symmetric(horizontal: 30),
                       decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 238, 242, 245),
+                        color: Color.fromARGB(255, 227, 246, 255),
                         borderRadius: BorderRadius.all(Radius.circular(20)),
                       ),
                       padding: const EdgeInsets.symmetric(
@@ -278,45 +347,7 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
                         children: [
                           buildSettingItem(Icons.settings_outlined, 'Umum'),
                           buildDivider(),
-                          InkWell(
-                            onTap: () async {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder:
-                                      (context) => InputStudentPage(
-                                        role: widget.role,
-                                        classId: widget.classId,
-                                      ),
-                                ),
-                              );
-                            },
-                            child: Row(
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.only(right: 10),
-                                  child: Icon(
-                                    Icons.add_circle_outline,
-                                    color: Colors.black,
-                                    size: 30,
-                                  ),
-                                ),
-                                Text(
-                                  'Tambah Anak',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 20,
-                                  ),
-                                ),
-                                Spacer(),
-                                Icon(
-                                  Icons.chevron_right,
-                                  color: Color(0xffA8A8A8),
-                                  size: 30,
-                                ),
-                              ],
-                            ),
-                          ),
+                          buildSettingItem(Icons.info_outline, 'Tentang Kami'),
                           buildDivider(),
                           InkWell(
                             onTap: () async {
@@ -354,7 +385,7 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
                                 Spacer(),
                                 Icon(
                                   Icons.chevron_right,
-                                  color: Color(0xffA8A8A8),
+                                  color: AppColors.primary300,
                                   size: 30,
                                 ),
                               ],
@@ -403,42 +434,61 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
 
   Widget buildKelasCard(Kelas kelas) {
     Color bgColor = kelas.aktif ? Color(0xffFFF3C2) : Color(0xffD3EFFD);
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 30, vertical: 8),
-      padding: EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Text(
-                      'Kelas: ${kelas.nama}',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ),
-                    Spacer(),
-                    Icon(Icons.chevron_right, color: Colors.black54),
-                  ],
-                ),
-                SizedBox(height: 2),
-                Text('Kode Kelas: ${kelas.kode}'),
-                Text(
-                  'Tahun Ajaran ${kelas.tahunAjaran} (Ruang: ${kelas.ruangan})',
-                ),
-              ],
+
+    return InkWell(
+      onTap: () {
+        if (kelas.aktif) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder:
+                  (context) => ListStudentPage(
+                    role: widget.role,
+                    classId: widget.classId,
+                  ),
             ),
-          ),
-        ],
+          );
+        } else {
+          _konfirmasiPindahKelas(kelas);
+        }
+      },
+      child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 30, vertical: 8),
+        padding: EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: bgColor,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        'Kelas: ${kelas.nama}',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                      Spacer(),
+                      Icon(Icons.chevron_right, color: Colors.black54),
+                    ],
+                  ),
+                  SizedBox(height: 2),
+                  Text('Kode Kelas: ${kelas.kode}'),
+                  Text(
+                    'Tahun Ajaran ${kelas.tahunAjaran} (Ruang: ${kelas.ruangan})',
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -449,11 +499,11 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
         children: [
           Padding(
             padding: EdgeInsets.only(right: 10),
-            child: Icon(icon, color: Color(0xff333333), size: 30),
+            child: Icon(icon, color: AppColors.primary300, size: 30),
           ),
           Text(label, style: TextStyle(fontSize: 20)),
           Spacer(),
-          Icon(Icons.chevron_right, color: Color(0xffA8A8A8), size: 30),
+          Icon(Icons.chevron_right, color: AppColors.primary300, size: 30),
         ],
       ),
     );
@@ -472,6 +522,7 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
 }
 
 class Kelas {
+  final String id;
   final String nama;
   final String kode;
   final String tahunAjaran;
@@ -479,6 +530,7 @@ class Kelas {
   final bool aktif;
 
   Kelas({
+    required this.id,
     required this.nama,
     required this.kode,
     required this.tahunAjaran,

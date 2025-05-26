@@ -342,7 +342,7 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 20),
+            SizedBox(height: 10),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 0),
               child: Column(
@@ -350,9 +350,9 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
                 children: [
                   const Text(
                     'Pilih Tanggal',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: 10),
+                  SizedBox(height: 5),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -397,9 +397,9 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
                   SizedBox(height: 20),
                   Text(
                     'Total Kehadiran',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: 10),
+                  SizedBox(height: 5),
                   Column(
                     children: [
                       Table(
@@ -551,9 +551,9 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
                   SizedBox(height: 20),
                   const Text(
                     'Nama Anak',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: 10),
+                  SizedBox(height: 5),
                 ],
               ),
             ),
@@ -688,24 +688,27 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
                 },
               ),
             ),
-            SizedBox(
-              width: double.infinity,
-              height: 50,
-              child: ElevatedButton(
-                onPressed: _simpanPresensi,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary50,
-                  elevation: 5,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(18),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 5),
+              child: SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: _simpanPresensi,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary50,
+                    elevation: 5,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(18),
+                    ),
                   ),
-                ),
-                child: Text(
-                  'Simpan Presensi',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                  child: Text(
+                    'Simpan Presensi',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),

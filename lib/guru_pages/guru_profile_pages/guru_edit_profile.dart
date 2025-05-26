@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../services/auth_service.dart';
 import '../../theme/AppColors.dart';
+import '../../widgets/custom_snackbar.dart';
 
 class GuruEditProfile extends StatefulWidget {
   final String role;
@@ -380,7 +381,7 @@ class _GuruEditProfileState extends State<GuruEditProfile> {
                     padding: const EdgeInsets.all(4),
                     child: ClipOval(
                       child: Image.asset(
-                        'assets/images/photo1.png',
+                        'assets/images/photo3.png',
                         width: 100,
                         height: 100,
                         fit: BoxFit.cover,

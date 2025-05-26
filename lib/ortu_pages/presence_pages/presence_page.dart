@@ -4,7 +4,6 @@ import '../../widgets/bottom_navbar.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-
 class PresencePage extends StatefulWidget {
   final String role;
   final String classId;
@@ -188,7 +187,7 @@ class _PresencePageState extends State<PresencePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 20),
+            SizedBox(height: 10),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 0),
               child: Column(
@@ -196,9 +195,9 @@ class _PresencePageState extends State<PresencePage> {
                 children: [
                   const Text(
                     'Pilih Tanggal',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: 10),
+                  SizedBox(height: 5),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -243,9 +242,9 @@ class _PresencePageState extends State<PresencePage> {
                   SizedBox(height: 20),
                   Text(
                     'Total Kehadiran',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: 10),
+                  SizedBox(height: 5),
                   Column(
                     children: [
                       Table(
@@ -397,9 +396,9 @@ class _PresencePageState extends State<PresencePage> {
                   SizedBox(height: 20),
                   const Text(
                     'Nama Anak',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: 10),
+                  SizedBox(height: 5),
                 ],
               ),
             ),
