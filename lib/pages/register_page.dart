@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import '../ortu_pages/class_options.dart';
 import '../pages/login_page.dart';
-import '../widgets/bottom_navbar.dart';
-<<<<<<< Updated upstream
 import '../theme/AppColors.dart';
-=======
 import 'package:firebase_auth/firebase_auth.dart';
->>>>>>> Stashed changes
 import '../services/auth_service.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -78,8 +73,6 @@ class _RegisterPageState extends State<RegisterPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-<<<<<<< Updated upstream
-=======
                           Container(
                             decoration: BoxDecoration(
                               color: Colors.white,
@@ -106,7 +99,6 @@ class _RegisterPageState extends State<RegisterPage> {
                             ),
                           ),
                           const SizedBox(height: 10),
->>>>>>> Stashed changes
                           Center(
                             child: Image.asset(
                               'assets/images/logo_paud.png',
