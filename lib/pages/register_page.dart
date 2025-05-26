@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:lifesync_capstone_project/widgets/custom_snackbar.dart';
 import '../pages/login_page.dart';
-import '../theme/AppColors.dart';
+import '../theme/AppColors.dart' as theme;
 import 'package:firebase_auth/firebase_auth.dart';
 import '../services/auth_service.dart';
 
@@ -41,9 +42,10 @@ class _RegisterPageState extends State<RegisterPage> {
               padding: EdgeInsets.all(6.5), // Padding di sekitar ikon
               decoration: BoxDecoration(
                 shape: BoxShape.circle, // Membuat bentuk bulat
-                color: AppColors.neutral100, // Warna latar belakang bulatan
+                color:
+                    theme.AppColors.neutral100, // Warna latar belakang bulatan
               ),
-              child: Icon(Icons.chevron_left, color: AppColors.primary50),
+              child: Icon(Icons.chevron_left, color: theme.AppColors.primary50),
             ),
             onPressed: () {
               Navigator.push(
@@ -73,32 +75,32 @@ class _RegisterPageState extends State<RegisterPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(50),
-                            ),
-                            child: IconButton(
-                              icon: Icon(
-                                Icons.chevron_left,
-                                color: Color(0xff1D99D3),
-                                size: 30,
-                              ),
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder:
-                                        (context) => LoginPage(
-                                          role: widget.role,
-                                          classId: widget.classId,
-                                        ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                          const SizedBox(height: 10),
+                          // Container(
+                          //   decoration: BoxDecoration(
+                          //     color: Colors.white,
+                          //     borderRadius: BorderRadius.circular(50),
+                          //   ),
+                          //   child: IconButton(
+                          //     icon: Icon(
+                          //       Icons.chevron_left,
+                          //       color: Color(0xff1D99D3),
+                          //       size: 30,
+                          //     ),
+                          //     onPressed: () {
+                          //       Navigator.push(
+                          //         context,
+                          //         MaterialPageRoute(
+                          //           builder:
+                          //               (context) => LoginPage(
+                          //                 role: widget.role,
+                          //                 classId: widget.classId,
+                          //               ),
+                          //         ),
+                          //       );
+                          //     },
+                          //   ),
+                          // ),
+                          // const SizedBox(height: 10),
                           Center(
                             child: Image.asset(
                               'assets/images/logo_paud.png',
@@ -255,17 +257,21 @@ class _RegisterPageState extends State<RegisterPage> {
 
             if (name.isEmpty || email.isEmpty || password.isEmpty) {
               if (!mounted) return;
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Semua field harus diisi')),
-              );
+              showErrorSnackBar(context, 'Semua field harus diisi');
               return;
             }
 
             if (password.length < 6) {
               if (!mounted) return;
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Password harus minimal 6 karakter')),
-              );
+              showErrorSnackBar(context, 'Password harus minimal 6 karakter');
+              return;
+            }
+
+            if (!RegExp(
+              r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+            ).hasMatch(email)) {
+              if (!mounted) return;
+              showErrorSnackBar(context, 'Format email tidak valid');
               return;
             }
 
@@ -279,14 +285,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 await AuthService().saveUserData(user.uid, name, widget.role);
 
                 if (!mounted) return;
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      'Berhasil registrasi. Silahkan Verifikasi Email Anda',
-                    ),
-                  ),
-                );
-
+                showSuccessSnackBar(context, 'Registrasi berhasil!');
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
@@ -298,33 +297,24 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                 );
               }
-            } on FirebaseAuthException catch (e) {
-              if (!mounted) return;
-
-              String errorMessage;
-
-              switch (e.code) {
-                case 'email-already-in-use':
-                  errorMessage = 'Email sudah terdaftar';
-                  break;
-                case 'weak-password':
-                  errorMessage = 'Password harus minimal 6 karakter';
-                  break;
-                case 'invalid-email':
-                  errorMessage = 'Format email tidak valid';
-                  break;
-                default:
-                  errorMessage = 'Registrasi gagal: ${e.message}';
-              }
-
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text(errorMessage)));
             } catch (e) {
               if (!mounted) return;
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Terjadi kesalahan: ${e.toString()}')),
-              );
+
+              String errorMessage = 'Terjadi kesalahan.';
+
+              if (e is FirebaseAuthException) {
+                if (e.code == 'email-already-in-use') {
+                  errorMessage = 'Email sudah terdaftar. Gunakan email lain.';
+                } else if (e.code == 'invalid-email') {
+                  errorMessage = 'Email tidak valid.';
+                } else if (e.code == 'weak-password') {
+                  errorMessage = 'Password terlalu lemah.';
+                } else {
+                  errorMessage = e.message ?? errorMessage;
+                }
+              }
+
+              showErrorSnackBar(context, errorMessage);
             }
           },
           style: ElevatedButton.styleFrom(
