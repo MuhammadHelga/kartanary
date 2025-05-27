@@ -45,7 +45,7 @@ class _InputStudentPageState extends State<InputStudentPage> {
         title: Text(
           'Tambah Anak',
           style: TextStyle(
-            fontSize: 20,
+            fontSize: 22,
             fontWeight: FontWeight.w600,
             color: AppColors.primary5,
           ),

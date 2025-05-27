@@ -47,7 +47,7 @@ class _RegisterPageState extends State<RegisterPage> {
               child: Icon(Icons.chevron_left, color: theme.AppColors.primary50),
             ),
             onPressed: () {
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                   builder:
@@ -70,57 +70,35 @@ class _RegisterPageState extends State<RegisterPage> {
                   constraints: BoxConstraints(minHeight: constraints.maxHeight),
                   child: IntrinsicHeight(
                     child: Padding(
-                      padding: const EdgeInsets.all(30.0),
+                      padding: const EdgeInsets.only(
+                        left: 30,
+                        top: 10,
+                        right: 30,
+                        bottom: 20,
+                      ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Container(
-                          //   decoration: BoxDecoration(
-                          //     color: Colors.white,
-                          //     borderRadius: BorderRadius.circular(50),
-                          //   ),
-                          //   child: IconButton(
-                          //     icon: Icon(
-                          //       Icons.chevron_left,
-                          //       color: Color(0xff1D99D3),
-                          //       size: 30,
-                          //     ),
-                          //     onPressed: () {
-                          //       Navigator.push(
-                          //         context,
-                          //         MaterialPageRoute(
-                          //           builder:
-                          //               (context) => LoginPage(
-                          //                 role: widget.role,
-                          //                 classId: widget.classId,
-                          //               ),
-                          //         ),
-                          //       );
-                          //     },
-                          //   ),
-                          // ),
-                          // const SizedBox(height: 10),
                           Center(
                             child: Image.asset(
-                              'assets/images/logo_paud.png',
-                              height: 150,
-                              width: 250,
+                              'assets/images/kartanary_logo.png',
+                              height: 200,
+                              width: 200,
                               fit: BoxFit.contain,
                             ),
                           ),
-                          const SizedBox(height: 10),
                           const Padding(
                             padding: EdgeInsets.symmetric(horizontal: 20),
                             child: Text(
                               'Memantau perkembangan anak dengan lebih mudah',
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                fontSize: 18,
+                                fontSize: 16,
                                 color: Colors.black,
                               ),
                             ),
                           ),
-                          SizedBox(height: 30),
+                          SizedBox(height: 20),
                           ..._buildSignupForm(),
                           const Spacer(),
                         ],
@@ -226,11 +204,11 @@ class _RegisterPageState extends State<RegisterPage> {
               });
             },
             icon: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Icon(
                 _hidepass ? Icons.visibility_off : Icons.visibility,
                 color: Color(0xff1D99D3),
-                size: 30,
+                size: 26,
               ),
             ),
           ),
@@ -332,7 +310,7 @@ class _RegisterPageState extends State<RegisterPage> {
       Center(
         child: TextButton(
           onPressed: () {
-            Navigator.push(
+            Navigator.pushReplacement(
               context,
               MaterialPageRoute(
                 builder:

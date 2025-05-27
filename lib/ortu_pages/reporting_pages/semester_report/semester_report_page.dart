@@ -160,17 +160,6 @@ class _SemesterReportPageState extends State<SemesterReportPage> {
     }
   }
 
-  // Future<void> _launchUrl(String url) async {
-  //   final uri = Uri.parse(url);
-  //   if (await canLaunchUrl(uri)) {
-  //     await launchUrl(uri, mode: LaunchMode.externalApplication);
-  //   } else {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       const SnackBar(content: Text('URL tidak valid atau tidak bisa dibuka')),
-  //     );
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -181,7 +170,7 @@ class _SemesterReportPageState extends State<SemesterReportPage> {
         title: Text(
           'Laporan Semester',
           style: TextStyle(
-            fontSize: 26,
+            fontSize: 22,
             fontWeight: FontWeight.w600,
             color: AppColors.primary5,
           ),

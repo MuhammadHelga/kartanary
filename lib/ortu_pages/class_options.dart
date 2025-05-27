@@ -119,34 +119,33 @@ class _ClassOptionsState extends State<ClassOptions> {
                     child: Padding(
                       padding: const EdgeInsets.only(
                         left: 30,
-                        top: 30,
+                        top: 10,
                         right: 30,
-                        bottom: 60,
+                        bottom: 50,
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Center(
                             child: Image.asset(
-                              'assets/images/logo_paud.png',
+                              'assets/images/kartanary_logo.png',
                               height: 200,
-                              width: 300,
+                              width: 200,
                               fit: BoxFit.cover,
                             ),
                           ),
-                          SizedBox(height: 20),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 20),
                             child: Text(
                               'Memantau perkembangan anak dengan lebih mudah',
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                fontSize: 20,
+                                fontSize: 16,
                                 color: Colors.black,
                               ),
                             ),
                           ),
-                          SizedBox(height: 30),
+                          SizedBox(height: 10),
                           Padding(
                             padding: const EdgeInsets.only(top: 20),
                             child: Text(
@@ -210,7 +209,6 @@ class _ClassOptionsState extends State<ClassOptions> {
                               ),
                             ),
                           ),
-                          SizedBox(height: 20),
                         ],
                       ),
                     ),

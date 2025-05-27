@@ -117,7 +117,7 @@ class _ListStudentPageState extends State<ListStudentPage> {
         title: Text(
           'Daftar Anak',
           style: TextStyle(
-            fontSize: 20,
+            fontSize: 22,
             fontWeight: FontWeight.w600,
             color: AppColors.primary5,
           ),

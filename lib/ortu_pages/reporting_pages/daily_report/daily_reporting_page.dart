@@ -67,10 +67,10 @@ class _DaysReportingPageState extends State<DaysReportingPage> {
         setState(() {
           activities = [];
         });
-        print('❌ Tidak ada laporan untuk tanggal ini');
+        debugPrint('❌ Tidak ada laporan untuk tanggal ini');
       }
     } catch (e) {
-      print('❌ Gagal memuat data: $e');
+      debugPrint('❌ Gagal memuat data: $e');
       setState(() {
         activities = [];
       });
@@ -133,7 +133,7 @@ class _DaysReportingPageState extends State<DaysReportingPage> {
         title: Text(
           'Laporan Harian',
           style: TextStyle(
-            fontSize: 26,
+            fontSize: 22,
             fontWeight: FontWeight.w600,
             color: AppColors.primary5,
           ),

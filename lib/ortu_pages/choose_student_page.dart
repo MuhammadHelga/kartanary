@@ -97,7 +97,7 @@ class _ChooseStudentPageState extends State<ChooseStudentPage> {
         title: Text(
           'Daftar Anak',
           style: TextStyle(
-            fontSize: 26,
+            fontSize: 22,
             fontWeight: FontWeight.w600,
             color: AppColors.primary5,
           ),

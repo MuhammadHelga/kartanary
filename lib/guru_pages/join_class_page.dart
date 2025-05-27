@@ -108,8 +108,10 @@ class _JoinClassPageState extends State<JoinClassPage> {
                               children: [
                                 // SizedBox(height: 50),
                                 Image.asset(
-                                  'assets/images/logo_paud.png',
-                                  height: 150,
+                                  'assets/images/kartanary_logo.png',
+                                  height: 200,
+                                  width: 200,
+                                  fit: BoxFit.contain,
                                 ),
                                 SizedBox(height: 20),
                                 Text(

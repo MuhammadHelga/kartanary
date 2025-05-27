@@ -40,7 +40,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               child: Icon(Icons.chevron_left, color: AppColors.primary50),
             ),
             onPressed: () {
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                   builder:
@@ -63,26 +63,30 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   constraints: BoxConstraints(minHeight: constraints.maxHeight),
                   child: IntrinsicHeight(
                     child: Padding(
-                      padding: const EdgeInsets.all(30.0),
+                      padding: const EdgeInsets.only(
+                        left: 30,
+                        top: 10,
+                        right: 30,
+                        bottom: 20,
+                      ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Center(
                             child: Image.asset(
-                              'assets/images/logo_paud.png',
-                              height: 150,
-                              width: 250,
+                              'assets/images/kartanary_logo.png',
+                              height: 200,
+                              width: 200,
                               fit: BoxFit.contain,
                             ),
                           ),
-                          const SizedBox(height: 10),
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 30),
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
                             child: Text(
                               'Memantau perkembangan anak dengan lebih mudah',
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                fontSize: 18,
+                                fontSize: 16,
                                 color: Colors.black,
                               ),
                             ),
@@ -105,16 +109,16 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     return [
       Center(
         child: Padding(
-          padding: const EdgeInsets.only(top: 30),
+          padding: const EdgeInsets.only(top: 20),
           child: Text(
             'Lupa Password?',
-            style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
           ),
         ),
       ),
       Text(
         'Masukkan Email yang terdaftar dalam akun. Petunjuk perubahan password akan dikirim melalui email.',
-        style: TextStyle(fontSize: 18),
+        style: TextStyle(fontSize: 14),
         textAlign: TextAlign.justify,
       ),
       SizedBox(height: 10),

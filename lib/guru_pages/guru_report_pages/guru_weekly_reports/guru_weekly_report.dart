@@ -69,7 +69,7 @@ class _GuruWeeklyReportPageState extends State<GuruWeeklyReportPage> {
         title: Text(
           'Laporan Mingguan',
           style: TextStyle(
-            fontSize: 26,
+            fontSize: 22,
             fontWeight: FontWeight.w600,
             color: AppColors.primary5,
           ),

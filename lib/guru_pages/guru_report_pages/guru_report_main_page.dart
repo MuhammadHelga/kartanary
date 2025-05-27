@@ -30,7 +30,7 @@ class _GuruReportMainPageState extends State<GuruReportMainPage> {
         title: Text(
           'Laporan',
           style: TextStyle(
-            fontSize: 26,
+            fontSize: 22,
             fontWeight: FontWeight.w600,
             color: AppColors.primary5,
           ),

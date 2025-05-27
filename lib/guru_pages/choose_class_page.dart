@@ -68,10 +68,10 @@ class _ChooseClassPageState extends State<ChooseClassPage> {
                 children: <Widget>[
                   // Logo
                   Image.asset(
-                    'assets/images/logo_paud.png',
-                    width: 250,
-                    height: 250,
-                    filterQuality: FilterQuality.high,
+                    'assets/images/kartanary_logo.png',
+                              height: 200,
+                              width: 200,
+                              fit: BoxFit.contain,
                   ),
                   const SizedBox(height: 10),
                   const Text(

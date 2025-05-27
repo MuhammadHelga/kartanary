@@ -3,7 +3,7 @@ import 'dart:async';
 import 'role_option_page.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key,});
+  const SplashScreen({super.key});
 
   @override
   _SplashScreenState createState() => _SplashScreenState();
@@ -16,7 +16,9 @@ class _SplashScreenState extends State<SplashScreen> {
     Timer(Duration(seconds: 3), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const RoleOptionPage(classId: '',)),
+        MaterialPageRoute(
+          builder: (context) => const RoleOptionPage(classId: ''),
+        ),
       );
     });
   }
@@ -35,23 +37,7 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Center(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 32),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Image.asset('assets/images/logo_paud.png'),
-                SizedBox(height: 32),
-                Text(
-                  'Taman Penitipan Anak, Kelompok Bermain, dan Taman Kanak-Kanak',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                    color: Color(0xff2E3094),
-                  ),
-                ),
-              ],
-            ),
+            child: Image.asset('assets/images/kartanary_logo.png'),
           ),
         ),
       ),

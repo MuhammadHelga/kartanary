@@ -145,9 +145,9 @@ class _HomePageState extends State<HomePage> {
               .limit(3)
               .get();
 
-      print("Jumlah laporan ditemukan: ${querySnapshot.docs.length}");
+      debugPrint("Jumlah laporan ditemukan: ${querySnapshot.docs.length}");
       for (var doc in querySnapshot.docs) {
-        print(
+        debugPrint(
           "Judul: ${doc['title']}, Tanggal: ${doc['tanggal']}, Deskripsi: ${doc['deskripsi']}",
         );
       }
@@ -229,7 +229,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               Text(
-                _name != null ? 'Mom $_name !' : 'Loading...',
+                _name != null ? 'Mom $_name!' : 'Loading...',
                 style: TextStyle(
                   fontFamily: 'Poppins',
                   fontSize: 24,

@@ -60,7 +60,7 @@ class _GuruNotificationPageState extends State<GuruNotificationPage> {
         _notification = loadednotification;
       });
     } catch (error) {
-      print('Error fetching notification: $error');
+      debugPrint('Error fetching notification: $error');
     }
   }
 

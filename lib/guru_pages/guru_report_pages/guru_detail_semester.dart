@@ -66,7 +66,7 @@ class _DetailSemesterReportPageState extends State<DetailSemesterReportPage> {
         isLoading = false;
       });
     } catch (e) {
-      print('Error fetching laporan: $e');
+      debugPrint('Error fetching laporan: $e');
       setState(() => isLoading = false);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Gagal mengambil data laporan: $e')),
@@ -135,7 +135,7 @@ class _DetailSemesterReportPageState extends State<DetailSemesterReportPage> {
         title: Text(
           'Laporan Semester',
           style: TextStyle(
-            fontSize: 26,
+            fontSize: 22,
             fontWeight: FontWeight.w600,
             color: AppColors.primary5,
           ),

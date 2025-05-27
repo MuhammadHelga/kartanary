@@ -148,7 +148,7 @@ class _GuruEditProfileState extends State<GuruEditProfile> {
         title: Text(
           'Edit Profil',
           style: TextStyle(
-            fontSize: 26,
+            fontSize: 22,
             fontWeight: FontWeight.w600,
             color: AppColors.primary5,
           ),

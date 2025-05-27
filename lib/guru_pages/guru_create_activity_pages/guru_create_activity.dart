@@ -74,7 +74,7 @@ class _GuruCreateActivityPageState extends State<GuruCreateActivityPage> {
         title: Text(
           'Buat Laporan',
           style: TextStyle(
-            fontSize: 26,
+            fontSize: 22,
             fontWeight: FontWeight.w600,
             color: AppColors.primary5,
           ),

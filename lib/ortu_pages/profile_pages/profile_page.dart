@@ -79,10 +79,10 @@ class _ProfilePageState extends State<ProfilePage> {
           });
         }
       } else {
-        print('Dokumen anak atau kelas tidak ditemukan.');
+        debugPrint('Dokumen anak atau kelas tidak ditemukan.');
       }
     } else {
-      print('selectedChildId atau classId kosong');
+      debugPrint('selectedChildId atau classId kosong');
     }
   }
 
@@ -96,7 +96,7 @@ class _ProfilePageState extends State<ProfilePage> {
         title: Text(
           'Profil',
           style: TextStyle(
-            fontSize: 26,
+            fontSize: 22,
             fontWeight: FontWeight.w600,
             color: AppColors.primary5,
           ),

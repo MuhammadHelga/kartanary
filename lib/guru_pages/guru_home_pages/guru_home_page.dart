@@ -176,9 +176,9 @@ class _GuruHomePageState extends State<GuruHomePage> {
         });
       }
 
-      print("Jumlah semua laporan ditemukan: ${reports.length}");
+      debugPrint("Jumlah semua laporan ditemukan: ${reports.length}");
     } catch (e) {
-      print('Error fetching all reports: $e');
+      debugPrint('Error fetching all reports: $e');
       if (mounted) {
         setState(() => _isLoading = false);
       }

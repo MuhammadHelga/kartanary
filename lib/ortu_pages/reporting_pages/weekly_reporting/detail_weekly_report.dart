@@ -102,7 +102,7 @@ class _DetailWeeklyReportState extends State<DetailWeeklyReport> {
         title: const Text(
           'Laporan Mingguan',
           style: TextStyle(
-            fontSize: 26,
+            fontSize: 22,
             fontWeight: FontWeight.w600,
             color: AppColors.primary5,
           ),
