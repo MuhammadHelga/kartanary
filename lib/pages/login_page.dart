@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../screens/role_option_page.dart';
 import '../pages/register_page.dart';
 import '../pages/forgot_password.dart';
@@ -233,11 +234,11 @@ class _LoginPageState extends State<LoginPage> {
             );
 
             if (user != null) {
-              // // Simpan device token ke Firestore
-              // await FirebaseFirestore.instance
-              //     .collection('users')
-              //     .doc(user.uid)
-              //     .update({'deviceToken': userDeviceToken});
+              final prefs = await SharedPreferences.getInstance();
+              await prefs.setBool('isLoggedIn', true);
+              await prefs.setString('role', widget.role);
+              await prefs.setString('classId', widget.classId);
+
               if (widget.role == 'Guru') {
                 Navigator.pushReplacement(
                   context,
