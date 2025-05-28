@@ -52,7 +52,8 @@ class _JoinClassPageState extends State<JoinClassPage> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => BottomNavbar(classId: classId, role: 'Guru'),
+          builder:
+              (context) => BottomNavbar(classId: classId, role: widget.role),
         ),
       );
     } catch (e) {

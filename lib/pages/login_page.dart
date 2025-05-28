@@ -6,11 +6,13 @@ import '../pages/forgot_password.dart';
 import '../guru_pages/choose_class_page.dart';
 import '../services/auth_service.dart';
 import '../ortu_pages/class_options.dart';
+import '../widgets/bottom_navbar.dart';
 import '../theme/AppColors.dart';
 
 class LoginPage extends StatefulWidget {
   final String role;
   final String classId;
+
   const LoginPage({super.key, required this.role, required this.classId});
 
   @override
@@ -40,10 +42,10 @@ class _LoginPageState extends State<LoginPage> {
           leading: IconButton(
             padding: const EdgeInsets.only(left: 20),
             icon: Container(
-              padding: EdgeInsets.all(6.5), // Padding di sekitar ikon
+              padding: const EdgeInsets.all(6.5),
               decoration: BoxDecoration(
-                shape: BoxShape.circle, // Membuat bentuk bulat
-                color: AppColors.neutral100, // Warna latar belakang bulatan
+                shape: BoxShape.circle,
+                color: AppColors.neutral100,
               ),
               child: Icon(Icons.chevron_left, color: AppColors.primary50),
             ),
@@ -224,8 +226,6 @@ class _LoginPageState extends State<LoginPage> {
         width: double.infinity,
         child: ElevatedButton(
           onPressed: () async {
-            // String userDeviceToken = await notificationService.getDeviceToken();
-
             final user = await AuthService().loginWithEmail(
               _emailController.text.trim(),
               _passwordController.text.trim(),
@@ -237,32 +237,56 @@ class _LoginPageState extends State<LoginPage> {
               final prefs = await SharedPreferences.getInstance();
               await prefs.setBool('isLoggedIn', true);
               await prefs.setString('role', widget.role);
-              await prefs.setString('classId', widget.classId);
+
+              String? savedClassId = prefs.getString('classId');
 
               if (widget.role == 'Guru') {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder:
-                        (context) =>
-                            ChooseClassPage(role: widget.role, classId: ''),
-                  ),
-                );
+                if (savedClassId != null && savedClassId.isNotEmpty) {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder:
+                          (context) => BottomNavbar(
+                            classId: savedClassId,
+                            role: widget.role,
+                          ),
+                    ),
+                  );
+                } else {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder:
+                          (context) =>
+                              ChooseClassPage(role: widget.role, classId: ''),
+                    ),
+                  );
+                }
               } else if (widget.role == 'Orang Tua') {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder:
-                        (context) => ClassOptions(
-                          role: widget.role,
-                          classId: widget.classId,
-                        ),
-                  ),
-                );
+                if (savedClassId != null && savedClassId.isNotEmpty) {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder:
+                          (context) => ClassOptions(
+                            role: widget.role,
+                            classId: savedClassId,
+                          ),
+                    ),
+                  );
+                } else {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder:
+                          (context) =>
+                              ClassOptions(role: widget.role, classId: ''),
+                    ),
+                  );
+                }
               }
             }
           },
-
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xff1D99D3),
             shape: RoundedRectangleBorder(
@@ -292,8 +316,8 @@ class _LoginPageState extends State<LoginPage> {
           },
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
+            children: const [
+              Text(
                 'Belum Punya Akun?',
                 style: TextStyle(color: Colors.black, fontSize: 16),
               ),
