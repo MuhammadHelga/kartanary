@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lifesync_capstone_project/guru_pages/guru_create_activity_pages/guru_add_daily.dart';
 import 'package:lifesync_capstone_project/guru_pages/guru_create_activity_pages/guru_add_semester.dart';
 import 'package:lifesync_capstone_project/guru_pages/guru_create_activity_pages/weekly/guru_add_weekly.dart';
-import '../../theme/AppColors.dart';
+import '../../theme/app_colors.dart';
 import 'guru_add_announcement.dart';
 
 class GuruCreateActivityPage extends StatefulWidget {

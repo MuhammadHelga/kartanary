@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../theme/AppColors.dart';
+import '../../theme/app_colors.dart';
 import '../guru_report_pages/guru_weekly_reports/guru_weekly_report.dart';
 import '../../widgets/bottom_navbar.dart';
 import '../guru_create_activity_pages/guru_create_activity.dart';

@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lifesync_capstone_project/guru_pages/guru_create_activity_pages/guru_create_activity.dart';
 import 'package:lifesync_capstone_project/guru_pages/guru_report_pages/guru_weekly_reports/guru_list_weekly.dart';
-import 'package:lifesync_capstone_project/theme/AppColors.dart';
+import 'package:lifesync_capstone_project/theme/app_colors.dart';
 
 class GuruWeeklyReportPage extends StatefulWidget {
   final String classId;
@@ -49,7 +49,7 @@ class _GuruWeeklyReportPageState extends State<GuruWeeklyReportPage> {
         });
       }
     } catch (e) {
-      print('Gagal mengambil daftar tema: $e');
+      debugPrint('Gagal mengambil daftar tema: $e');
     }
   }
 
@@ -205,9 +205,9 @@ class _GuruWeeklyReportPageState extends State<GuruWeeklyReportPage> {
             ),
           );
         },
-        child: const Icon(Icons.add, color: Colors.white),
         backgroundColor: const Color(0xFF1D99D3),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+        child: const Icon(Icons.add, color: Colors.white),
       ),
     );
   }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import '../../theme/AppColors.dart';
+import '../../theme/app_colors.dart';
 import '../guru_create_activity_pages/guru_create_activity.dart';
 import '../guru_report_pages/guru_detail_daily.dart';
 
@@ -68,10 +68,10 @@ class _GuruDailyReportPageState extends State<GuruDailyReportPage> {
         setState(() {
           activities = [];
         });
-        print('❌ Tidak ada laporan untuk tanggal ini');
+        debugPrint('❌ Tidak ada laporan untuk tanggal ini');
       }
     } catch (e) {
-      print('❌ Gagal memuat data: $e');
+      debugPrint('❌ Gagal memuat data: $e');
       setState(() {
         activities = [];
       });
@@ -89,9 +89,9 @@ class _GuruDailyReportPageState extends State<GuruDailyReportPage> {
           .doc(laporanId)
           .delete();
 
-      print('✅ Laporan berhasil dihapus');
+      debugPrint('✅ Laporan berhasil dihapus');
     } catch (e) {
-      print('❌ Gagal menghapus laporan: $e');
+      debugPrint('❌ Gagal menghapus laporan: $e');
     }
   }
 
@@ -341,11 +341,11 @@ class _GuruDailyReportPageState extends State<GuruDailyReportPage> {
               ),
             );
           },
-          child: const Icon(Icons.add, color: Colors.white),
           backgroundColor: const Color(0xFF1D99D3),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30),
           ),
+          child: const Icon(Icons.add, color: Colors.white),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,

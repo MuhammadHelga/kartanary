@@ -3,7 +3,7 @@ import 'package:lifesync_capstone_project/guru_pages/input_student_page.dart';
 import '../../widgets/bottom_navbar.dart';
 import '../../pages/login_page.dart';
 import 'edit_profile.dart';
-import '../../theme/AppColors.dart';
+import '../../theme/app_colors.dart';
 
 import '../../services/auth_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -16,7 +16,7 @@ class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key, required this.role, required this.classId});
 
   @override
-  _ProfilePageState createState() => _ProfilePageState();
+  State<ProfilePage> createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
@@ -128,9 +128,8 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Container(
+          child: SizedBox(
             width: double.infinity,
-            // padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Column(
               children: [
                 Container(

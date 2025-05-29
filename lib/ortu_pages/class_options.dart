@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../ortu_pages/choose_student_page.dart';
-import '../theme/AppColors.dart';
+import '../theme/app_colors.dart';
 
 class ClassOptions extends StatefulWidget {
   final String role;
@@ -36,6 +36,7 @@ class _ClassOptionsState extends State<ClassOptions> {
               .get();
 
       if (snapshot.docs.isEmpty) {
+        if (!mounted) return;
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text('Kode kelas tidak ditemukan')));
@@ -49,6 +50,7 @@ class _ClassOptionsState extends State<ClassOptions> {
       final user = FirebaseFirestore.instance.collection('users');
       final uid = await _getCurrentUserId();
       if (uid == null) {
+        if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Gagal mendapatkan UID pengguna')),
         );
@@ -57,9 +59,9 @@ class _ClassOptionsState extends State<ClassOptions> {
 
       await user.doc(uid).update({'joinedClassId': kodeKelas});
 
-      print('✅ Bergabung ke classId: $classId');
+      debugPrint('✅ Bergabung ke classId: $classId');
 
-      // Arahkan ke halaman yang memerlukan classId
+      if (!mounted) return;
       Navigator.push(
         context,
         MaterialPageRoute(

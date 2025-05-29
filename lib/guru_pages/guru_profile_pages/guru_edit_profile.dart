@@ -4,7 +4,7 @@ import '../../pages/login_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../services/auth_service.dart';
-import '../../theme/AppColors.dart';
+import '../../theme/app_colors.dart';
 
 class GuruEditProfile extends StatefulWidget {
   final String role;
@@ -87,6 +87,7 @@ class _GuruEditProfileState extends State<GuruEditProfile> {
           final result = await authService.updateUserEmail(newEmail);
 
           if (result != null) {
+            if (!mounted) return;
             ScaffoldMessenger.of(
               context,
             ).showSnackBar(SnackBar(content: Text(result)));
@@ -117,6 +118,7 @@ class _GuruEditProfileState extends State<GuruEditProfile> {
           'name': newName,
         });
 
+        if (!mounted) return;
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text('Profil berhasil diperbarui.')));
@@ -131,6 +133,7 @@ class _GuruEditProfileState extends State<GuruEditProfile> {
         );
       }
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Terjadi kesalahan. Silakan coba lagi.')),
       );

@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../../theme/AppColors.dart';
+import '../../theme/app_colors.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AddAnnouncementPage extends StatefulWidget {

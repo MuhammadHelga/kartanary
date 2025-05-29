@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../theme/AppColors.dart';
+import '../theme/app_colors.dart';
 import 'create_class_page.dart';
 import '../pages/login_page.dart';
 import 'join_class_page.dart';

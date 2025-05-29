@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../theme/AppColors.dart';
+import '../../../theme/app_colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../weekly_reporting/detail_weekly_report.dart'; // pastikan path ini benar
@@ -25,6 +25,7 @@ class _WeeksReportingPageState extends State<WeeksReportingPage> {
         selectedChildId = childId;
       });
     } else {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Tidak ada anak yang dipilih')),
       );
@@ -63,7 +64,7 @@ class _WeeksReportingPageState extends State<WeeksReportingPage> {
         });
       }
     } catch (e) {
-      print('Gagal mengambil daftar tema: $e');
+      debugPrint('Gagal mengambil daftar tema: $e');
     }
   }
 

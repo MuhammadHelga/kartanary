@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lifesync_capstone_project/widgets/custom_snackbar.dart';
 import '../pages/login_page.dart';
-import '../theme/AppColors.dart' as theme;
+import '../theme/app_colors.dart' as theme;
 import 'package:firebase_auth/firebase_auth.dart';
 import '../services/auth_service.dart';
 

@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:lifesync_capstone_project/ortu_pages/home_pages/detail_page.dart';
-import 'package:lifesync_capstone_project/theme/AppColors.dart';
+import 'package:lifesync_capstone_project/theme/app_colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lifesync_capstone_project/ortu_pages/home_pages/notif_page.dart';
@@ -72,7 +72,7 @@ class _HomePageState extends State<HomePage> {
         _announcements = loadedAnnouncements;
       });
     } catch (error) {
-      print('Error fetching announcements: $error');
+      debugPrint('Error fetching announcements: $error');
     }
   }
 
@@ -176,7 +176,7 @@ class _HomePageState extends State<HomePage> {
         });
       }
     } catch (e) {
-      print('Error fetching reports: $e');
+      debugPrint('Error fetching reports: $e');
       if (mounted) {
         setState(() => _isLoading = false);
       }
@@ -392,6 +392,7 @@ class UpdateCard extends StatelessWidget {
   final String imageUrl;
 
   const UpdateCard({
+    super.key,
     required this.title,
     required this.lokasi,
     required this.tanggal,

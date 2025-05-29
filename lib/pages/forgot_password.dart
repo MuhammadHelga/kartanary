@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../pages/login_page.dart';
-import '../theme/AppColors.dart';
+import '../theme/app_colors.dart';
 import '../services/auth_service.dart';
 
 class ForgotPassword extends StatefulWidget {
@@ -163,6 +163,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
 
             try {
               await AuthService().sendPasswordResetEmail(email);
+              if (!mounted) return;
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(

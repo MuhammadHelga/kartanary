@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../theme/AppColors.dart';
+import '../../theme/app_colors.dart';
 import '../../widgets/bottom_navbar.dart';
 import '../../pages/login_page.dart';
 import './guru_edit_profile.dart';
@@ -14,7 +14,7 @@ class GuruProfilePage extends StatefulWidget {
   const GuruProfilePage({super.key, required this.role, required this.classId});
 
   @override
-  _GuruProfilePageState createState() => _GuruProfilePageState();
+  State<GuruProfilePage> createState() => _GuruProfilePageState();
 }
 
 class _GuruProfilePageState extends State<GuruProfilePage> {
@@ -67,7 +67,7 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
         });
       }
     } catch (e) {
-      print('Gagal mengambil data kelas: $e');
+      debugPrint('Gagal mengambil data kelas: $e');
     }
   }
 
