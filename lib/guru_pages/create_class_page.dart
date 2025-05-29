@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:lifesync_capstone_project/guru_pages/input_student_page.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '/theme/AppColors.dart';
 import '../services/auth_service.dart';
 
@@ -9,7 +8,7 @@ class CreateClassPage extends StatefulWidget {
   const CreateClassPage({super.key, required this.role});
 
   @override
-  State<CreateClassPage> createState() => _CreateClassPageState();
+  _CreateClassPageState createState() => _CreateClassPageState();
 }
 
 class _CreateClassPageState extends State<CreateClassPage> {
@@ -35,9 +34,6 @@ class _CreateClassPageState extends State<CreateClassPage> {
         ruangan: ruangan,
         tahunAjaran: tahunAjaran,
       );
-
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('classId', classId);
 
       if (!mounted) return;
       Navigator.push(

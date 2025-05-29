@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../widgets/bottom_navbar.dart';
 import '/theme/AppColors.dart';
 
@@ -43,17 +42,12 @@ class _JoinClassPageState extends State<JoinClassPage> {
       final classDoc = snapshot.docs.first;
       final classId = classDoc.id;
 
-      // ✅ SIMPAN classId ke SharedPreferences
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('classId', classId);
-
       debugPrint('✅ Bergabung ke classId: $classId');
 
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder:
-              (context) => BottomNavbar(classId: classId, role: widget.role),
+          builder: (context) => BottomNavbar(classId: classId, role: 'Guru'),
         ),
       );
     } catch (e) {
