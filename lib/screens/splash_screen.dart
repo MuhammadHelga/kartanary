@@ -17,7 +17,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
 
-    Timer(Duration(seconds: 9), () {
+    Timer(Duration(seconds: 5), () {
     _checkLoginStatus();
      });
   }

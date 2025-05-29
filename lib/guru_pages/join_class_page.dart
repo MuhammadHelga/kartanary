@@ -112,7 +112,6 @@ class _JoinClassPageState extends State<JoinClassPage> {
                           Center(
                             child: Column(
                               children: [
-                                // SizedBox(height: 50),
                                 Image.asset(
                                   'assets/images/kartanary_logo.png',
                                   height: 200,
