@@ -344,7 +344,7 @@ class _AddAnnouncementPageState extends State<AddAnnouncementPage> {
             style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
           ),
           const SizedBox(height: 12),
-          Container(
+          SizedBox(
             width: double.infinity,
             child:
                 _selectedImages.isNotEmpty
@@ -559,7 +559,7 @@ class _AddAnnouncementPageState extends State<AddAnnouncementPage> {
                   vertical: 10,
                 ),
                 elevation: 4,
-                shadowColor: Colors.black.withOpacity(0.25),
+                shadowColor: Colors.black.withAlpha(25),
               ),
               child: const Text(
                 'Simpan',

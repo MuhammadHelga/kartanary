@@ -36,7 +36,7 @@ flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
   image_path: "assets/images/kartanary_icons.png"
-  min_sdk_android: 21 # android min sdk min:16, default 21
+  min_sdk_android: 21
 
 flutter:
   uses-material-design: true
@@ -45,6 +45,7 @@ flutter:
     - assets/images/logo_paud.png
     - assets/images/logo_ortu.png
     - assets/images/logo_guru.png
+    - assets/images/logo_animation.gif
     - assets/images/kartanary_logo.png
     - assets/images/photo1.png
     - assets/images/photo2.png
@@ -63,11 +64,3 @@ flutter:
           weight: 700
         - asset: assets/fonts/Poppins-SemiBold.ttf
           weight: 600
-
-# ⬇️ Konfigurasi splash screen diletakkan DI SINI, setelah flutter:
-flutter_native_splash:
-  color: "#ffffff"
-  image: assets/images/splash_screen.png
-  # branding: assets/images/branding.png
-  android: true
-  ios: true

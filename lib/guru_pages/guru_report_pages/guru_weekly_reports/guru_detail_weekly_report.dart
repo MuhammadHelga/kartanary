@@ -19,7 +19,7 @@ class GuruDetailWeeklyReport extends StatefulWidget {
 }
 
 class _GuruDetailWeeklyReportState extends State<GuruDetailWeeklyReport> {
-  String? _name;
+  String? nameUser;
 
   @override
   void initState() {
@@ -73,7 +73,7 @@ class _GuruDetailWeeklyReportState extends State<GuruDetailWeeklyReport> {
               .get();
       if (doc.exists) {
         setState(() {
-          _name = doc['name'];
+          nameUser = doc['name'];
         });
       }
     }

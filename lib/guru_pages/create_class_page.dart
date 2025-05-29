@@ -9,7 +9,7 @@ class CreateClassPage extends StatefulWidget {
   const CreateClassPage({super.key, required this.role});
 
   @override
-  _CreateClassPageState createState() => _CreateClassPageState();
+  State<CreateClassPage> createState() => _CreateClassPageState();
 }
 
 class _CreateClassPageState extends State<CreateClassPage> {

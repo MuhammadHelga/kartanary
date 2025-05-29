@@ -85,7 +85,7 @@ class _GuruHomePageState extends State<GuruHomePage> {
         _announcements = loadedAnnouncements;
       });
     } catch (error) {
-      print('Error fetching announcements: $error');
+      debugPrint('Error fetching announcements: $error');
     }
   }
 
@@ -405,6 +405,7 @@ class UpdateCard extends StatelessWidget {
   final String imageUrl;
 
   const UpdateCard({
+    super.key,
     required this.title,
     required this.lokasi,
     required this.tanggal,

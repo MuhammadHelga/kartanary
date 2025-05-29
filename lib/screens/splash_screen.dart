@@ -6,14 +6,15 @@ class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
   @override
-  _SplashScreenState createState() => _SplashScreenState();
+  State<SplashScreen> createState() => _SplashScreenState();
 }
 
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Timer(Duration(seconds: 3), () {
+
+    Timer(Duration(seconds: 9), () {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -37,7 +38,7 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Center(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 32),
-            child: Image.asset('assets/images/kartanary_logo.png'),
+            child: Image.asset('assets/images/logo_animation.gif'),
           ),
         ),
       ),

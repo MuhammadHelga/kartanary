@@ -10,7 +10,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class AddSemesterPage extends StatefulWidget {
   final String classId;
 
-  const AddSemesterPage({Key? key, required this.classId}) : super(key: key);
+  const AddSemesterPage({super.key, required this.classId});
 
   @override
   State<AddSemesterPage> createState() => _AddSemesterPageState();
@@ -29,7 +29,7 @@ class _AddSemesterPageState extends State<AddSemesterPage> {
   @override
   void initState() {
     super.initState();
-    print('classId dari widget: ${widget.classId}');
+    debugPrint('classId dari widget: ${widget.classId}');
     fetchChildrenFromFirestore();
   }
 
@@ -42,9 +42,9 @@ class _AddSemesterPageState extends State<AddSemesterPage> {
               .collection('anak')
               .get();
 
-      print('Ditemukan ${snapshot.docs.length} anak');
+      debugPrint('Ditemukan ${snapshot.docs.length} anak');
       for (var doc in snapshot.docs) {
-        print('Anak: ${doc.id}, data: ${doc.data()}');
+        debugPrint('Anak: ${doc.id}, data: ${doc.data()}');
       }
 
       setState(() {
@@ -59,7 +59,7 @@ class _AddSemesterPageState extends State<AddSemesterPage> {
         }
       });
     } catch (e) {
-      print('Gagal mengambil data anak: $e');
+      debugPrint('Gagal mengambil data anak: $e');
       setState(() => _isLoadingChildren = false);
     }
   }
@@ -118,7 +118,7 @@ class _AddSemesterPageState extends State<AddSemesterPage> {
       await batch.commit();
       _showSuccessDialog(publicUrl);
     } catch (e) {
-      print('Error saat upload: $e');
+      debugPrint('Error saat upload: $e');
       _showErrorSnackBar("Gagal mengunggah file.");
     }
   }
@@ -284,7 +284,7 @@ class _AddSemesterPageState extends State<AddSemesterPage> {
                   vertical: 10,
                 ),
                 elevation: 5,
-                shadowColor: Colors.black.withOpacity(0.25),
+                shadowColor: Colors.black.withAlpha(25),
               ),
               child: const Text(
                 'Simpan',

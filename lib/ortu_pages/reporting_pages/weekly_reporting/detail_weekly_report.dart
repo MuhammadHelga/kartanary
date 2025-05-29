@@ -23,7 +23,7 @@ class _DetailWeeklyReportState extends State<DetailWeeklyReport> {
   final TextEditingController _temaController = TextEditingController();
   late Future<List<Map<String, dynamic>>> _reportFuture;
 
-  String? _guruName;
+  String? guruName;
   String? _anakName;
 
   @override
@@ -43,7 +43,7 @@ class _DetailWeeklyReportState extends State<DetailWeeklyReport> {
               .get();
       if (doc.exists) {
         setState(() {
-          _guruName = doc['name'];
+          guruName = doc['name'];
         });
       }
     }
@@ -139,7 +139,7 @@ class _DetailWeeklyReportState extends State<DetailWeeklyReport> {
           }
 
           final report = snapshot.data!.first;
-          final tema = report['tema'];
+          // final tema = report['tema'];
           final pesanGuru = report['pesanGuru'];
           final weeks = List<Map<String, dynamic>>.from(report['weeks'] ?? []);
 

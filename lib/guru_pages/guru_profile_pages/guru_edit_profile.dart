@@ -5,7 +5,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../services/auth_service.dart';
 import '../../theme/AppColors.dart';
-import '../../widgets/custom_snackbar.dart';
 
 class GuruEditProfile extends StatefulWidget {
   final String role;

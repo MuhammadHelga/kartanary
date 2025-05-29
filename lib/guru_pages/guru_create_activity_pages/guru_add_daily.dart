@@ -19,7 +19,7 @@ class _AddDailyPageState extends State<AddDailyPage> {
   final TextEditingController deskripsiController = TextEditingController();
 
   final ImagePicker _picker = ImagePicker();
-  List<File> _selectedImages = [];
+  final List<File> _selectedImages = [];
   String? _classIdFromFirestore;
 
   @override
@@ -217,7 +217,7 @@ class _AddDailyPageState extends State<AddDailyPage> {
             style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
           ),
           const SizedBox(height: 12),
-          Container(
+          SizedBox(
             width: double.infinity,
             child:
                 _selectedImages.isNotEmpty
@@ -357,7 +357,7 @@ class _AddDailyPageState extends State<AddDailyPage> {
                   setState(() {
                     _selectedImages.clear();
                   });
-
+                  if(!context.mounted) return;
                   showDialog(
                     context: context,
                     builder:
@@ -394,7 +394,7 @@ class _AddDailyPageState extends State<AddDailyPage> {
                   vertical: 10,
                 ),
                 elevation: 4,
-                shadowColor: Colors.black.withOpacity(0.25),
+                shadowColor: Colors.black.withAlpha(25),
               ),
               child: const Text(
                 'Simpan',

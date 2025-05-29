@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AddWeeklyPage extends StatefulWidget {
   final String classId;
-  const AddWeeklyPage({Key? key, required this.classId}) : super(key: key);
+  const AddWeeklyPage({super.key, required this.classId});
 
   @override
   State<AddWeeklyPage> createState() => _AddWeeklyPageState();
@@ -38,16 +38,16 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
               .collection('anak')
               .get();
 
-      print('Jumlah anak yang diambil: ${snapshot.docs.length}'); // Debugging
+      debugPrint('Jumlah anak yang diambil: ${snapshot.docs.length}'); // Debugging
 
       setState(() {
         childrenNames =
             snapshot.docs.map((doc) => doc['name'] as String).toList();
       });
 
-      print('Daftar anak: $childrenNames');
+      debugPrint('Daftar anak: $childrenNames');
     } catch (e) {
-      print('Gagal mengambil daftar anak: $e');
+      debugPrint('Gagal mengambil daftar anak: $e');
     }
   }
 
@@ -105,6 +105,7 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
         'pesanGuru': pesanGuruController.text.trim(),
       }, SetOptions(merge: true)); // Menggunakan merge untuk memperbarui data
 
+      if(!mounted) return;
       showDialog(
         context: context,
         builder:
@@ -389,11 +390,11 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
                 child: Center(
                   child: FloatingActionButton(
                     onPressed: _addWeeklyBlock,
-                    child: const Icon(Icons.add, color: Colors.white),
                     backgroundColor: Color(0xFF1D99D3),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
                     ),
+                    child: const Icon(Icons.add, color: Colors.white),
                   ),
                 ),
               ),
@@ -497,7 +498,7 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
                       vertical: 10,
                     ),
                     elevation: 5,
-                    shadowColor: Colors.black.withOpacity(0.25),
+                    shadowColor: Colors.black.withAlpha(25),
                   ),
                   child: const Text(
                     'Simpan',
