@@ -8,7 +8,6 @@ class RoleOptionPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -17,20 +16,26 @@ class RoleOptionPage extends StatelessWidget {
             colors: [Color.fromARGB(255, 176, 230, 255), Color(0xFFFFFFFF)],
           ),
         ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 26.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Image.asset('assets/images/kartanary_logo.png'),
-              Text(
-                'Pilih Role',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+        child: SafeArea(
+          child: Center(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 26.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Image.asset('assets/images/kartanary_logo.png'),
+                    Text(
+                      'Pilih Role',
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+                    ),
+                    roleBtn('Guru', 'assets/images/logo_guru.png'),
+                    roleBtn('Orang Tua', 'assets/images/logo_ortu.png'),
+                  ],
+                ),
               ),
-              roleBtn('Guru', 'assets/images/logo_guru.png'),
-              roleBtn('Orang Tua', 'assets/images/logo_ortu.png'),
-            ],
+            ),
           ),
         ),
       ),
