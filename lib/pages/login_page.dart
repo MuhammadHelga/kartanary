@@ -198,11 +198,11 @@ class _LoginPageState extends State<LoginPage> {
               });
             },
             icon: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Icon(
                 _hidepass ? Icons.visibility_off : Icons.visibility,
                 color: const Color(0xff1D99D3),
-                size: 30,
+                size: 26,
               ),
             ),
           ),
@@ -221,7 +221,7 @@ class _LoginPageState extends State<LoginPage> {
         alignment: Alignment.centerRight,
         child: TextButton(
           onPressed: () {
-            Navigator.push(
+            Navigator.pushReplacement(
               context,
               MaterialPageRoute(
                 builder:
@@ -264,8 +264,10 @@ class _LoginPageState extends State<LoginPage> {
                   context,
                   MaterialPageRoute(
                     builder:
-                        (context) =>
-                            ChooseClassPage(role: widget.role, classId: ''),
+                        (context) => ChooseClassPage(
+                          role: widget.role,
+                          classId: widget.classId,
+                        ),
                   ),
                 );
               } else if (widget.role == 'Orang Tua') {
@@ -299,7 +301,7 @@ class _LoginPageState extends State<LoginPage> {
       Center(
         child: TextButton(
           onPressed: () {
-            Navigator.push(
+            Navigator.pushReplacement(
               context,
               MaterialPageRoute(
                 builder:

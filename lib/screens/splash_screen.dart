@@ -37,7 +37,7 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Center(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 32),
-            child: Image.asset('assets/images/kartanary_logo.png'),
+            child: Image.asset('assets/images/logo_animation.gif'),
           ),
         ),
       ),
