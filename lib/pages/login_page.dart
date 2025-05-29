@@ -5,7 +5,7 @@ import '../pages/forgot_password.dart';
 import '../guru_pages/choose_class_page.dart';
 import '../services/auth_service.dart';
 import '../ortu_pages/class_options.dart';
-import '../theme/AppColors.dart';
+import '../theme/app_colors.dart';
 
 class LoginPage extends StatefulWidget {
   final String role;
@@ -260,6 +260,7 @@ class _LoginPageState extends State<LoginPage> {
               //     .doc(user.uid)
               //     .update({'deviceToken': userDeviceToken});
               if (widget.role == 'Guru') {
+                if (!mounted) return;
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
@@ -271,6 +272,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 );
               } else if (widget.role == 'Orang Tua') {
+                if (!mounted) return;
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(

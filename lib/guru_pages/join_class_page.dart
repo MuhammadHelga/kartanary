@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../widgets/bottom_navbar.dart';
-import '/theme/AppColors.dart';
+import '../theme/app_colors.dart';
 
 class JoinClassPage extends StatefulWidget {
   final String role;
@@ -9,7 +9,7 @@ class JoinClassPage extends StatefulWidget {
   const JoinClassPage({super.key, required this.role, required this.classId});
 
   @override
-  _JoinClassPageState createState() => _JoinClassPageState();
+  State<JoinClassPage> createState() => _JoinClassPageState();
 }
 
 class _JoinClassPageState extends State<JoinClassPage> {
@@ -33,6 +33,7 @@ class _JoinClassPageState extends State<JoinClassPage> {
               .get();
 
       if (snapshot.docs.isEmpty) {
+        if (!mounted) return;
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text('Kode kelas tidak ditemukan')));
@@ -44,6 +45,7 @@ class _JoinClassPageState extends State<JoinClassPage> {
 
       debugPrint('✅ Bergabung ke classId: $classId');
 
+      if (!mounted) return;
       Navigator.push(
         context,
         MaterialPageRoute(

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../theme/AppColors.dart';
+import '../theme/app_colors.dart';
 
 /// Menampilkan snackbar error dengan icon dan desain custom
 void showErrorSnackBar(BuildContext context, String message) {

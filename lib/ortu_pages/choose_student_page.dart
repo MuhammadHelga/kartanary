@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../theme/AppColors.dart';
+import '../theme/app_colors.dart';
 import 'class_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -81,6 +81,7 @@ class _ChooseStudentPageState extends State<ChooseStudentPage> {
       });
     } catch (e) {
       debugPrint('Gagal mengambil data anak: $e');
+      if (!mounted) return;
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Gagal memuat data anak')));
@@ -176,6 +177,7 @@ class _ChooseStudentPageState extends State<ChooseStudentPage> {
                               );
                               await prefs.setString('selectedChildId', childId);
 
+                          if(!context.mounted) return;
                               showDialog(
                                 context: context,
                                 builder:

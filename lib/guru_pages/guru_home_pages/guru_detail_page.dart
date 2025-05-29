@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../../../theme/AppColors.dart';
+import '../../theme/app_colors.dart';
 
 class GuruDetailPage extends StatelessWidget {
   final String title;
@@ -11,13 +11,13 @@ class GuruDetailPage extends StatelessWidget {
   final String imageUrl;
 
   const GuruDetailPage({
-    Key? key,
+    super.key,
     required this.title,
     required this.tanggal,
     required this.lokasi,
     required this.description,
     required this.imageUrl,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +93,7 @@ class GuruDetailPage extends StatelessWidget {
                     ),
                     gradient: LinearGradient(
                       colors: [
-                        Colors.black.withOpacity(0.7),
+                        Colors.black.withAlpha(7),
                         Colors.transparent,
                       ],
                       begin: Alignment.bottomCenter,

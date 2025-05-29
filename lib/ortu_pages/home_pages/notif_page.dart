@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lifesync_capstone_project/ortu_pages/home_pages/detail_notif.dart';
-import 'package:lifesync_capstone_project/theme/AppColors.dart';
+import 'package:lifesync_capstone_project/theme/app_colors.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class NotificationPage extends StatefulWidget {
@@ -59,7 +59,7 @@ class _NotificationPageState extends State<NotificationPage> {
         _notification = loadednotification;
       });
     } catch (error) {
-      print('Error fetching notification: $error');
+      debugPrint('Error fetching notification: $error');
     }
   }
 

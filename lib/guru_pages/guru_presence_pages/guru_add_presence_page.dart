@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../theme/AppColors.dart';
+import '../../theme/app_colors.dart';
 import 'package:intl/intl.dart';
 import '../../widgets/bottom_navbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -44,7 +44,7 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
   }
 
   void _fetchChildrenData() async {
-    print("📌 Mengambil anak dari classId: ${widget.classId}");
+    debugPrint("📌 Mengambil anak dari classId: ${widget.classId}");
 
     int maxRetries = 3;
     int retryCount = 0;
@@ -94,7 +94,7 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
           throw e;
         }
 
-        print(
+        debugPrint(
           "⚠️ Firestore error, retrying ($retryCount/$maxRetries) after ${retryDelayMs}ms: $e",
         );
         await Future.delayed(Duration(milliseconds: retryDelayMs));
@@ -136,7 +136,7 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
         } catch (e) {
           retryCount++;
           if (retryCount >= maxRetries) {
-            print(
+            debugPrint(
               "Failed to load presensi for child $i after $maxRetries attempts",
             );
             // Just continue with default status
@@ -194,7 +194,7 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
             retryCount++;
             if (retryCount >= maxRetries) {
               failCount++;
-              print(
+              debugPrint(
                 "Failed to save presensi for child $i after $maxRetries attempts",
               );
               break;

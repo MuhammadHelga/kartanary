@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../theme/AppColors.dart';
+import '../theme/app_colors.dart';
 import '/guru_pages/list_student_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../services/auth_service.dart';
@@ -14,13 +14,13 @@ class InputStudentPage extends StatefulWidget {
   });
 
   @override
-  _InputStudentPageState createState() => _InputStudentPageState();
+  State<InputStudentPage> createState() => _InputStudentPageState();
 }
 
 class _InputStudentPageState extends State<InputStudentPage> {
   String? _selectedGender;
   String _childName = '';
-  List<String> _childrenNames = [];
+  final List<String> _childrenNames = [];
 
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _ageController = TextEditingController();
@@ -252,6 +252,7 @@ class _InputStudentPageState extends State<InputStudentPage> {
                             _selectedGender = null;
                           });
 
+                          if(!context.mounted) return;
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Container(
@@ -298,6 +299,7 @@ class _InputStudentPageState extends State<InputStudentPage> {
                             ),
                           );
                         } catch (e) {
+                          if(!context.mounted) return;
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text('Gagal menambahkan anak: $e'),
@@ -305,6 +307,7 @@ class _InputStudentPageState extends State<InputStudentPage> {
                           );
                         }
                       } else {
+                        if(!context.mounted) return;
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Container(

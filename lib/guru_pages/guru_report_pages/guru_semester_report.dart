@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../theme/AppColors.dart';
+import '../../theme/app_colors.dart';
 import '../guru_create_activity_pages/guru_create_activity.dart';
 import './guru_detail_semester.dart';
 
@@ -114,9 +114,9 @@ class _GuruSemesterReportPageState extends State<GuruSemesterReportPage> {
             ),
           );
         },
-        child: const Icon(Icons.add, color: Colors.white),
         backgroundColor: const Color(0xFF1D99D3),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+        child: const Icon(Icons.add, color: Colors.white),
       ),
     );
   }

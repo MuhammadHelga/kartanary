@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lifesync_capstone_project/guru_pages/input_student_page.dart';
-import '../theme/AppColors.dart';
+import '../theme/app_colors.dart';
 import '../widgets/bottom_navbar.dart';
 
 class ListStudentPage extends StatefulWidget {
@@ -11,7 +11,7 @@ class ListStudentPage extends StatefulWidget {
   const ListStudentPage({super.key, required this.role, required this.classId});
 
   @override
-  _ListStudentPageState createState() => _ListStudentPageState();
+  State<ListStudentPage> createState() => _ListStudentPageState();
 }
 
 class _ListStudentPageState extends State<ListStudentPage> {
@@ -38,11 +38,11 @@ class _ListStudentPageState extends State<ListStudentPage> {
               ),
               ElevatedButton(
                 onPressed: () => Navigator.of(context).pop(true),
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
                 child: Text(
                   'Hapus',
                   style: TextStyle(color: AppColors.neutral100),
                 ),
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
               ),
             ],
           ),
@@ -57,6 +57,7 @@ class _ListStudentPageState extends State<ListStudentPage> {
             .doc(id)
             .delete();
 
+        if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Row(
@@ -94,6 +95,7 @@ class _ListStudentPageState extends State<ListStudentPage> {
           ),
         );
       } catch (e) {
+        if (!mounted) return;
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text('Gagal menghapus: $e')));
@@ -104,7 +106,7 @@ class _ListStudentPageState extends State<ListStudentPage> {
   @override
   void initState() {
     super.initState();
-    print('📌 DEBUG className yang dikirim: ${widget.classId}');
+    debugPrint('📌 DEBUG className yang dikirim: ${widget.classId}');
   }
 
   @override

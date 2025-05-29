@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:lifesync_capstone_project/theme/AppColors.dart';
+import 'package:lifesync_capstone_project/theme/app_colors.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 import 'guru_detail_notif_page.dart'; // pastikan path ini sesuai

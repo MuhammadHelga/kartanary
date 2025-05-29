@@ -1,13 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lifesync_capstone_project/guru_pages/guru_report_pages/guru_weekly_reports/guru_detail_weekly_report.dart';
-import 'package:lifesync_capstone_project/theme/AppColors.dart';
+import 'package:lifesync_capstone_project/theme/app_colors.dart';
 
 class GuruListWeekly extends StatefulWidget {
   final String? classId;
   final String? temaId;
 
-  GuruListWeekly({super.key, required this.classId, required this.temaId});
+  const GuruListWeekly({
+    super.key,
+    required this.classId,
+    required this.temaId,
+  });
 
   @override
   State<GuruListWeekly> createState() => _GuruListWeeklyState();
@@ -21,7 +25,7 @@ class _GuruListWeeklyState extends State<GuruListWeekly> {
   void initState() {
     super.initState();
     _fetchChildren();
-    _fetchTemaTitle(); // ambil judul tema saat init
+    _fetchTemaTitle();
   }
 
   Future<void> _fetchChildren() async {
@@ -48,7 +52,7 @@ class _GuruListWeeklyState extends State<GuruListWeekly> {
         children = fetchedChildren;
       });
     } catch (e) {
-      print('Gagal mengambil daftar anak: $e');
+      debugPrint('Gagal mengambil daftar anak: $e');
     }
   }
 
@@ -74,7 +78,7 @@ class _GuruListWeeklyState extends State<GuruListWeekly> {
         });
       }
     } catch (e) {
-      print('Gagal mengambil tema: $e');
+      debugPrint('Gagal mengambil tema: $e');
       setState(() {
         temaTitle = 'Gagal mengambil tema';
       });
@@ -252,6 +256,7 @@ class _GuruListWeeklyState extends State<GuruListWeekly> {
                                                 children.removeAt(index);
                                               });
 
+                                              if (!context.mounted) return;
                                               Navigator.of(context).pop();
 
                                               ScaffoldMessenger.of(

@@ -6,7 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../theme/AppColors.dart';
+import '../../../theme/app_colors.dart';
 import 'dart:io';
 
 class SemesterReportPage extends StatefulWidget {
@@ -41,6 +41,7 @@ class _SemesterReportPageState extends State<SemesterReportPage> {
       await fetchLaporanSemester();
     } else {
       setState(() => isLoading = false);
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Tidak ada anak yang dipilih')),
       );
@@ -62,6 +63,7 @@ class _SemesterReportPageState extends State<SemesterReportPage> {
 
       if (!anakDoc.exists) {
         setState(() => isLoading = false);
+        if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Data anak tidak ditemukan')),
         );
@@ -115,8 +117,9 @@ class _SemesterReportPageState extends State<SemesterReportPage> {
 
       setState(() => isLoading = false);
     } catch (e) {
-      print('Error fetching laporan: $e');
+      debugPrint('Error fetching laporan: $e');
       setState(() => isLoading = false);
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Gagal mengambil data laporan: $e')),
       );
@@ -129,6 +132,7 @@ class _SemesterReportPageState extends State<SemesterReportPage> {
       if (Platform.isAndroid) {
         var status = await Permission.storage.request();
         if (!status.isGranted) {
+          if (!mounted) return;
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Izin penyimpanan ditolak')),
           );
@@ -149,11 +153,12 @@ class _SemesterReportPageState extends State<SemesterReportPage> {
       Dio dio = Dio();
       await dio.download(url, filePath);
 
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Laporan berhasil diunduh ke $filePath')),
       );
     } catch (e) {
-      print('Error saat download: $e');
+      debugPrint('Error saat download: $e');
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: Text('Gagal mengunduh file')));

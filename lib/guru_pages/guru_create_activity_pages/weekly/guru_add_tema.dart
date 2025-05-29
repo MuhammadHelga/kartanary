@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:lifesync_capstone_project/theme/AppColors.dart';
+import 'package:lifesync_capstone_project/theme/app_colors.dart';
 
 class GuruAddTema extends StatefulWidget {
   final String classId;
 
-  const GuruAddTema({Key? key, required this.classId}) : super(key: key);
+  const GuruAddTema({super.key, required this.classId});
 
   @override
   State<GuruAddTema> createState() => _GuruAddTemaState();
@@ -13,7 +13,7 @@ class GuruAddTema extends StatefulWidget {
 
 class _GuruAddTemaState extends State<GuruAddTema> {
   final TextEditingController _temaController = TextEditingController();
-  List<TextEditingController> _mingguControllers = [
+  final List<TextEditingController> _mingguControllers = [
     TextEditingController(),
   ]; // Start with 1 week
 

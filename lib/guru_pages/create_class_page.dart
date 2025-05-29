@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lifesync_capstone_project/guru_pages/input_student_page.dart';
-import '/theme/AppColors.dart';
+import '../theme/app_colors.dart';
 import '../services/auth_service.dart';
 
 class CreateClassPage extends StatefulWidget {
@@ -8,7 +8,7 @@ class CreateClassPage extends StatefulWidget {
   const CreateClassPage({super.key, required this.role});
 
   @override
-  _CreateClassPageState createState() => _CreateClassPageState();
+  State<CreateClassPage> createState() => _CreateClassPageState();
 }
 
 class _CreateClassPageState extends State<CreateClassPage> {

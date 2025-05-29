@@ -4,7 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:intl/intl.dart';
-import '../../theme/AppColors.dart';
+import '../../theme/app_colors.dart';
 
 class AddDailyPage extends StatefulWidget {
   final String classId;

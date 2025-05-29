@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../../../theme/AppColors.dart';
+import '../../theme/app_colors.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
 class GuruDetailNotifPage extends StatefulWidget {
@@ -12,13 +12,13 @@ class GuruDetailNotifPage extends StatefulWidget {
   final String imageUrl;
 
   const GuruDetailNotifPage({
-    Key? key,
+    super.key,
     required this.title,
     required this.tanggal,
     required this.lokasi,
     required this.description,
     required this.imageUrl,
-  }) : super(key: key);
+  });
 
   @override
   State<GuruDetailNotifPage> createState() => _GuruDetailNotifPageState();
@@ -111,7 +111,7 @@ class _GuruDetailNotifPageState extends State<GuruDetailNotifPage> {
                             ),
                             gradient: LinearGradient(
                               colors: [
-                                Colors.black.withOpacity(0.7),
+                                Colors.black.withAlpha(7),
                                 Colors.transparent,
                               ],
                               begin: Alignment.bottomCenter,

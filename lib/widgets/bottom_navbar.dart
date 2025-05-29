@@ -28,20 +28,20 @@ class _BottomNavbarState extends State<BottomNavbar> {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> ortu_pages = [
+    List<Widget> ortuPages = [
       HomePage(classId: widget.classId),
       PresencePage(role: widget.role, classId: widget.classId),
       ReportingPage(role: widget.role, classId: widget.classId),
       ProfilePage(role: widget.role, classId: widget.classId),
     ];
-    List<Widget> guru_pages = [
+    List<Widget> guruPages = [
       GuruHomePage(classId: widget.classId),
       GuruPresencePage(role: widget.role, classId: widget.classId),
       GuruReportMainPage(role: widget.role, classId: widget.classId),
       GuruProfilePage(role: widget.role, classId: widget.classId),
     ];
 
-    final pages = widget.role == 'Guru' ? guru_pages : ortu_pages;
+    final pages = widget.role == 'Guru' ? guruPages : ortuPages;
     return Scaffold(
       body: pages[_selectedIndex],
       bottomNavigationBar: ClipRRect(

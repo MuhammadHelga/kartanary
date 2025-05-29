@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '../theme/AppColors.dart';
+import '../theme/app_colors.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -74,7 +74,6 @@ class AuthService {
         );
         return null;
       }
-      ;
 
       String storedRole = userDoc['role'];
 
@@ -157,7 +156,7 @@ class AuthService {
     required String ruangan,
     required String tahunAjaran,
   }) async {
-    String _generateKodeKelas({int length = 6}) {
+    String generateKodeKelas({int length = 6}) {
       const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
       final random = DateTime.now().millisecondsSinceEpoch;
       return List.generate(
@@ -172,7 +171,7 @@ class AuthService {
       throw Exception('Pengguna belum login');
     }
 
-    final String kodeKelas = _generateKodeKelas();
+    final String kodeKelas = generateKodeKelas();
 
     try {
       final docRef = await _firestore.collection('kelas').add({

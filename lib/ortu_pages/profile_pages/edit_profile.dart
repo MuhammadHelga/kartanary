@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../../services/auth_service.dart';
 import '../../pages/login_page.dart';
 import 'profile_page.dart';
-import '../../theme/AppColors.dart';
+import '../../theme/app_colors.dart';
 
 class EditProfile extends StatefulWidget {
   final String role;
@@ -87,6 +87,7 @@ class _EditProfileState extends State<EditProfile> {
           final result = await authService.updateUserEmail(newEmail);
 
           if (result != null) {
+                          if(!mounted) return;
             ScaffoldMessenger.of(
               context,
             ).showSnackBar(SnackBar(content: Text(result)));
@@ -117,6 +118,7 @@ class _EditProfileState extends State<EditProfile> {
           'name': newName,
         });
 
+                          if(!mounted) return;
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text('Profil berhasil diperbarui.')));
@@ -131,6 +133,7 @@ class _EditProfileState extends State<EditProfile> {
         );
       }
     } catch (e) {
+                          if(!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Terjadi kesalahan. Silakan coba lagi.')),
       );

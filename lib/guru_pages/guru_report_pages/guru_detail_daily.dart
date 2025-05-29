@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../theme/AppColors.dart';
+import '../../theme/app_colors.dart';
 
 class DetailDailyReportPage extends StatelessWidget {
   final String title;

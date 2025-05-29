@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../theme/AppColors.dart';
+import '../../theme/app_colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DetailSemesterReportPage extends StatefulWidget {
@@ -68,6 +68,7 @@ class _DetailSemesterReportPageState extends State<DetailSemesterReportPage> {
     } catch (e) {
       debugPrint('Error fetching laporan: $e');
       setState(() => isLoading = false);
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Gagal mengambil data laporan: $e')),
       );
@@ -113,12 +114,15 @@ class _DetailSemesterReportPageState extends State<DetailSemesterReportPage> {
           isLoading = false;
         });
 
+        if (!mounted) return;
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text('Laporan berhasil dihapus')));
       }
     } catch (e) {
       setState(() => isLoading = false);
+
+      if (!mounted) return;
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Gagal menghapus laporan: $e')));

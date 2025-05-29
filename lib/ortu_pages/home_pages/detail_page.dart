@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../../../theme/AppColors.dart';
+import '../../theme/app_colors.dart';
 
 class DetailPage extends StatelessWidget {
   final String title;
@@ -89,7 +89,7 @@ class DetailPage extends StatelessWidget {
                     ),
                     gradient: LinearGradient(
                       colors: [
-                        Colors.black.withOpacity(0.7),
+                        Colors.black.withAlpha(7),
                         Colors.transparent,
                       ],
                       begin: Alignment.bottomCenter,

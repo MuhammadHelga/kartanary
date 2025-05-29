@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:lifesync_capstone_project/guru_pages/guru_create_activity_pages/weekly/guru_add_tema.dart';
-import 'package:lifesync_capstone_project/theme/AppColors.dart';
+import 'package:lifesync_capstone_project/theme/app_colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AddWeeklyPage extends StatefulWidget {
   final String classId;
-  const AddWeeklyPage({Key? key, required this.classId}) : super(key: key);
+  const AddWeeklyPage({super.key, required this.classId});
 
   @override
   State<AddWeeklyPage> createState() => _AddWeeklyPageState();
@@ -92,7 +92,7 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
         });
       }
     } catch (e) {
-      print('Gagal mengambil daftar tema: $e');
+      debugPrint('Gagal mengambil daftar tema: $e');
     }
   }
 
@@ -154,7 +154,7 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
               .collection('anak')
               .get();
 
-      print('Jumlah anak yang diambil: ${snapshot.docs.length}');
+      debugPrint('Jumlah anak yang diambil: ${snapshot.docs.length}');
 
       // Urutkan dulu dokumen berdasarkan field 'name'
       final sortedDocs =
@@ -170,9 +170,9 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
         });
       }
 
-      print('Daftar anak (terurut): $childrenNames');
+      debugPrint('Daftar anak (terurut): $childrenNames');
     } catch (e) {
-      print('Gagal mengambil daftar anak: $e');
+      debugPrint('Gagal mengambil daftar anak: $e');
     }
   }
 
@@ -615,7 +615,7 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
                                 'createdAt': FieldValue.serverTimestamp(),
                               });
 
-                          // Show success dialog
+                          if(!context.mounted) return;
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
@@ -639,6 +639,7 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
                             },
                           );
                         } catch (e) {
+                          if(!context.mounted) return;
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text("Gagal menyimpan: ${e.toString()}"),
@@ -647,7 +648,7 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
                           );
                         }
                       } else {
-                        // Show error if fields are empty
+                          if(!context.mounted) return;
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text(
@@ -668,7 +669,7 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
                         vertical: 10,
                       ),
                       elevation: 5,
-                      shadowColor: Colors.black.withOpacity(0.25),
+                      shadowColor: Colors.black.withAlpha(25),
                     ),
                     child: const Text(
                       'Simpan',
