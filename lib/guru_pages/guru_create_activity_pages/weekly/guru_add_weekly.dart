@@ -419,8 +419,11 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
                   );
                   _refreshAfterAddingTema();
                 },
-                icon: const Icon(Icons.add),
-                label: const Text("Tambah Tema"),
+                icon: const Icon(Icons.add, color: AppColors.neutral100),
+                label: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                  child: const Text("Tambah Tema"),
+                ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary50,
                   foregroundColor: Colors.white,

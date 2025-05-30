@@ -10,10 +10,19 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  bool showImage = false;
+
   @override
   void initState() {
     super.initState();
-    Timer(Duration(seconds: 9), () {
+
+    Future.delayed(const Duration(seconds: 1), () {
+      setState(() {
+        showImage = true;
+      });
+    });
+
+    Timer(Duration(seconds: 7), () {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -37,7 +46,9 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Center(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 32),
-            child: Image.asset('assets/images/logo_animation.gif'),
+            child: showImage 
+            ? Image.asset('assets/images/logo_animation.gif')
+            : const SizedBox.shrink(),
           ),
         ),
       ),
