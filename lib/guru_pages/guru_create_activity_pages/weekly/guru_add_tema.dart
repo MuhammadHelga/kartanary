@@ -15,7 +15,7 @@ class _GuruAddTemaState extends State<GuruAddTema> {
   final TextEditingController _temaController = TextEditingController();
   final List<TextEditingController> _mingguControllers = [
     TextEditingController(),
-  ]; // Start with 1 week
+  ];
 
   bool _isLoading = false;
 
@@ -209,13 +209,14 @@ class _GuruAddTemaState extends State<GuruAddTema> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: AppColors.primary50,
         elevation: 0,
         title: Text(
           'Tambahkan Tema',
           style: TextStyle(
-            fontSize: 26,
+            fontSize: 22,
             fontWeight: FontWeight.w600,
             color: AppColors.primary5,
           ),

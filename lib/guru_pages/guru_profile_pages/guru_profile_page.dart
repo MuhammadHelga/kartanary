@@ -205,7 +205,7 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
             child: Icon(
               Icons.chevron_left,
               color: AppColors.primary50,
-              size: 22,
+              size: 26,
             ),
           ),
           onPressed: () {

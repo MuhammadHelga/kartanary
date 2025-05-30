@@ -347,8 +347,11 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
                   // Refresh temas after returning
                   _refreshAfterAddingTema();
                 },
-                icon: const Icon(Icons.add),
-                label: const Text("Tambah Tema"),
+                icon: const Icon(Icons.add, color: AppColors.neutral100),
+                label: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                  child: const Text("Tambah Tema"),
+                ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary50,
                   foregroundColor: Colors.white,
@@ -615,7 +618,7 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
                                 'createdAt': FieldValue.serverTimestamp(),
                               });
 
-                          if(!context.mounted) return;
+                          if (!context.mounted) return;
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
@@ -639,7 +642,7 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
                             },
                           );
                         } catch (e) {
-                          if(!context.mounted) return;
+                          if (!context.mounted) return;
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text("Gagal menyimpan: ${e.toString()}"),
@@ -648,7 +651,7 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
                           );
                         }
                       } else {
-                          if(!context.mounted) return;
+                        if (!context.mounted) return;
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text(
