@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lifesync_capstone_project/guru_pages/guru_create_activity_pages/weekly/guru_add_tema.dart';
 import 'package:lifesync_capstone_project/theme/app_colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:lifesync_capstone_project/widgets/custom_snackbar.dart';
 
 class AddWeeklyPage extends StatefulWidget {
   final String classId;
@@ -17,7 +18,12 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
   List<String> temaList = [];
   List<Map<String, dynamic>> subTemaList = [];
   List<Map<String, dynamic>> childrenData = [];
-  List<String> weekTitles = []; // Store week titles from Firebase
+  List<String> weekTitles = [];
+
+  // Tambahkan untuk menyimpan existing reports
+  List<Map<String, dynamic>> existingReports = [];
+  bool isEditMode = false;
+  String? currentReportId;
 
   String? _selectedLaporan;
   String? _selectedTema;
@@ -78,7 +84,6 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
           Map<String, dynamic> data = doc.data();
           temas.add(data['Tema'] ?? 'Tema tanpa judul');
 
-          // Store complete tema data with document ID
           temasWithDetails.add({
             'id': doc.id,
             'Tema': data['Tema'],
@@ -96,13 +101,55 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
     }
   }
 
+  // Fungsi baru untuk mengambil existing reports
+  Future<void> _fetchExistingReports() async {
+    if (_selectedLaporan == null) return;
+
+    try {
+      // Cari anakId berdasarkan nama
+      final anakSnapshot =
+          await FirebaseFirestore.instance
+              .collection('kelas')
+              .doc(widget.classId)
+              .collection('anak')
+              .where('name', isEqualTo: _selectedLaporan)
+              .get();
+
+      if (anakSnapshot.docs.isEmpty) return;
+
+      String anakId = anakSnapshot.docs.first.id;
+
+      // Ambil semua laporan mingguan untuk anak ini
+      final reportsSnapshot =
+          await FirebaseFirestore.instance
+              .collection('kelas')
+              .doc(widget.classId)
+              .collection('anak')
+              .doc(anakId)
+              .collection('laporanMingguan')
+              .get();
+
+      List<Map<String, dynamic>> reports = [];
+      for (var doc in reportsSnapshot.docs) {
+        Map<String, dynamic> data = doc.data();
+        data['id'] = doc.id; // Tambahkan document ID
+        reports.add(data);
+      }
+
+      setState(() {
+        existingReports = reports;
+      });
+    } catch (e) {
+      debugPrint('Gagal mengambil existing reports: $e');
+    }
+  }
+
   void _handleTemaSelected(String? selectedTema) {
     if (selectedTema == null) return;
 
     setState(() {
       _selectedTema = selectedTema;
 
-      // Find the matching tema in our details list
       Map<String, dynamic>? selectedTemaData = subTemaList.firstWhere(
         (tema) => tema['Tema'] == selectedTema,
         orElse: () => <String, dynamic>{},
@@ -110,36 +157,68 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
 
       if (selectedTemaData.isNotEmpty) {
         _selectedTemaId = selectedTemaData['id'];
-
-        // Set the tema title (read-only)
         judulTemaController.text = selectedTemaData['Tema'] ?? '';
 
-        // Get minggu data
         List<dynamic> mingguData = selectedTemaData['minggu'] ?? [];
 
-        // Clear existing controllers
         for (var controller in deskripsiControllers) {
           controller.dispose();
         }
         deskripsiControllers.clear();
         weekTitles.clear();
 
-        // Create new controllers for each minggu based on Firebase data
+        // Cek apakah ada existing report untuk tema ini
+        Map<String, dynamic>? existingReport = existingReports.firstWhere(
+          (report) => report['tema'] == selectedTema,
+          orElse: () => <String, dynamic>{},
+        );
+
         for (int i = 0; i < mingguData.length; i++) {
           var minggu = mingguData[i];
-
-          // Store week titles from Firebase (read-only)
           weekTitles.add(minggu['Sub-Tema'] ?? 'Minggu ${i + 1}');
-
-          // Create controller for description (editable)
           TextEditingController descController = TextEditingController();
+
+          // Jika ada existing report, isi dengan data yang sudah ada
+          if (existingReport.isNotEmpty) {
+            List<dynamic> weeks = existingReport['weeks'] ?? [];
+            if (i < weeks.length) {
+              descController.text = weeks[i]['deskripsi'] ?? '';
+            }
+          }
+
           deskripsiControllers.add(descController);
         }
 
-        // If no minggu data was found, add at least one empty block
         if (mingguData.isEmpty) {
           weekTitles.add('Minggu 1');
-          deskripsiControllers.add(TextEditingController());
+          TextEditingController descController = TextEditingController();
+
+          // Jika ada existing report, isi dengan data yang sudah ada
+          if (existingReport.isNotEmpty) {
+            List<dynamic> weeks = existingReport['weeks'] ?? [];
+            if (weeks.isNotEmpty) {
+              descController.text = weeks[0]['deskripsi'] ?? '';
+            }
+          }
+
+          deskripsiControllers.add(descController);
+        }
+
+        // Set mode edit dan data lainnya jika ada existing report
+        if (existingReport.isNotEmpty) {
+          isEditMode = true;
+          currentReportId = existingReport['id'];
+          pesanGuruController.text = existingReport['pesanGuru'] ?? '';
+
+          if (existingReport['tanggal'] != null) {
+            selectedDate = (existingReport['tanggal'] as Timestamp).toDate();
+          }
+        } else {
+          // Reset jika tidak ada existing report
+          isEditMode = false;
+          currentReportId = null;
+          pesanGuruController.clear();
+          selectedDate = DateTime.now();
         }
       }
     });
@@ -154,41 +233,21 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
               .collection('anak')
               .get();
 
-      debugPrint('Jumlah anak yang diambil: ${snapshot.docs.length}');
-
-      // Urutkan dulu dokumen berdasarkan field 'name'
       final sortedDocs =
           snapshot.docs.toList()..sort(
             (a, b) => (a['name'] as String).compareTo(b['name'] as String),
           );
 
-      // Lalu set state jika widget masih aktif
       if (mounted) {
         setState(() {
           childrenNames =
               sortedDocs.map((doc) => doc['name'] as String).toList();
         });
       }
-
-      debugPrint('Daftar anak (terurut): $childrenNames');
     } catch (e) {
       debugPrint('Gagal mengambil daftar anak: $e');
     }
   }
-
-  // String? _getAnakId(String? selectedName) {
-  //   if (selectedName == null) return null;
-
-  //   try {
-  //     Map<String, dynamic> child = childrenData.firstWhere(
-  //       (child) => child['name'] == selectedName,
-  //     );
-  //     return child['id'];
-  //   } catch (e) {
-  //     print('Anak tidak ditemukan: $e');
-  //     return null;
-  //   }
-  // }
 
   String _monthName(int month) {
     const months = [
@@ -208,14 +267,12 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
     return months[month - 1];
   }
 
-  // Function to handle refresh after adding a new tema
   void _refreshAfterAddingTema() async {
     await _fetchTemas();
   }
 
   @override
   void dispose() {
-    // Dispose all controllers
     for (var controller in deskripsiControllers) {
       controller.dispose();
     }
@@ -230,6 +287,7 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Dropdown untuk pilih anak
           Container(
             width: double.infinity,
             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -275,13 +333,29 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
                 onChanged: (String? newValue) {
                   setState(() {
                     _selectedLaporan = newValue;
+                    // Reset form ketika ganti anak
+                    _selectedTema = null;
+                    _selectedTemaId = null;
+                    isEditMode = false;
+                    currentReportId = null;
+                    judulTemaController.clear();
+                    pesanGuruController.clear();
+                    for (var controller in deskripsiControllers) {
+                      controller.dispose();
+                    }
+                    deskripsiControllers.clear();
+                    weekTitles.clear();
                   });
+                  // Fetch existing reports untuk anak yang dipilih
+                  _fetchExistingReports();
                 },
               ),
             ),
           ),
 
           const SizedBox(height: 16),
+
+          // Row untuk dropdown tema dan tombol tambah tema
           Row(
             children: [
               Expanded(
@@ -336,7 +410,6 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
               const SizedBox(width: 12),
               ElevatedButton.icon(
                 onPressed: () async {
-                  // Navigate to the GuruAddTema page and wait for it to return
                   await Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -344,7 +417,6 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
                           (context) => GuruAddTema(classId: widget.classId),
                     ),
                   );
-                  // Refresh temas after returning
                   _refreshAfterAddingTema();
                 },
                 icon: const Icon(Icons.add),
@@ -363,12 +435,14 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
             ],
           ),
 
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
+
+          // Date picker section
           const Text(
             'Pilih Tanggal',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -411,19 +485,20 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
             ],
           ),
           const SizedBox(height: 24),
+
+          // Tema section
           Center(
             child: Text(
-              'Tema',
+              isEditMode ? 'Edit Tema' : 'Tema',
               style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
             ),
           ),
           const SizedBox(height: 10),
 
-          // Read-only tema title
           TextField(
             controller: judulTemaController,
             textAlign: TextAlign.center,
-            enabled: false, // Make it read-only
+            enabled: false,
             decoration: const InputDecoration(
               isDense: true,
               contentPadding: EdgeInsets.only(bottom: 4),
@@ -433,12 +508,39 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
             ),
             style: const TextStyle(fontSize: 20, color: Colors.black),
           ),
-          SizedBox(height: 24),
+          const SizedBox(height: 24),
 
-          // Weekly blocks based on Firebase data
+          // Weekly blocks
           if (_selectedTema != null && weekTitles.isNotEmpty)
             Column(
               children: [
+                // Mode indicator
+                if (isEditMode)
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    margin: const EdgeInsets.only(bottom: 16),
+                    decoration: BoxDecoration(
+                      color: Colors.orange[100],
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: AppColors.warning50),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(Icons.edit, color: AppColors.warning500),
+                        const SizedBox(width: 5),
+                        Text(
+                          'Mode Edit - Update Laporan',
+                          maxLines: 2,
+                          style: TextStyle(
+                            color: AppColors.warning500,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                // Weekly blocks
                 ...List.generate(weekTitles.length, (index) {
                   return Container(
                     margin: const EdgeInsets.symmetric(vertical: 10),
@@ -457,7 +559,7 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
                           ),
                           decoration: BoxDecoration(
                             color: AppColors.primary10,
-                            borderRadius: BorderRadius.only(
+                            borderRadius: const BorderRadius.only(
                               topLeft: Radius.circular(6),
                               topRight: Radius.circular(6),
                             ),
@@ -469,6 +571,7 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 14,
+                                  color: Colors.black,
                                 ),
                               ),
                               const SizedBox(width: 8),
@@ -483,7 +586,7 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
                                     borderRadius: BorderRadius.circular(4),
                                   ),
                                   child: Text(
-                                    weekTitles[index], // Read-only week title from Firebase
+                                    weekTitles[index],
                                     style: const TextStyle(
                                       fontSize: 14,
                                       color: Colors.black,
@@ -497,7 +600,7 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
                         Container(
                           decoration: BoxDecoration(
                             color: AppColors.primary5,
-                            borderRadius: BorderRadius.only(
+                            borderRadius: const BorderRadius.only(
                               bottomLeft: Radius.circular(6),
                               bottomRight: Radius.circular(6),
                             ),
@@ -505,21 +608,27 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
                           child: TextField(
                             controller: deskripsiControllers[index],
                             maxLines: 6,
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
                               border: InputBorder.none,
-                              contentPadding: EdgeInsets.all(10),
+                              contentPadding: const EdgeInsets.all(10),
                               hintText: 'Masukkan deskripsi tema...',
+                              hintStyle: TextStyle(
+                                color: Colors.grey[500],
+                                fontStyle: FontStyle.italic,
+                              ),
                             ),
-                            style: const TextStyle(fontSize: 14),
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Colors.black,
+                            ),
                           ),
                         ),
                       ],
                     ),
                   );
                 }),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
 
-                // Message block
                 Container(
                   width: double.infinity,
                   margin: const EdgeInsets.only(bottom: 40),
@@ -560,10 +669,11 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
                   ),
                 ),
 
+                // Save button
                 Center(
                   child: ElevatedButton(
                     onPressed: () async {
-                      // Find anakId (document ID) based on selected name
+                      // Find anakId
                       String? anakId;
                       final anakSnapshot =
                           await FirebaseFirestore.instance
@@ -581,56 +691,90 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
                           _selectedLaporan != null &&
                           _selectedTema != null &&
                           judulTemaController.text.trim().isNotEmpty &&
-                          pesanGuruController.text.trim().isNotEmpty &&
-                          deskripsiControllers.every(
+                          // pesanGuruController.text.trim().isNotEmpty &&
+                          deskripsiControllers.any(
                             (c) => c.text.trim().isNotEmpty,
                           ) &&
                           anakId != null;
 
                       if (isValid) {
                         try {
-                          // Create weekly report in Firestore
-                          await FirebaseFirestore.instance
-                              .collection('kelas')
-                              .doc(widget.classId)
-                              .collection('anak')
-                              .doc(anakId)
-                              .collection('laporanMingguan')
-                              .doc(_selectedTemaId)
-                              .set({
-                                'studentName': _selectedLaporan,
-                                'tema': judulTemaController.text,
-                                'pesanGuru': pesanGuruController.text,
-                                'tanggal': selectedDate,
-                                'weeks': List.generate(
-                                  deskripsiControllers.length,
-                                  (index) => {
-                                    'mingguKe': index + 1,
-                                    'judul':
-                                        weekTitles[index], // Use Firebase data
-                                    'deskripsi':
-                                        deskripsiControllers[index].text,
-                                  },
-                                ),
-                                'createdAt': FieldValue.serverTimestamp(),
-                              });
+                          Map<String, dynamic> reportData = {
+                            'studentName': _selectedLaporan,
+                            'tema': judulTemaController.text,
+                            'pesanGuru': pesanGuruController.text,
+                            'tanggal': selectedDate,
+                            'weeks': List.generate(
+                              deskripsiControllers.length,
+                              (index) => {
+                                'mingguKe': index + 1,
+                                'judul': weekTitles[index],
+                                'deskripsi': deskripsiControllers[index].text,
+                              },
+                            ),
+                          };
 
-                          if(!context.mounted) return;
+                          if (isEditMode && currentReportId != null) {
+                            // Update existing report
+                            reportData['updatedAt'] =
+                                FieldValue.serverTimestamp();
+                            await FirebaseFirestore.instance
+                                .collection('kelas')
+                                .doc(widget.classId)
+                                .collection('anak')
+                                .doc(anakId)
+                                .collection('laporanMingguan')
+                                .doc(currentReportId)
+                                .update(reportData);
+                          } else {
+                            // Create new report
+                            reportData['createdAt'] =
+                                FieldValue.serverTimestamp();
+                            await FirebaseFirestore.instance
+                                .collection('kelas')
+                                .doc(widget.classId)
+                                .collection('anak')
+                                .doc(anakId)
+                                .collection('laporanMingguan')
+                                .doc(_selectedTemaId)
+                                .set(reportData);
+                          }
+
+                          // Refresh existing reports
+                          _fetchExistingReports();
+
+                          if (!context.mounted) return;
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
-                                title: const Text("Berhasil"),
-                                content: const Text(
-                                  "Laporan berhasil disimpan.",
+                                title: Text(
+                                  isEditMode ? "Berhasil Diupdate" : "Berhasil",
+                                ),
+                                content: Text(
+                                  isEditMode
+                                      ? "Laporan berhasil diupdate."
+                                      : "Laporan berhasil disimpan.",
                                 ),
                                 actions: [
                                   TextButton(
                                     onPressed: () {
-                                      Navigator.of(
-                                        context,
-                                      ).pop(); // Close dialog
-                                      // Navigator.of(context).pop(); // Go back
+                                      Navigator.of(context).pop();
+                                      // Reset form after save
+                                      setState(() {
+                                        if (!isEditMode) {
+                                          // Reset hanya kalau bukan edit mode (simpan baru)
+                                          pesanGuruController.clear();
+                                          for (var controller
+                                              in deskripsiControllers) {
+                                            controller.clear();
+                                          }
+                                          _selectedTema = null;
+                                          _selectedTemaId = null;
+                                        }
+                                        isEditMode = false;
+                                        currentReportId = null;
+                                      });
                                     },
                                     child: const Text("OK"),
                                   ),
@@ -639,7 +783,7 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
                             },
                           );
                         } catch (e) {
-                          if(!context.mounted) return;
+                          if (!context.mounted) return;
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text("Gagal menyimpan: ${e.toString()}"),
@@ -648,14 +792,10 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
                           );
                         }
                       } else {
-                          if(!context.mounted) return;
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text(
-                              "Harap pilih tema dan isi semua kolom sebelum menyimpan.",
-                            ),
-                            backgroundColor: Colors.red,
-                          ),
+                        if (!context.mounted) return;
+                        showErrorSnackBar(
+                          context,
+                          "Harap pilih tema dan isi semua kolom sebelum menyimpan.",
                         );
                       }
                     },
@@ -671,9 +811,9 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
                       elevation: 5,
                       shadowColor: Colors.black.withAlpha(25),
                     ),
-                    child: const Text(
-                      'Simpan',
-                      style: TextStyle(
+                    child: Text(
+                      isEditMode ? 'Update' : 'Simpan',
+                      style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
                         color: Colors.white,
@@ -681,7 +821,7 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
               ],
             ),
 
