@@ -133,7 +133,7 @@ class _ClassOptionsState extends State<ClassOptions> {
                               'assets/images/kartanary_logo.png',
                               height: 200,
                               width: 200,
-                              fit: BoxFit.cover,
+                              fit: BoxFit.contain,
                             ),
                           ),
                           Padding(

@@ -69,9 +69,9 @@ class _ChooseClassPageState extends State<ChooseClassPage> {
                   // Logo
                   Image.asset(
                     'assets/images/kartanary_logo.png',
-                              height: 200,
-                              width: 200,
-                              fit: BoxFit.contain,
+                    height: 200,
+                    width: 200,
+                    fit: BoxFit.contain,
                   ),
                   const SizedBox(height: 10),
                   const Text(

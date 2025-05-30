@@ -359,7 +359,6 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
                           ],
                         ),
                       ),
-                      // const SizedBox(height: 6),
                       Container(
                         decoration: BoxDecoration(
                           color:
@@ -384,7 +383,6 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
                   ),
                 );
               }),
-              // Tombol tambah minggu
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 child: Center(
@@ -399,8 +397,6 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
                 ),
               ),
               SizedBox(height: 20),
-
-              // Blok Pesan Guru
               Container(
                 width: double.infinity,
                 margin: const EdgeInsets.only(bottom: 40, left: 10, right: 10),
@@ -444,7 +440,6 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
               Center(
                 child: ElevatedButton(
                   onPressed: () {
-                    // Validasi semua TextField
                     bool isValid =
                         _selectedLaporan != null &&
                         judulTemaController.text.trim().isNotEmpty &&
@@ -476,7 +471,6 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
                         },
                       );
                     } else {
-                      // Tampilkan error jika ada field kosong
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text(
