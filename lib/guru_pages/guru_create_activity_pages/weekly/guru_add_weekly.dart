@@ -787,11 +787,9 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
                           );
                         } catch (e) {
                           if (!context.mounted) return;
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text("Gagal menyimpan: ${e.toString()}"),
-                              backgroundColor: Colors.red,
-                            ),
+                          showErrorSnackBar(
+                            context,
+                            "Gagal menyimpan: ${e.toString()}",
                           );
                         }
                       } else {
