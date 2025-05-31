@@ -9,7 +9,7 @@ Built with the tools and technologies:
 ![Dart](https://img.shields.io/badge/Dart-0175C2?logo=dart&logoColor=white)  
 ![Flutter](https://img.shields.io/badge/Flutter-02569B?logo=flutter&logoColor=white)  
 ![Firebase](https://img.shields.io/badge/Firebase-FFCA28?logo=firebase&logoColor=black)  
-![Supabase](https://img.shields.io/badge/CMake-064F8C?logo=supabase&logoColor=white)  
+![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?logo=supabase&logoColor=white)  
 ![Gradle](https://img.shields.io/badge/Gradle-02303A?logo=gradle&logoColor=white)  
 ![JSON](https://img.shields.io/badge/JSON-000000?logo=json&logoColor=white)  
 
