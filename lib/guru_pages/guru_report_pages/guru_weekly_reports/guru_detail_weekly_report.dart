@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../theme/app_colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart'; // Tambahkan import ini untuk format tanggal
 
 class GuruDetailWeeklyReport extends StatefulWidget {
   final String? classId;
@@ -55,6 +56,7 @@ class _GuruDetailWeeklyReportState extends State<GuruDetailWeeklyReport> {
           'nama': data?['studentName'] ?? anakName,
           'tema': data?['tema'] ?? '',
           'pesanGuru': data?['pesanGuru'] ?? '',
+          'tanggal': data?['tanggal'], // Tambahkan tanggal
           'weeks': data?['weeks'] ?? [],
         },
       ];
@@ -76,6 +78,73 @@ class _GuruDetailWeeklyReportState extends State<GuruDetailWeeklyReport> {
           nameUser = doc['name'];
         });
       }
+    }
+  }
+
+  String _formatDate(dynamic tanggal) {
+    print('Debug tanggal: $tanggal, type: ${tanggal.runtimeType}'); // Debug
+    if (tanggal == null) return 'Tanggal tidak tersedia';
+
+    try {
+      DateTime date;
+
+      if (tanggal is Timestamp) {
+        date = tanggal.toDate();
+      } else if (tanggal is DateTime) {
+        date = tanggal;
+      } else if (tanggal is String) {
+        // Coba berbagai format string
+        try {
+          date = DateTime.parse(tanggal);
+        } catch (e) {
+          // Jika gagal, coba format lain
+          try {
+            date = DateFormat('dd/MM/yyyy').parse(tanggal);
+          } catch (e2) {
+            try {
+              date = DateFormat('yyyy-MM-dd').parse(tanggal);
+            } catch (e3) {
+              return 'Format string tidak dikenali: $tanggal';
+            }
+          }
+        }
+      } else if (tanggal is int) {
+        // Jika berupa timestamp dalam milliseconds
+        date = DateTime.fromMillisecondsSinceEpoch(tanggal);
+      } else if (tanggal is Map) {
+        // Jika berupa Map (seperti dari date picker)
+        if (tanggal.containsKey('year') &&
+            tanggal.containsKey('month') &&
+            tanggal.containsKey('day')) {
+          date = DateTime(tanggal['year'], tanggal['month'], tanggal['day']);
+        } else {
+          return 'Format Map tidak dikenali: $tanggal';
+        }
+      } else {
+        return 'Tipe data tidak dikenali: ${tanggal.runtimeType} - $tanggal';
+      }
+
+      // Format dengan nama bulan bahasa Indonesia
+      List<String> bulanIndonesia = [
+        '',
+        'Januari',
+        'Februari',
+        'Maret',
+        'April',
+        'Mei',
+        'Juni',
+        'Juli',
+        'Agustus',
+        'September',
+        'Oktober',
+        'November',
+        'Desember',
+      ];
+
+      return '${date.day} ${bulanIndonesia[date.month]} ${date.year}';
+    } catch (e) {
+      print('Error formatting date: $e'); // Debug
+      return 'Error parse: $e';
     }
   }
 
@@ -137,6 +206,7 @@ class _GuruDetailWeeklyReportState extends State<GuruDetailWeeklyReport> {
               // final nama = report['nama'];
               final tema = report['tema'];
               final pesanGuru = report['pesanGuru'];
+              final tanggal = report['tanggal']; // Ambil data tanggal
               final weeks = report['weeks'] as List;
 
               return Column(
@@ -177,6 +247,20 @@ class _GuruDetailWeeklyReportState extends State<GuruDetailWeeklyReport> {
                   const SizedBox(height: 20),
                   _messageGuru(pesanGuru),
                   const Divider(thickness: 2),
+                  const SizedBox(height: 10),
+
+                  // Tampilkan tanggal di kanan bawah setelah garis
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      _formatDate(tanggal),
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Colors.black54,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
                   const SizedBox(height: 30),
                 ],
               );
@@ -229,7 +313,6 @@ class _GuruDetailWeeklyReportState extends State<GuruDetailWeeklyReport> {
           Container(
             decoration: const BoxDecoration(
               color: Color(0xFFE6F0FA),
-
               borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(6),
                 bottomRight: Radius.circular(6),
@@ -237,7 +320,6 @@ class _GuruDetailWeeklyReportState extends State<GuruDetailWeeklyReport> {
             ),
             width: double.infinity,
             padding: const EdgeInsets.all(10),
-
             child: Text(deskripsi, style: const TextStyle(fontSize: 14)),
           ),
         ],
@@ -281,7 +363,6 @@ class _GuruDetailWeeklyReportState extends State<GuruDetailWeeklyReport> {
                 bottomRight: Radius.circular(6),
               ),
             ),
-
             child: Text(description, style: const TextStyle(fontSize: 14)),
           ),
           const SizedBox(height: 16),

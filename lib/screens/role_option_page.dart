@@ -26,9 +26,12 @@ class RoleOptionPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Image.asset('assets/images/kartanary_logo.png'),
-                    Text(
+                    const Text(
                       'Pilih Role',
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 24,
+                      ),
                     ),
                     roleBtn('Guru', 'assets/images/logo_guru.png'),
                     roleBtn('Orang Tua', 'assets/images/logo_ortu.png'),
