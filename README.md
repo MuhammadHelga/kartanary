@@ -1,8 +1,6 @@
 # KARTANARY  
 
-![Last Commit](https://img.shields.io/github/last-commit/MuhammadHelga/lifesync)  
-![Language](https://img.shields.io/badge/language-dart-blue)  
-![License](https://img.shields.io/github/license/MuhammadHelga/lifesync)  
+![Last Commit](https://img.shields.io/github/last-commit/MuhammadHelga/lifesync)         ![Language](https://img.shields.io/badge/language-dart-blue)        ![License](https://img.shields.io/github/license/MuhammadHelga/lifesync)  
 
 Built with the tools and technologies:  
 ![Dart](https://img.shields.io/badge/Dart-0175C2?logo=dart&logoColor=white)  ![Flutter](https://img.shields.io/badge/Flutter-02569B?logo=flutter&logoColor=white)  ![Firebase](https://img.shields.io/badge/Firebase-f6820d?logo=firebase&logoColor=white)  
