@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:lifesync_capstone_project/widgets/custom_snackbar.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:intl/intl.dart';
 import '../../theme/app_colors.dart';
@@ -105,8 +106,8 @@ class _AddDailyPageState extends State<AddDailyPage> {
 
   Future<void> _pickImage(ImageSource source) async {
     if (source == ImageSource.gallery) {
-      final List<XFile>? pickedFiles = await _picker.pickMultiImage();
-      if (pickedFiles != null && pickedFiles.isNotEmpty) {
+      final List<XFile> pickedFiles = await _picker.pickMultiImage();
+      if (pickedFiles.isNotEmpty) {
         setState(() {
           // Tambahkan gambar baru ke daftar yang sudah ada
           _selectedImages.addAll(
@@ -334,11 +335,9 @@ class _AddDailyPageState extends State<AddDailyPage> {
                 if (namaKegiatanController.text.isEmpty ||
                     deskripsiController.text.isEmpty ||
                     _selectedImages.isEmpty) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("Harap isi semua kolom dan upload gambar."),
-                      backgroundColor: Colors.red,
-                    ),
+                  showErrorSnackBar(
+                    context,
+                    'Harap isi semua field dan pilih gambar.',
                   );
                   return;
                 }
@@ -357,7 +356,7 @@ class _AddDailyPageState extends State<AddDailyPage> {
                   setState(() {
                     _selectedImages.clear();
                   });
-                  if(!context.mounted) return;
+                  if (!context.mounted) return;
                   showDialog(
                     context: context,
                     builder:
@@ -375,12 +374,7 @@ class _AddDailyPageState extends State<AddDailyPage> {
                         ),
                   );
                 } catch (e) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text("Gagal menyimpan data: $e"),
-                      backgroundColor: Colors.red,
-                    ),
-                  );
+                  showErrorSnackBar(context, 'Gagal menyimpan data: $e');
                 }
               },
 

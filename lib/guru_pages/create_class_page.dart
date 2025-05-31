@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lifesync_capstone_project/guru_pages/input_student_page.dart';
+import 'package:lifesync_capstone_project/widgets/custom_snackbar.dart';
 import '../theme/app_colors.dart';
 import '../services/auth_service.dart';
 
@@ -22,9 +23,7 @@ class _CreateClassPageState extends State<CreateClassPage> {
     final String tahunAjaran = _tahunAjaranController.text.trim();
 
     if (namaKelas.isEmpty || ruangan.isEmpty || tahunAjaran.isEmpty) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Harap lengkapi semua field')));
+      showErrorSnackBar(context, 'Harap lengkapi semua field');
       return;
     }
 
@@ -46,9 +45,7 @@ class _CreateClassPageState extends State<CreateClassPage> {
       );
     } catch (e) {
       debugPrint('Error: $e');
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(e.toString())));
+      showErrorSnackBar(context, 'Error $e');
     }
   }
 

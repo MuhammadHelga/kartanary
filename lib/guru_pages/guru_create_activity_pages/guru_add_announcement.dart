@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:lifesync_capstone_project/widgets/custom_snackbar.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../theme/app_colors.dart';
 import 'package:image_picker/image_picker.dart';
@@ -146,6 +147,7 @@ class _AddAnnouncementPageState extends State<AddAnnouncementPage> {
 
   Future<void> _pickImage(ImageSource source) async {
     if (source == ImageSource.gallery) {
+      // ignore: unnecessary_nullable_for_final_variable_declarations
       final List<XFile>? pickedFiles = await _picker.pickMultiImage();
       if (pickedFiles != null && pickedFiles.isNotEmpty) {
         setState(() {
@@ -490,11 +492,9 @@ class _AddAnnouncementPageState extends State<AddAnnouncementPage> {
                 final deskripsi = deskripsiController.text.trim();
 
                 if (nama.isEmpty || lokasi.isEmpty || deskripsi.isEmpty) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("Harap isi semua kolom dan upload gambar."),
-                      backgroundColor: Colors.red,
-                    ),
+                  showErrorSnackBar(
+                    context,
+                    'Harap isi semua kolom deskripsi.',
                   );
                   return;
                 }
@@ -536,12 +536,7 @@ class _AddAnnouncementPageState extends State<AddAnnouncementPage> {
                     selectedDate = DateTime.now();
                   });
                 } catch (e) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text("Terjadi kesalahan: ${e.toString()}"),
-                      backgroundColor: Colors.red,
-                    ),
-                  );
+                  showErrorSnackBar(context, 'Terjadi kesalahan: $e');
                 }
 
                 //Noti

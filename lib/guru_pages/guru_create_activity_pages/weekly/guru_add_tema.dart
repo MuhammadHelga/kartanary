@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lifesync_capstone_project/theme/app_colors.dart';
+import 'package:lifesync_capstone_project/widgets/custom_snackbar.dart';
 
 class GuruAddTema extends StatefulWidget {
   final String classId;
@@ -42,12 +43,7 @@ class _GuruAddTemaState extends State<GuruAddTema> {
     // Validate inputs
     if (_temaController.text.trim().isEmpty) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Harap isi nama tema'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        showErrorSnackBar(context, 'Tema tidak boleh kosong');
       }
       return;
     }
@@ -63,12 +59,7 @@ class _GuruAddTemaState extends State<GuruAddTema> {
 
     if (!hasFilledWeek) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Harap isi minimal satu minggu'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        showErrorSnackBar(context, 'Setidaknya satu sub-tema harus diisi');
       }
       return;
     }
@@ -118,13 +109,7 @@ class _GuruAddTemaState extends State<GuruAddTema> {
 
       // Success feedback
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Tema berhasil ditambahkan'),
-            backgroundColor: Colors.green,
-            duration: Duration(seconds: 2),
-          ),
-        );
+        showSuccessSnackBar(context, 'Tema berhasil disimpan!');
 
         // Navigate back after success
         await Future.delayed(const Duration(milliseconds: 500));
@@ -146,13 +131,10 @@ class _GuruAddTemaState extends State<GuruAddTema> {
           errorMessage = 'Gagal menyimpan tema: ${e.toString()}';
         }
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(errorMessage),
-            backgroundColor: Colors.red,
-            duration: const Duration(seconds: 3),
-          ),
-        );
+        showErrorSnackBar(context, '$errorMessage');
+        if (mounted) {
+          Navigator.of(context).pop(false); // Return false to indicate failure
+        }
       }
 
       // Log error for debugging

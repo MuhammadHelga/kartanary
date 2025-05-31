@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:lifesync_capstone_project/widgets/custom_snackbar.dart';
 import '../widgets/bottom_navbar.dart';
 import '../theme/app_colors.dart';
 
@@ -19,9 +20,8 @@ class _JoinClassPageState extends State<JoinClassPage> {
     String kodeKelas = _kodeKelasController.text.trim();
 
     if (kodeKelas.isEmpty) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Kode kelas tidak boleh kosong')));
+      if (!mounted) return;
+      showErrorSnackBar(context, 'Kode kelas tidak boleh kosong');
       return;
     }
 
@@ -34,9 +34,7 @@ class _JoinClassPageState extends State<JoinClassPage> {
 
       if (snapshot.docs.isEmpty) {
         if (!mounted) return;
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Kode kelas tidak ditemukan')));
+        showErrorSnackBar(context, 'Kode kelas tidak ditemukan');
         return;
       }
 
@@ -53,9 +51,8 @@ class _JoinClassPageState extends State<JoinClassPage> {
         ),
       );
     } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Terjadi kesalahan: $e')));
+      if (!mounted) return;
+      showErrorSnackBar(context, 'Terjadi kesalahan saat bergabung ke kelas');
     }
   }
 

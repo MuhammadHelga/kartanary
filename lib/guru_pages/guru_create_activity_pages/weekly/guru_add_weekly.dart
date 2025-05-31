@@ -837,7 +837,7 @@ class _AddWeeklyPageState extends State<AddWeeklyPage> {
               ),
               child: Center(
                 child: Text(
-                  'Silakan pilih tema terlebih dahulu untuk menampilkan minggu-minggu',
+                  'Silakan pilih tema terlebih dahulu untuk membuat laporan mingguan',
                   style: TextStyle(fontSize: 16, color: Colors.grey[600]),
                   textAlign: TextAlign.center,
                 ),

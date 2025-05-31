@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lifesync_capstone_project/widgets/custom_snackbar.dart';
 import '../../theme/app_colors.dart';
 import 'package:intl/intl.dart';
 import '../../widgets/bottom_navbar.dart';
@@ -83,12 +84,9 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
         retryCount++;
         if (retryCount >= maxRetries) {
           if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  'Failed to fetch data after $maxRetries attempts. Please check your connection.',
-                ),
-              ),
+            showErrorSnackBar(
+              context,
+              'Gagal mengambil data, cek koneksi internet anda',
             );
           }
           throw e;
@@ -209,26 +207,20 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
       // Only show messages if the widget is still mounted
       if (!_isDisposed && mounted) {
         if (failCount == 0) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Presensi berhasil disimpan untuk semua anak'),
-            ),
+          showSuccessSnackBar(
+            context,
+            'Presensi berhasil disimpan untuk semua anak',
           );
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                'Presensi berhasil disimpan untuk $successCount anak, gagal untuk $failCount anak',
-              ),
-            ),
+          showSuccessSnackBar(
+            context,
+            'Presensi berhasil disimpan untuk $successCount anak, gagal untuk $failCount anak',
           );
         }
       }
     } catch (e) {
       if (!_isDisposed && mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Gagal menyimpan presensi: $e')));
+        showErrorSnackBar(context, 'Gagal menyimpan presensi: $e');
       }
     }
   }

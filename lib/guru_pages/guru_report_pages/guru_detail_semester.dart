@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lifesync_capstone_project/widgets/custom_snackbar.dart';
 import '../../theme/app_colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -61,6 +62,7 @@ class _DetailSemesterReportPageState extends State<DetailSemesterReportPage> {
         }
       }
 
+      if (!mounted) return;
       setState(() {
         laporanList = laporan;
         isLoading = false;
@@ -69,9 +71,7 @@ class _DetailSemesterReportPageState extends State<DetailSemesterReportPage> {
       debugPrint('Error fetching laporan: $e');
       setState(() => isLoading = false);
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Gagal mengambil data laporan: $e')),
-      );
+      showErrorSnackBar(context, 'Gagal mengambil data laporan: $e');
     }
   }
 
@@ -98,7 +98,9 @@ class _DetailSemesterReportPageState extends State<DetailSemesterReportPage> {
       );
 
       if (confirmDelete == true) {
-        setState(() => isLoading = true);
+        if (mounted) {
+          setState(() => isLoading = true);
+        }
 
         // Hapus dokumen dari Firestore
         await FirebaseFirestore.instance
@@ -109,23 +111,20 @@ class _DetailSemesterReportPageState extends State<DetailSemesterReportPage> {
             .delete();
 
         // Hapus dari list lokal
-        setState(() {
-          laporanList.removeAt(index);
-          isLoading = false;
-        });
-
+        if (mounted) {
+          setState(() {
+            laporanList.removeAt(index);
+            isLoading = false;
+          });
+        }
         if (!mounted) return;
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Laporan berhasil dihapus')));
+        showSuccessSnackBar(context, 'Laporan berhasil dihapus');
       }
     } catch (e) {
       setState(() => isLoading = false);
 
       if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Gagal menghapus laporan: $e')));
+      showErrorSnackBar(context, 'Gagal menghapus laporan: $e');
     }
   }
 

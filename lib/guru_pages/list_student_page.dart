@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lifesync_capstone_project/guru_pages/input_student_page.dart';
+import 'package:lifesync_capstone_project/widgets/custom_snackbar.dart';
 import '../theme/app_colors.dart';
 import '../widgets/bottom_navbar.dart';
 
@@ -58,47 +59,10 @@ class _ListStudentPageState extends State<ListStudentPage> {
             .delete();
 
         if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Row(
-              children: [
-                Container(
-                  padding: EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    Icons.check,
-                    color: AppColors.success500,
-                    size: 26,
-                  ),
-                ),
-                SizedBox(width: 10),
-                Expanded(
-                  child: Text(
-                    'Anak "$name" berhasil dihapus',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            backgroundColor: AppColors.success500,
-            duration: Duration(seconds: 3),
-            elevation: 6,
-            // Penting: biarkan behavior default (fixed), jangan ubah
-            // Jangan pakai margin atau container pembungkus custom
-          ),
-        );
+        showSuccessSnackBar(context, 'Anak "$name" berhasil dihapus');
       } catch (e) {
         if (!mounted) return;
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Gagal menghapus: $e')));
+        showErrorSnackBar(context, 'message: Gagal menghapus anak "$name": $e');
       }
     }
   }

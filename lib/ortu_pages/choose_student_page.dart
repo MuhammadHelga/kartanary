@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lifesync_capstone_project/widgets/custom_snackbar.dart';
 import '../theme/app_colors.dart';
 import 'class_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -82,9 +83,7 @@ class _ChooseStudentPageState extends State<ChooseStudentPage> {
     } catch (e) {
       debugPrint('Gagal mengambil data anak: $e');
       if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Gagal memuat data anak')));
+      showErrorSnackBar(context, 'Gagal memuat data anak');
     }
   }
 
@@ -177,7 +176,7 @@ class _ChooseStudentPageState extends State<ChooseStudentPage> {
                               );
                               await prefs.setString('selectedChildId', childId);
 
-                          if(!context.mounted) return;
+                              if (!context.mounted) return;
                               showDialog(
                                 context: context,
                                 builder:

@@ -20,6 +20,8 @@ void showErrorSnackBar(BuildContext context, String message) {
               child: Text(
                 message,
                 style: const TextStyle(fontSize: 16, color: Colors.white),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ],
@@ -54,6 +56,8 @@ void showSuccessSnackBar(BuildContext context, String message) {
               child: Text(
                 message,
                 style: const TextStyle(fontSize: 16, color: Colors.white),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ],

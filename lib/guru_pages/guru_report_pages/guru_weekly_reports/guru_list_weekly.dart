@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lifesync_capstone_project/guru_pages/guru_report_pages/guru_weekly_reports/guru_detail_weekly_report.dart';
 import 'package:lifesync_capstone_project/theme/app_colors.dart';
+import 'package:lifesync_capstone_project/widgets/custom_snackbar.dart';
 
 class GuruListWeekly extends StatefulWidget {
   final String? classId;
@@ -259,25 +260,15 @@ class _GuruListWeeklyState extends State<GuruListWeekly> {
                                               if (!context.mounted) return;
                                               Navigator.of(context).pop();
 
-                                              ScaffoldMessenger.of(
+                                              showSuccessSnackBar(
                                                 context,
-                                              ).showSnackBar(
-                                                SnackBar(
-                                                  content: Text(
-                                                    'Laporan $name berhasil dihapus',
-                                                  ),
-                                                ),
+                                                'Laporan $name berhasil dihapus',
                                               );
                                             } catch (e) {
                                               Navigator.of(context).pop();
-                                              ScaffoldMessenger.of(
+                                              showErrorSnackBar(
                                                 context,
-                                              ).showSnackBar(
-                                                SnackBar(
-                                                  content: Text(
-                                                    'Gagal menghapus laporan: $e',
-                                                  ),
-                                                ),
+                                                'Gagal menghapus laporan: $e',
                                               );
                                             }
                                           },

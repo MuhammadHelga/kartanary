@@ -262,7 +262,10 @@ class _RegisterPageState extends State<RegisterPage> {
                 await AuthService().saveUserData(user.uid, name, widget.role);
 
                 if (!mounted) return;
-                showSuccessSnackBar(context, 'Registrasi berhasil!');
+                showSuccessSnackBar(
+                  context,
+                  'Registrasi berhasil! Silahkan cek email untuk verifikasi akun.',
+                );
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(

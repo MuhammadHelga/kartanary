@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lifesync_capstone_project/widgets/custom_snackbar.dart';
 import '../theme/app_colors.dart';
 import '/guru_pages/list_student_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -252,95 +253,23 @@ class _InputStudentPageState extends State<InputStudentPage> {
                             _selectedGender = null;
                           });
 
-                          if(!context.mounted) return;
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Container(
-                                padding: EdgeInsets.all(10),
-                                height: 70,
-                                decoration: BoxDecoration(
-                                  color: AppColors.success500,
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(10),
-                                  ),
-                                ),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      padding: EdgeInsets.all(5),
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: Icon(
-                                        Icons.check,
-                                        color: AppColors.success500,
-                                        size: 26,
-                                      ),
-                                    ),
-                                    SizedBox(width: 10),
-                                    Expanded(
-                                      child: Text(
-                                        'Anak berhasil ditambahkan ke $className!',
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                        maxLines: 2,
-                                        overflow: TextOverflow.clip,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              behavior: SnackBarBehavior.floating,
-                              backgroundColor: Colors.transparent,
-                              elevation: 0,
-                            ),
+                          if (!context.mounted) return;
+                          showSuccessSnackBar(
+                            context,
+                            'Anak berhasil ditambahkan ke kelas $className',
                           );
                         } catch (e) {
-                          if(!context.mounted) return;
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('Gagal menambahkan anak: $e'),
-                            ),
+                          if (!context.mounted) return;
+                          showErrorSnackBar(
+                            context,
+                            'Gagal menambahkan anak: $e',
                           );
                         }
                       } else {
-                        if(!context.mounted) return;
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Container(
-                              padding: EdgeInsets.all(10),
-                              height: 70,
-                              decoration: BoxDecoration(
-                                color: AppColors.error500,
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(10),
-                                ),
-                              ),
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    Icons.error,
-                                    color: AppColors.neutral100,
-                                    size: 26,
-                                  ),
-                                  SizedBox(width: 10),
-                                  Text(
-                                    'Isi semua data terlebih dahulu',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            behavior: SnackBarBehavior.floating,
-                            backgroundColor: Colors.transparent,
-                            elevation: 0,
-                          ),
+                        if (!context.mounted) return;
+                        showErrorSnackBar(
+                          context,
+                          'Isi semua data terlebih dahulu!',
                         );
                       }
                     },

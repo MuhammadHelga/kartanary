@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:lifesync_capstone_project/widgets/custom_snackbar.dart';
 import '../ortu_pages/choose_student_page.dart';
 import '../theme/app_colors.dart';
 
@@ -21,9 +22,7 @@ class _ClassOptionsState extends State<ClassOptions> {
     String kodeKelas = _kodeKelasController.text.trim();
 
     if (kodeKelas.isEmpty) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Kode kelas tidak boleh kosong')));
+      showErrorSnackBar(context, 'Kode kelas tidak boleh kosong');
       return;
     }
 
@@ -37,9 +36,7 @@ class _ClassOptionsState extends State<ClassOptions> {
 
       if (snapshot.docs.isEmpty) {
         if (!mounted) return;
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Kode kelas tidak ditemukan')));
+        showErrorSnackBar(context, 'Kode kelas tidak ditemukan');
         return;
       }
 
@@ -71,9 +68,7 @@ class _ClassOptionsState extends State<ClassOptions> {
         ),
       );
     } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Terjadi kesalahan: $e')));
+      showErrorSnackBar(context, 'Terjadi kesalahan: $e');
     }
   }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lifesync_capstone_project/widgets/custom_snackbar.dart';
 import '../pages/login_page.dart';
 import '../theme/app_colors.dart';
 import '../services/auth_service.dart';
@@ -155,21 +156,16 @@ class _ForgotPasswordState extends State<ForgotPassword> {
           onPressed: () async {
             final email = emailController.text.trim();
             if (email.isEmpty) {
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text('Masukkan email anda')));
+              showErrorSnackBar(context, 'Masukkan email anda');
               return;
             }
 
             try {
               await AuthService().sendPasswordResetEmail(email);
               if (!mounted) return;
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    'Link reset password telah dikirim ke email anda',
-                  ),
-                ),
+              showSuccessSnackBar(
+                context,
+                'Link reset password telah dikirim ke email anda',
               );
               Navigator.pushReplacement(
                 context,
@@ -180,9 +176,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 ),
               );
             } catch (e) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Gagal mengirim reset password')),
-              );
+              showErrorSnackBar(context, 'Gagal mengirim reset password');
             }
           },
           style: ElevatedButton.styleFrom(
