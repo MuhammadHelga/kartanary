@@ -11,8 +11,6 @@ Built with the tools and technologies:
 - Getting Started  
   - Prerequisites  
   - Installation  
-- Usage  
-- Testing  
 
 ## Overview  
 Kartanary adalah aplikasi berbasis Flutter yang dirancang untuk mempermudah pengembangan alat pendidikan lintas platform dengan memanfaatkan Firebase sebagai backend.
