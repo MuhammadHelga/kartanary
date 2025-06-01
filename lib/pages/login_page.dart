@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:lifesync_capstone_project/widgets/bottom_navbar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../screens/role_option_page.dart';
 import '../pages/register_page.dart';
 import '../pages/forgot_password.dart';
@@ -233,6 +235,12 @@ class _LoginPageState extends State<LoginPage> {
             );
 
             if (user != null) {
+              final prefs = await SharedPreferences.getInstance();
+              await prefs.setBool('isLoggedIn', true);
+              await prefs.setString('role', widget.role);
+
+              String? savedClassId = prefs.getString('classId');
+
               // // Simpan device token ke Firestore
               // await FirebaseFirestore.instance
               //     .collection('users')
@@ -240,28 +248,50 @@ class _LoginPageState extends State<LoginPage> {
               //     .update({'deviceToken': userDeviceToken});
               if (widget.role == 'Guru') {
                 if (!mounted) return;
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder:
-                        (context) => ChooseClassPage(
-                          role: widget.role,
-                          classId: widget.classId,
-                        ),
-                  ),
-                );
+                if (savedClassId != null && savedClassId.isNotEmpty) {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder:
+                          (context) => BottomNavbar(
+                            classId: savedClassId,
+                            role: widget.role,
+                          ),
+                    ),
+                  );
+                } else {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder:
+                          (context) =>
+                              ChooseClassPage(role: widget.role, classId: ''),
+                    ),
+                  );
+                }
               } else if (widget.role == 'Orang Tua') {
                 if (!mounted) return;
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder:
-                        (context) => ClassOptions(
-                          role: widget.role,
-                          classId: widget.classId,
-                        ),
-                  ),
-                );
+                if (savedClassId != null && savedClassId.isNotEmpty) {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder:
+                          (context) => ClassOptions(
+                            role: widget.role,
+                            classId: savedClassId,
+                          ),
+                    ),
+                  );
+                } else {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder:
+                          (context) =>
+                              ClassOptions(role: widget.role, classId: ''),
+                    ),
+                  );
+                }
               }
             }
           },

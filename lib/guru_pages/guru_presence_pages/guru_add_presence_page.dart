@@ -179,7 +179,7 @@ class _GuruPresencePageState extends State<GuruPresencePage> {
                 .collection('anak')
                 .doc(anakId)
                 .collection('presensi')
-                .doc('${selectedDate.toIso8601String().substring(0, 10)}')
+                .doc(selectedDate.toIso8601String().substring(0, 10))
                 .set({
                   'tanggal': selectedDate,
                   'status': status,

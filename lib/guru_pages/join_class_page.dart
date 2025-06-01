@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lifesync_capstone_project/widgets/custom_snackbar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../widgets/bottom_navbar.dart';
 import '../theme/app_colors.dart';
 
@@ -40,6 +41,9 @@ class _JoinClassPageState extends State<JoinClassPage> {
 
       final classDoc = snapshot.docs.first;
       final classId = classDoc.id;
+
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('classId', classId);
 
       debugPrint('✅ Bergabung ke classId: $classId');
 

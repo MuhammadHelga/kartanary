@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lifesync_capstone_project/widgets/custom_snackbar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../ortu_pages/choose_student_page.dart';
 import '../theme/app_colors.dart';
 
@@ -42,6 +43,9 @@ class _ClassOptionsState extends State<ClassOptions> {
 
       final classDoc = snapshot.docs.first;
       final classId = classDoc.id;
+
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('classId', classId);
 
       // ✅ Update joinedClassId di Firestore untuk user yang login
       final user = FirebaseFirestore.instance.collection('users');

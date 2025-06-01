@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lifesync_capstone_project/guru_pages/input_student_page.dart';
 import 'package:lifesync_capstone_project/widgets/custom_snackbar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../theme/app_colors.dart';
 import '../services/auth_service.dart';
 
@@ -33,6 +34,9 @@ class _CreateClassPageState extends State<CreateClassPage> {
         ruangan: ruangan,
         tahunAjaran: tahunAjaran,
       );
+
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('classId', classId);
 
       if (!mounted) return;
       Navigator.push(
