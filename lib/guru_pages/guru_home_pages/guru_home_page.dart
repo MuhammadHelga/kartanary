@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import './guru_detail_page.dart';
 import 'package:lifesync_capstone_project/theme/app_colors.dart';
@@ -24,6 +25,10 @@ class _GuruHomePageState extends State<GuruHomePage> {
   Timer? _autoSlideTimer;
   List<Map<String, dynamic>> _announcements = [];
 
+  // Variables untuk double back to exit
+  DateTime? _lastBackPressed;
+  static const Duration _backPressThreshold = Duration(seconds: 2);
+
   Future<void> _fetchAnnouncements() async {
     try {
       final snapshot =
@@ -43,10 +48,6 @@ class _GuruHomePageState extends State<GuruHomePage> {
           snapshot.docs
               .map((doc) {
                 final data = doc.data();
-                // final Timestamp tanggal =
-                //     data['tanggal'] is Timestamp
-                //         ? data['tanggal']
-                //         : Timestamp.fromDate(DateTime.parse(data['tanggal']));
                 return {
                   'title': data['title'],
                   'tanggal':
@@ -68,12 +69,10 @@ class _GuruHomePageState extends State<GuruHomePage> {
                   tgl.month,
                   tgl.day,
                 );
-                return !tanggalTanpaWaktu.isBefore(
-                  today,
-                ); // hari ini atau masa depan
+                return !tanggalTanpaWaktu.isBefore(today);
               })
               .toList();
-      // Sort by date ascending (paling dekat ke atas)
+
       loadedAnnouncements.sort((a, b) {
         final dateA = (a['tanggal'] as Timestamp).toDate();
         final dateB = (b['tanggal'] as Timestamp).toDate();
@@ -122,7 +121,6 @@ class _GuruHomePageState extends State<GuruHomePage> {
         );
       }
     });
-    // _fetchAnnouncements();
   }
 
   Future<void> _loadUserName() async {
@@ -185,105 +183,133 @@ class _GuruHomePageState extends State<GuruHomePage> {
     }
   }
 
+  // Function untuk handle double back press
+  Future<bool> _onWillPop() async {
+    final now = DateTime.now();
+
+    if (_lastBackPressed == null ||
+        now.difference(_lastBackPressed!) > _backPressThreshold) {
+      _lastBackPressed = now;
+
+      // Tampilkan snackbar atau toast
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Tekan sekali lagi untuk keluar'),
+          duration: _backPressThreshold,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+
+      return false; // Jangan keluar aplikasi
+    } else {
+      // Exit aplikasi
+      SystemNavigator.pop();
+      return true;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xffFFFFFF),
-      appBar: AppBar(
-        backgroundColor: AppColors.primary50,
-        elevation: 0,
-        automaticallyImplyLeading: false,
-        actions: [
-          IconButton(
-            icon: Icon(Icons.notifications, color: Colors.white, size: 38),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder:
-                      (context) =>
-                          GuruNotificationPage(classId: widget.classId),
-                ),
-              );
-            },
-          ),
-        ],
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(30),
-            bottomRight: Radius.circular(30),
-          ),
-        ),
-        clipBehavior: Clip.hardEdge,
-        toolbarHeight: 70,
-      ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Hai,',
-                      style: TextStyle(
-                        fontFamily: 'Poppins',
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      _name != null ? 'Miss $_name!' : 'Loading...',
-                      style: TextStyle(
-                        fontFamily: 'Poppins',
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-
-                    SizedBox(height: 16),
-
-                    // Slider
-                    _buildLatestReportsSlider(),
-
-                    // School Updates
-                    Text(
-                      'Update Kegiatan Sekolah',
-                      style: TextStyle(
-                        fontFamily: 'Poppins',
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    _announcements.isEmpty
-                        ? Text(
-                          'Belum ada update kegiatan sekolah.',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontFamily: 'Poppins',
-                            color: Colors.grey,
-                          ),
-                        )
-                        : Column(
-                          children:
-                              _announcements.map((announcement) {
-                                return UpdateCard(
-                                  tanggal: announcement['tanggal'],
-                                  lokasi: announcement['lokasi'],
-                                  title: announcement['title'],
-                                  description: announcement['description'],
-                                  imageUrl: announcement['imageUrl'],
-                                );
-                              }).toList(),
-                        ),
-                  ],
-                ),
-              ),
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        backgroundColor: Color(0xffFFFFFF),
+        appBar: AppBar(
+          backgroundColor: AppColors.primary50,
+          elevation: 0,
+          automaticallyImplyLeading: false,
+          actions: [
+            IconButton(
+              icon: Icon(Icons.notifications, color: Colors.white, size: 38),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder:
+                        (context) =>
+                            GuruNotificationPage(classId: widget.classId),
+                  ),
+                );
+              },
             ),
           ],
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(30),
+              bottomRight: Radius.circular(30),
+            ),
+          ),
+          clipBehavior: Clip.hardEdge,
+          toolbarHeight: 70,
+        ),
+        body: SafeArea(
+          child: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Hai,',
+                        style: TextStyle(
+                          fontFamily: 'Poppins',
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        _name != null ? 'Miss $_name!' : 'Loading...',
+                        style: TextStyle(
+                          fontFamily: 'Poppins',
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+
+                      SizedBox(height: 16),
+
+                      // Slider
+                      _buildLatestReportsSlider(),
+
+                      // School Updates
+                      Text(
+                        'Update Kegiatan Sekolah',
+                        style: TextStyle(
+                          fontFamily: 'Poppins',
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      _announcements.isEmpty
+                          ? Text(
+                            'Belum ada update kegiatan sekolah.',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontFamily: 'Poppins',
+                              color: Colors.grey,
+                            ),
+                          )
+                          : Column(
+                            children:
+                                _announcements.map((announcement) {
+                                  return UpdateCard(
+                                    tanggal: announcement['tanggal'],
+                                    lokasi: announcement['lokasi'],
+                                    title: announcement['title'],
+                                    description: announcement['description'],
+                                    imageUrl: announcement['imageUrl'],
+                                  );
+                                }).toList(),
+                          ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

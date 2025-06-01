@@ -131,7 +131,7 @@ class _GuruAddTemaState extends State<GuruAddTema> {
           errorMessage = 'Gagal menyimpan tema: ${e.toString()}';
         }
 
-        showErrorSnackBar(context, '$errorMessage');
+        showErrorSnackBar(context, errorMessage);
         if (mounted) {
           Navigator.of(context).pop(false); // Return false to indicate failure
         }
