@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:lifesync_capstone_project/pages/login_page.dart';
+// import 'package:lifesync_capstone_project/pages/login_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:async';
 import '../screens/role_option_page.dart';
 import '../widgets/bottom_navbar.dart';
+import '../ortu_pages/class_options.dart';
+// import '../guru_pages/choose_class_page.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -41,12 +44,18 @@ class _SplashScreenState extends State<SplashScreen> {
       final prefs = await SharedPreferences.getInstance();
       final isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
       final classId = prefs.getString('classId') ?? '';
-      final role = prefs.getString('role') ?? 'Guru';
+      final role = prefs.getString('role') ?? '';
+
+      // ===== PENTING: Cek juga Firebase Auth state =====
+      final currentUser = FirebaseAuth.instance.currentUser;
 
       if (!mounted) return;
 
-      if (isLoggedIn && classId.isNotEmpty) {
-        // ✅ Sudah login, langsung ke halaman utama sesuai role
+      // Jika ada saved login state DAN user masih ter-authenticate di Firebase
+      if (isLoggedIn &&
+          classId.isNotEmpty &&
+          role.isNotEmpty &&
+          currentUser != null) {
         if (role == 'Guru') {
           Navigator.pushReplacement(
             context,
@@ -54,33 +63,46 @@ class _SplashScreenState extends State<SplashScreen> {
               builder: (context) => BottomNavbar(classId: classId, role: role),
             ),
           );
-        } else {
+        } else if (role == 'Orang Tua') {
+          // ===== FIX: Orang Tua ke ClassOptions, bukan RoleOptionPage =====
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => RoleOptionPage(classId: classId),
+              builder: (context) => ClassOptions(classId: classId, role: role),
+            ),
+          );
+        } else {
+          // Role tidak dikenal, ke RoleOptionPage
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => RoleOptionPage(classId: ''),
             ),
           );
         }
       } else {
-        // ❌ Belum login, arahkan ke LoginPage
+        // ===== CLEAR invalid saved state =====
+        if (isLoggedIn || classId.isNotEmpty || role.isNotEmpty) {
+          // Ada saved state tapi tidak lengkap/valid, clear semuanya
+          await prefs.remove('isLoggedIn');
+          await prefs.remove('classId');
+          await prefs.remove('role');
+        }
+
+        // Belum login atau state tidak valid, ke RoleOptionPage
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(
-            builder: (context) => LoginPage(classId: classId, role: role),
-          ),
+          MaterialPageRoute(builder: (context) => RoleOptionPage(classId: '')),
         );
       }
     } catch (e) {
       debugPrint('Splash screen error: $e');
 
-      // Jika error, fallback ke login page
+      // Jika error, fallback ke RoleOptionPage
       if (mounted) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(
-            builder: (context) => LoginPage(classId: '', role: 'Guru'),
-          ),
+          MaterialPageRoute(builder: (context) => RoleOptionPage(classId: '')),
         );
       }
     }

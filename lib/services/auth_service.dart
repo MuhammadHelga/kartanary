@@ -7,6 +7,62 @@ import '../theme/app_colors.dart';
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  // Cek status login yang disimpan
+  Future<Map<String, dynamic>?> checkSavedLoginState() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+      final classId = prefs.getString('classId') ?? '';
+      final role = prefs.getString('role') ?? '';
+
+      final currentUser = _auth.currentUser;
+
+      if (isLoggedIn &&
+          currentUser != null &&
+          classId.isNotEmpty &&
+          role.isNotEmpty) {
+        return {
+          'isLoggedIn': true,
+          'classId': classId,
+          'role': role,
+          'user': currentUser,
+        };
+      }
+
+      await currentUser?.reload();
+      if (currentUser?.emailVerified == false) {
+        await clearLoginState();
+        return null;
+      }
+    } catch (e) {
+      debugPrint('Error checking saved login state: $e');
+    }
+    return null;
+  }
+
+  // Logout tapi hanya hapus status login
+  Future<void> clearLoginState() async {
+    final prefs = await SharedPreferences.getInstance();
+    // Pilih salah satu:
+    // 1. Hapus isLoggedIn:
+    await prefs.remove('isLoggedIn');
+    // 2. ATAU set isLoggedIn ke false:
+    // await prefs.setBool('isLoggedIn', false);
+  }
+
+  // Simpan status login dan data user
+  Future<void> saveLoginState({
+    required bool isLoggedIn,
+    required String classId,
+    required String role,
+  }) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isLoggedIn', isLoggedIn);
+    await prefs.setString('classId', classId);
+    await prefs.setString('role', role);
+  }
+
   // Register
   Future<User?> registerWithEmail(String email, String password) async {
     try {
@@ -16,7 +72,6 @@ class AuthService {
       );
 
       await cred.user!.sendEmailVerification();
-
       return cred.user;
     } catch (e) {
       debugPrint('Error saat register: $e');
@@ -24,6 +79,7 @@ class AuthService {
     }
   }
 
+  // Simpan data user baru ke Firestore
   Future<void> saveUserData(
     String uid,
     String name,
@@ -42,17 +98,6 @@ class AuthService {
     } catch (e) {
       debugPrint('Error saat menyimpan data user: $e');
     }
-  }
-
-  Future<void> saveLoginState({
-    required bool isLoggedIn,
-    required String classId,
-    required String role,
-  }) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isLoggedIn', isLoggedIn);
-    await prefs.setString('classId', classId);
-    await prefs.setString('role', role);
   }
 
   // Login
@@ -89,7 +134,12 @@ class AuthService {
       }
 
       String storedRole = userDoc['role'];
-      String classId = userDoc['joinedClassId'] ?? '';
+      final userData = userDoc.data() as Map<String, dynamic>;
+
+      String classId =
+          userData.containsKey('joinedClassId')
+              ? userData['joinedClassId'] ?? ''
+              : '';
 
       if (storedRole != selectedRole) {
         await _auth.signOut();
@@ -107,7 +157,7 @@ class AuthService {
                   Icon(Icons.error_outline, color: Colors.white, size: 26),
                   SizedBox(width: 10),
                   Text(
-                    'Email atau Password salah',
+                    'Peran tidak sesuai. Silakan pilih peran yang sesuai saat login.',
                     style: TextStyle(fontSize: 16),
                   ),
                 ],
@@ -121,7 +171,6 @@ class AuthService {
         return null;
       }
 
-      // Simpan status login ke SharedPreferences
       await saveLoginState(
         isLoggedIn: true,
         classId: classId,
@@ -148,9 +197,10 @@ class AuthService {
   // Logout
   Future<void> logout() async {
     await _auth.signOut();
+    await clearLoginState(); // Tidak menghapus classId & role
   }
 
-  // Update Nama dan Email
+  // Update email
   Future<String?> updateUserEmail(String newEmail) async {
     try {
       User? user = FirebaseAuth.instance.currentUser;
@@ -187,10 +237,7 @@ class AuthService {
     }
 
     final user = _auth.currentUser;
-
-    if (user == null) {
-      throw Exception('Pengguna belum login');
-    }
+    if (user == null) throw Exception('Pengguna belum login');
 
     final String kodeKelas = generateKodeKelas();
 
@@ -210,7 +257,7 @@ class AuthService {
     }
   }
 
-  //Tambah Anak
+  // Tambah anak
   Future<void> tambahAnak({
     required String name,
     required String gender,
@@ -230,7 +277,7 @@ class AuthService {
           });
     } catch (e) {
       debugPrint('Error saat menambah anak: $e');
-      throw e; // Melempar kembali error jika terjadi
+      throw e;
     }
   }
 }

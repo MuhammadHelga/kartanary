@@ -239,59 +239,46 @@ class _LoginPageState extends State<LoginPage> {
               await prefs.setBool('isLoggedIn', true);
               await prefs.setString('role', widget.role);
 
-              if (prefs.getString('classId') == null ||
-                  prefs.getString('classId')!.isEmpty) {
+              // Simpan classId yang dikirim dari halaman sebelumnya
+              if (widget.classId.isNotEmpty) {
                 await prefs.setString('classId', widget.classId);
               }
 
               String? savedClassId = prefs.getString('classId');
-              
+
+              if (!mounted) return;
+
               if (widget.role == 'Guru') {
-                if (!mounted) return;
-                if (savedClassId != null && savedClassId.isNotEmpty) {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder:
-                          (context) => BottomNavbar(
-                            classId: savedClassId,
-                            role: widget.role,
-                          ),
-                    ),
-                  );
-                } else {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder:
-                          (context) =>
-                              ChooseClassPage(role: widget.role, classId: ''),
-                    ),
-                  );
-                }
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder:
+                        (context) =>
+                            savedClassId != null && savedClassId.isNotEmpty
+                                ? BottomNavbar(
+                                  role: widget.role,
+                                  classId: savedClassId,
+                                )
+                                : ChooseClassPage(
+                                  role: widget.role,
+                                  classId: '',
+                                ),
+                  ),
+                );
               } else if (widget.role == 'Orang Tua') {
-                if (!mounted) return;
-                if (savedClassId != null && savedClassId.isNotEmpty) {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder:
-                          (context) => ClassOptions(
-                            role: widget.role,
-                            classId: savedClassId,
-                          ),
-                    ),
-                  );
-                } else {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder:
-                          (context) =>
-                              ClassOptions(role: widget.role, classId: ''),
-                    ),
-                  );
-                }
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder:
+                        (context) =>
+                            savedClassId != null && savedClassId.isNotEmpty
+                                ? ClassOptions(
+                                  role: widget.role,
+                                  classId: savedClassId,
+                                )
+                                : ClassOptions(role: widget.role, classId: ''),
+                  ),
+                );
               }
             }
           },

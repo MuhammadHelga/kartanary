@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:lifesync_capstone_project/screens/role_option_page.dart';
 import '../../theme/app_colors.dart';
 import '../../widgets/bottom_navbar.dart';
-import '../../pages/login_page.dart';
+// import '../../pages/login_page.dart';
 import './guru_edit_profile.dart';
 import '../../services/auth_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -34,6 +35,28 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
     await _loadUserName();
     await _loadClassInfo();
     await loadKelasGuru();
+  }
+
+  // Di halaman profile atau tempat logout lainnya:
+
+  Future<void> handleLogout() async {
+    final authService = AuthService();
+
+    try {
+      await authService
+          .logout(); // Ini akan clear Firebase Auth + SharedPreferences
+
+      if (mounted) {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => RoleOptionPage(classId: '')),
+          (route) => false,
+        );
+      }
+    } catch (e) {
+      debugPrint('Error during logout: $e');
+      // Handle error jika perlu
+    }
   }
 
   Future<void> _loadUserName() async {
@@ -351,19 +374,19 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
                           buildDivider(),
                           InkWell(
                             onTap: () async {
-                              await AuthService().logout();
-                              if (!context.mounted) return;
-                              Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(
-                                  builder:
-                                      (context) => LoginPage(
-                                        role: widget.role,
-                                        classId: widget.classId,
-                                      ),
-                                ),
-                                (route) => false,
-                              );
+                              handleLogout();
+                              // if (!context.mounted) return;
+                              // Navigator.pushAndRemoveUntil(
+                              //   context,
+                              //   MaterialPageRoute(
+                              //     builder:
+                              //         (context) => LoginPage(
+                              //           role: widget.role,
+                              //           classId: widget.classId,
+                              //         ),
+                              //   ),
+                              //   (route) => false,
+                              // );
                             },
                             child: Row(
                               children: [
