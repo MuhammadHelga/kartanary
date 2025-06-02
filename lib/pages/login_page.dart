@@ -239,13 +239,13 @@ class _LoginPageState extends State<LoginPage> {
               await prefs.setBool('isLoggedIn', true);
               await prefs.setString('role', widget.role);
 
-              String? savedClassId = prefs.getString('classId');
+              if (prefs.getString('classId') == null ||
+                  prefs.getString('classId')!.isEmpty) {
+                await prefs.setString('classId', widget.classId);
+              }
 
-              // // Simpan device token ke Firestore
-              // await FirebaseFirestore.instance
-              //     .collection('users')
-              //     .doc(user.uid)
-              //     .update({'deviceToken': userDeviceToken});
+              String? savedClassId = prefs.getString('classId');
+              
               if (widget.role == 'Guru') {
                 if (!mounted) return;
                 if (savedClassId != null && savedClassId.isNotEmpty) {

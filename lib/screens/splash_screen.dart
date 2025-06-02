@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:lifesync_capstone_project/pages/login_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
-import 'role_option_page.dart';
+import '../screens/role_option_page.dart';
+import '../widgets/bottom_navbar.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -45,15 +46,24 @@ class _SplashScreenState extends State<SplashScreen> {
       if (!mounted) return;
 
       if (isLoggedIn && classId.isNotEmpty) {
-        // Sudah login, ke role option page
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => RoleOptionPage(classId: classId),
-          ),
-        );
+        // ✅ Sudah login, langsung ke halaman utama sesuai role
+        if (role == 'Guru') {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => BottomNavbar(classId: classId, role: role),
+            ),
+          );
+        } else {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => RoleOptionPage(classId: classId),
+            ),
+          );
+        }
       } else {
-        // Belum login, ke login page
+        // ❌ Belum login, arahkan ke LoginPage
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -64,7 +74,7 @@ class _SplashScreenState extends State<SplashScreen> {
     } catch (e) {
       debugPrint('Splash screen error: $e');
 
-      // Jika error, default ke login page
+      // Jika error, fallback ke login page
       if (mounted) {
         Navigator.pushReplacement(
           context,

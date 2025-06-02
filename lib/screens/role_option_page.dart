@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../pages/login_page.dart';
 
 class RoleOptionPage extends StatelessWidget {
@@ -53,7 +54,10 @@ class RoleOptionPage extends StatelessWidget {
           width: 300,
           height: 100,
           child: ElevatedButton(
-            onPressed: () {
+            onPressed: () async {
+              final prefs = await SharedPreferences.getInstance();
+              await prefs.setString('role', name);
+              await prefs.setString('classId', classId);
               Navigator.push(
                 context,
                 MaterialPageRoute(

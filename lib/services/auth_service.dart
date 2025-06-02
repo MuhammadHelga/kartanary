@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
 
@@ -43,6 +44,17 @@ class AuthService {
     }
   }
 
+  Future<void> saveLoginState({
+    required bool isLoggedIn,
+    required String classId,
+    required String role,
+  }) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isLoggedIn', isLoggedIn);
+    await prefs.setString('classId', classId);
+    await prefs.setString('role', role);
+  }
+
   // Login
   Future<User?> loginWithEmail(
     String email,
@@ -58,38 +70,40 @@ class AuthService {
 
       User? user = cred.user;
 
-      // Ambil data user dari Firestore
-      DocumentSnapshot userDoc =
-          await FirebaseFirestore.instance
-              .collection('users')
-              .doc(user!.uid)
-              .get();
-
-      if (!cred.user!.emailVerified) {
+      if (!user!.emailVerified) {
         await _auth.signOut();
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text('Email belum diverifikasi. Silakan cek email anda'),
           ),
         );
         return null;
       }
 
+      DocumentSnapshot userDoc =
+          await _firestore.collection('users').doc(user.uid).get();
+
+      if (!userDoc.exists) {
+        debugPrint('Dokumen user tidak ditemukan');
+        return null;
+      }
+
       String storedRole = userDoc['role'];
+      String classId = userDoc['joinedClassId'] ?? '';
 
       if (storedRole != selectedRole) {
-        await FirebaseAuth.instance.signOut();
+        await _auth.signOut();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Container(
-              padding: EdgeInsets.all(10),
+              padding: const EdgeInsets.all(10),
               height: 70,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: AppColors.error300,
                 borderRadius: BorderRadius.all(Radius.circular(10)),
               ),
               child: Row(
-                children: [
+                children: const [
                   Icon(Icons.error_outline, color: Colors.white, size: 26),
                   SizedBox(width: 10),
                   Text(
@@ -106,6 +120,13 @@ class AuthService {
         );
         return null;
       }
+
+      // Simpan status login ke SharedPreferences
+      await saveLoginState(
+        isLoggedIn: true,
+        classId: classId,
+        role: storedRole,
+      );
 
       return user;
     } catch (e) {
