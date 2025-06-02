@@ -68,7 +68,7 @@ class _SplashScreenState extends State<SplashScreen> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => ClassOptions(classId: classId, role: role),
+              builder: (context) => BottomNavbar(classId: classId, role: role),
             ),
           );
         } else {

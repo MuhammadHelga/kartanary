@@ -5,6 +5,7 @@ import 'package:lifesync_capstone_project/ortu_pages/home_pages/detail_page.dart
 import 'package:lifesync_capstone_project/theme/app_colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
 import 'package:lifesync_capstone_project/ortu_pages/home_pages/notif_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -18,6 +19,9 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   String? _name;
   List<Map<String, dynamic>> _announcements = [];
+
+  DateTime? _lastBackPressed;
+  static const Duration _backPressThreshold = Duration(seconds: 2);
 
   Future<void> _fetchAnnouncements() async {
     try {
@@ -183,93 +187,120 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  Future<bool> _onWillPop() async {
+    final now = DateTime.now();
+
+    if (_lastBackPressed == null ||
+        now.difference(_lastBackPressed!) > _backPressThreshold) {
+      _lastBackPressed = now;
+
+      // Tampilkan snackbar atau toast
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Tekan sekali lagi untuk keluar'),
+          duration: _backPressThreshold,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+
+      return false; // Jangan keluar aplikasi
+    } else {
+      // Exit aplikasi
+      SystemNavigator.pop();
+      return true;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xffFFFFFF),
-      appBar: AppBar(
-        backgroundColor: AppColors.primary50,
-        elevation: 0,
-        automaticallyImplyLeading: false,
-        actions: [
-          IconButton(
-            icon: Icon(Icons.notifications, color: Colors.white, size: 30),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder:
-                      (context) => NotificationPage(classId: widget.classId),
-                ),
-              );
-            },
-          ),
-        ],
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(30),
-            bottomRight: Radius.circular(30),
-          ),
-        ),
-        clipBehavior: Clip.hardEdge,
-        toolbarHeight: 70,
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Hai,',
-                style: TextStyle(
-                  fontFamily: 'Poppins',
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Text(
-                _name != null ? 'Mom $_name!' : 'Loading...',
-                style: TextStyle(
-                  fontFamily: 'Poppins',
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: 16),
-              _buildLatestReportsSlider(),
-              SizedBox(height: 16),
-              Text(
-                'Update Kegiatan Sekolah',
-                style: TextStyle(
-                  fontFamily: 'Poppins',
-                  fontSize: 20,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              SizedBox(height: 10),
-              _announcements.isEmpty
-                  ? Text(
-                    'Belum ada update kegiatan sekolah.',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontFamily: 'Poppins',
-                      color: Colors.grey,
-                    ),
-                  )
-                  : Column(
-                    children:
-                        _announcements.map((announcement) {
-                          return UpdateCard(
-                            tanggal: announcement['tanggal'],
-                            lokasi: announcement['lokasi'],
-                            title: announcement['title'],
-                            description: announcement['description'],
-                            imageUrl: announcement['imageUrl'],
-                          );
-                        }).toList(),
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        backgroundColor: Color(0xffFFFFFF),
+        appBar: AppBar(
+          backgroundColor: AppColors.primary50,
+          elevation: 0,
+          automaticallyImplyLeading: false,
+          actions: [
+            IconButton(
+              icon: Icon(Icons.notifications, color: Colors.white, size: 30),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder:
+                        (context) => NotificationPage(classId: widget.classId),
                   ),
-            ],
+                );
+              },
+            ),
+          ],
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(30),
+              bottomRight: Radius.circular(30),
+            ),
+          ),
+          clipBehavior: Clip.hardEdge,
+          toolbarHeight: 70,
+        ),
+        body: SafeArea(
+          child: SingleChildScrollView(
+            padding: EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Hai,',
+                  style: TextStyle(
+                    fontFamily: 'Poppins',
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  _name != null ? 'Mom $_name!' : 'Loading...',
+                  style: TextStyle(
+                    fontFamily: 'Poppins',
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 16),
+                _buildLatestReportsSlider(),
+                SizedBox(height: 16),
+                Text(
+                  'Update Kegiatan Sekolah',
+                  style: TextStyle(
+                    fontFamily: 'Poppins',
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                SizedBox(height: 10),
+                _announcements.isEmpty
+                    ? Text(
+                      'Belum ada update kegiatan sekolah.',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontFamily: 'Poppins',
+                        color: Colors.grey,
+                      ),
+                    )
+                    : Column(
+                      children:
+                          _announcements.map((announcement) {
+                            return UpdateCard(
+                              tanggal: announcement['tanggal'],
+                              lokasi: announcement['lokasi'],
+                              title: announcement['title'],
+                              description: announcement['description'],
+                              imageUrl: announcement['imageUrl'],
+                            );
+                          }).toList(),
+                    ),
+              ],
+            ),
           ),
         ),
       ),
