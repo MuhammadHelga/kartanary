@@ -366,7 +366,7 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
                                 Padding(
                                   padding: EdgeInsets.only(right: 10),
                                   child: Icon(
-                                    Icons.add,
+                                    Icons.add_box_outlined,
                                     color: AppColors.primary300,
                                     size: 30,
                                   ),
