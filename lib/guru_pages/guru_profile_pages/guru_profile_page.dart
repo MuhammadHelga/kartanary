@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../theme/app_colors.dart';
 import '../../widgets/bottom_navbar.dart';
 import '../../pages/login_page.dart';
+import '../create_class_page.dart';
 import './guru_edit_profile.dart';
 import '../../services/auth_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -347,7 +348,45 @@ class _GuruProfilePageState extends State<GuruProfilePage> {
                         children: [
                           buildSettingItem(Icons.settings_outlined, 'Umum'),
                           buildDivider(),
-                          buildSettingItem(Icons.info_outline, 'Tentang Kami'),
+                          InkWell(
+                            onTap: () async {
+                              if (!context.mounted) return;
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder:
+                                      (context) =>
+                                          CreateClassPage(role: widget.role),
+                                ),
+                                // (route) => false,
+                              );
+                            },
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(right: 10),
+                                  child: Icon(
+                                    Icons.add,
+                                    color: AppColors.primary300,
+                                    size: 30,
+                                  ),
+                                ),
+                                Text(
+                                  'Tambah Kelas',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 20,
+                                  ),
+                                ),
+                                Spacer(),
+                                Icon(
+                                  Icons.chevron_right,
+                                  color: AppColors.primary300,
+                                  size: 30,
+                                ),
+                              ],
+                            ),
+                          ),
                           buildDivider(),
                           InkWell(
                             onTap: () async {
